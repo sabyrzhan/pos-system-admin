@@ -1,0 +1,7 @@
+POST http://localhost:8080/api/v1/users/validate
+Accept: application/json
+
+{
+  "username": "sabyrzhan",
+  "password": "123"
+}
