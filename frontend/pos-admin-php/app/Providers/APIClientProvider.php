@@ -8,6 +8,13 @@ use Illuminate\Support\Facades\Http;
 class APIClientProvider extends ServiceProvider
 {
     private $client;
+
+    public function __construct($app)
+    {
+        parent::__construct($app);
+        $this->client = Http::baseUrl(env('API_BASE_URL'));
+    }
+
     /**
      * Register services.
      *
@@ -25,16 +32,18 @@ class APIClientProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->client = Http::baseUrl('http://localhost:8080');
     }
 
     public function authenticate($username, $password) {
-        $response = Http::post('/api/v1/users/validate', [
+        $response = $this->client->post('/api/v1/users/validate', [
             'username' => $username,
             'password' => $password,
         ]);
 
-        var_dump($response);
-        exit;
+        if ($response->status() != 200) {
+            return false;
+        } else {
+            return $response->json();
+        }
     }
 }

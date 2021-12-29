@@ -39,17 +39,17 @@ class JWTUserProvider extends ServiceProvider implements UserProvider
 
     public function retrieveById($identifier)
     {
+        $payload = auth()->payload();
         $user = new User();
-        $user['id'] = 2;
-        $user['username'] = 'sabyrzhan';
-        $user['role'] = 'ADMIN';
+        $user['id'] = $payload['sub'];
+        $user['username'] = $payload['username'];
+        $user['role'] = $payload['role'];
         return $user;
     }
 
     public function retrieveByToken($identifier, $token)
     {
         // TODO: Implement retrieveByToken() method.
-        var_dump($token);exit;
     }
 
     public function updateRememberToken(Authenticatable $user, $token)
@@ -59,10 +59,15 @@ class JWTUserProvider extends ServiceProvider implements UserProvider
 
     public function retrieveByCredentials(array $credentials)
     {
+        $response = $this->apiClient->authenticate($credentials['email'], $credentials['password']);
+        if (!$response) {
+            return NULL;
+        }
+
         $user = new User();
-        $user['id'] = 1;
-        $user['username'] = 'sabyrzhan';
-        $user['role'] = 'ADMIN';
+        $user['id'] = $response['id'];
+        $user['username'] = $response['username'];
+        $user['role'] = $response['role'];
 
         return $user;
     }

@@ -174,7 +174,7 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-
+        App\Providers\APIClientProvider::class
     ],
 
     /*
@@ -228,8 +228,7 @@ return [
         'Str' => Illuminate\Support\Str::class,
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
-        'View' => Illuminate\Support\Facades\View::class,
-        'APIClientProvider' => App\Providers\APIClientProvider::class
+        'View' => Illuminate\Support\Facades\View::class
     ],
 
 ];
