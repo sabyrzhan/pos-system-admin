@@ -3,13 +3,20 @@
 namespace App\Providers;
 
 use App\Models\User;
-use Illuminate\Auth\GenericUser;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\UserProvider;
 use Illuminate\Support\ServiceProvider;
 
 class JWTUserProvider extends ServiceProvider implements UserProvider
 {
+    private $apiClient;
+
+    public function __construct($app, APIClientProvider $apiClient)
+    {
+        parent::__construct($app);
+        $this->apiClient = $apiClient;
+    }
+
     /**
      * Register services.
      *
