@@ -1,9 +1,11 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DashboardRouterController;
+use App\Http\Controllers\UserDashboardController;
 use App\Http\Middleware\Authenticate;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,5 +22,7 @@ Route::get('login', [AuthController::class, 'loginPage'])->name('login');
 Route::post('login', [AuthController::class, 'authenticate']);
 
 Route::middleware([Authenticate::class])->group(function() {
-    Route::get('/', [DashboardController::class, 'index']);
+    Route::get('/', [DashboardRouterController::class, 'index']);
+    Route::get('/admin_dashboard', [AdminDashboardController::class, 'index']);
+    Route::get('/user_dashboard', [UserDashboardController::class, 'index']);
 });

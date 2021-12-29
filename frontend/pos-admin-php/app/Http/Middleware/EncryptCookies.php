@@ -14,4 +14,6 @@ class EncryptCookies extends Middleware
     protected $except = [
         //
     ];
+
+    static protected $serialize = true;
 }
