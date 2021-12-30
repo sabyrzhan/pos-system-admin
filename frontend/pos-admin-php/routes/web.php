@@ -20,9 +20,10 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('login', [AuthController::class, 'loginPage'])->name('login');
 Route::post('login', [AuthController::class, 'authenticate']);
+Route::get('logout', [AuthController::class, 'logout']);
 
 Route::middleware([Authenticate::class])->group(function() {
     Route::get('/', [DashboardRouterController::class, 'index']);
-    Route::get('/admin_dashboard', [AdminDashboardController::class, 'index']);
-    Route::get('/user_dashboard', [UserDashboardController::class, 'index']);
+    Route::get('/admin_dashboard', [AdminDashboardController::class, 'index'])->middleware('authRole:ADMIN');
+    Route::get('/user_dashboard', [UserDashboardController::class, 'index'])->middleware('authRole:USER');
 });

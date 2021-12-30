@@ -2,18 +2,12 @@
 
 namespace App\Http\Middleware;
 
+use Closure;
 use Illuminate\Auth\Middleware\Authenticate as Middleware;
-use Illuminate\Support\Facades\Crypt;
 
 class Authenticate extends Middleware
 {
-    /**
-     * Get the path the user should be redirected to when they are not authenticated.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return string|null
-     */
-    protected function redirectTo($request)
+    public function handle($request, Closure $next, ...$guards)
     {
         $user = NULL;
         try {
@@ -22,7 +16,9 @@ class Authenticate extends Middleware
         }
 
         if (!$user) {
-            return route('login');
+            return redirect('login');
         }
+
+        return $next($request);
     }
 }

@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 
 class AuthController extends Controller
@@ -18,5 +17,11 @@ class AuthController extends Controller
         }
 
         return redirect('/')->cookie('token', Crypt::encrypt($token));
+    }
+
+    public function logout() {
+        auth()->logout(true);
+
+        return redirect('/');
     }
 }
