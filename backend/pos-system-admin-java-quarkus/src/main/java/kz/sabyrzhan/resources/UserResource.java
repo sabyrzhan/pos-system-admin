@@ -19,7 +19,7 @@ import javax.ws.rs.core.Response;
 @Slf4j
 public class UserResource {
     @Inject
-    private UserService userService;
+    UserService userService;
 
     @POST
     public Uni<Response> createUser() {
@@ -28,8 +28,8 @@ public class UserResource {
 
     @GET
     @Path("/{id}")
-    public Uni<User> getById(@PathParam("id") long id) {
-        return Uni.createFrom().item(new User());
+    public Uni<User> getById(@PathParam("id") int id) {
+        return userService.findById(id);
     }
 
     @POST

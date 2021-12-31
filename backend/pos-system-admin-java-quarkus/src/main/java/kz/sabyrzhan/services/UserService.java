@@ -14,4 +14,10 @@ public class UserService {
                 .onItem().transform(User::fromEntity)
                 .onFailure().transform(throwable -> new UserNotFoundException(throwable));
     }
+
+    public Uni<User> findById(int id) {
+        return UserEntity.<UserEntity>findById(id)
+                .onItem().transform(User::fromEntity)
+                .onFailure().transform(t -> new UserNotFoundException(t));
+    }
 }
