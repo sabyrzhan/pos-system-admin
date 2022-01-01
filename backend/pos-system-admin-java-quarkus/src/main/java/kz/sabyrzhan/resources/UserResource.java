@@ -1,6 +1,7 @@
 package kz.sabyrzhan.resources;
 
 import io.smallrye.mutiny.Uni;
+import kz.sabyrzhan.entities.UserEntity;
 import kz.sabyrzhan.model.User;
 import kz.sabyrzhan.resources.request.UsernameAndPasswordRequest;
 import kz.sabyrzhan.services.UserService;
@@ -22,8 +23,8 @@ public class UserResource {
     UserService userService;
 
     @POST
-    public Uni<Response> createUser() {
-        return Uni.createFrom().item(Response.accepted().build());
+    public Uni<User> createUser(UserEntity user) {
+        return userService.createUser(user);
     }
 
     @GET
