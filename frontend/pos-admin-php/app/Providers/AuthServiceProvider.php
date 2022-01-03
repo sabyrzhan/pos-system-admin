@@ -26,7 +26,7 @@ class AuthServiceProvider extends ServiceProvider
         $this->registerPolicies();
 
         Auth::provider('external', function ($app, array $config) {
-            return new JWTUserProvider($app, $app->makeWith(APIClientProvider::class, ['app' => $app]));
+            return new JWTUserProvider($app, $app->makeWith(APIClientProvider::class));
         });
     }
 }

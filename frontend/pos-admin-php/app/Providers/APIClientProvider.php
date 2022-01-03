@@ -2,16 +2,14 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Http;
 
-class APIClientProvider extends ServiceProvider
+class APIClientProvider
 {
     private $client;
 
-    public function __construct($app)
+    public function __construct()
     {
-        parent::__construct($app);
         $this->client = Http::baseUrl(env('API_BASE_URL'));
     }
 
@@ -38,6 +36,18 @@ class APIClientProvider extends ServiceProvider
         $response = $this->client->post('/api/v1/users/validate', [
             'username' => $username,
             'password' => $password,
+        ]);
+
+        if ($response->status() != 200) {
+            return false;
+        } else {
+            return $response->json();
+        }
+    }
+
+    public function changePassword($userId, $newPassword) {
+        $response = $this->client->post('/api/v1/users/' . $userId . '/change_password', [
+            'password' => $newPassword
         ]);
 
         if ($response->status() != 200) {

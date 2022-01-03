@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardRouterController;
 use App\Http\Controllers\UserDashboardController;
 use App\Http\Controllers\CategoriesController;
+use App\Http\Controllers\UsersController;
 use App\Http\Middleware\Authenticate;
 use Illuminate\Support\Facades\Route;
 
@@ -28,5 +29,7 @@ Route::middleware([Authenticate::class])->group(function() {
     Route::get('/admin_dashboard', [AdminDashboardController::class, 'index'])->middleware('authRole:ADMIN');
     Route::get('/user_dashboard', [UserDashboardController::class, 'index'])->middleware('authRole:USER');
     Route::get('/categories', [CategoriesController::class, 'categoriesPage'])->name('categories');
-    Route::get('/users/add', [UsesController::class, 'addUserPage'])->name('add_user');
+    Route::get('/users/add', [UsersController::class, 'addUserPage'])->name('add_user');
+    Route::get('/change_password', [UsersController::class, 'changePasswordPage'])->name('changePasswordPage');
+    Route::post('/change_password', [UsersController::class, 'changePassword']);
 });
