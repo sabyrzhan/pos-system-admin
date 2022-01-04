@@ -37,6 +37,16 @@ public class UserService {
                 .onItem().transform(User::fromEntity);
     }
 
+    public Uni<User> changePassword(UserEntity userIdAndPassword) {
+        return UserEntity.<UserEntity>findById(userIdAndPassword.getId())
+                .onItem().transformToUni(userEntity -> {
+                    userEntity.setPassword(userIdAndPassword.getPassword());
+                    return Panache.<UserEntity>withTransaction(userEntity::persist);
+                })
+                .onItem().transform(User::fromEntity)
+                .onFailure().transform(UserNotFoundException::new);
+    }
+
     private Uni<UserEntity> createUserEntity(UserEntity userEntity) {
         UserEntity save = new UserEntity();
         save.setUsername(userEntity.getUsername());

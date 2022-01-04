@@ -43,4 +43,14 @@ public class UserResource {
                                                             .build());
 
     }
+
+    @POST
+    @Path("/{id}/change_password")
+    public Uni<Response> changePassword(@PathParam("id") int id, UserEntity userIdAndPassword) {
+        userIdAndPassword.setId(id);
+        return userService.changePassword(userIdAndPassword).onItem().transform(user -> Response.ok(user).build())
+                .onFailure().recoverWithItem(throwable -> Response.status(Response.Status.NOT_FOUND)
+                        .entity(new ErrorResponse(throwable.getMessage()))
+                        .build());
+    }
 }
