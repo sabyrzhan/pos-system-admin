@@ -1,8 +1,4 @@
-@if(auth()->user()->isAdmin())
-    @include('includes.adminhead')
-@else
-    @include('includes.userhead')
-@endif
+@include('includes.header')
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->

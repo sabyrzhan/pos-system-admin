@@ -18,7 +18,7 @@ class UsersController extends Controller
 
 
     public function addUserPage() {
-        return view('add_user');
+        return view('registration');
     }
 
     public function changePasswordPage() {
