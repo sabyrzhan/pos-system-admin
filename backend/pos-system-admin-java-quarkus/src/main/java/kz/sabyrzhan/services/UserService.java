@@ -1,6 +1,7 @@
 package kz.sabyrzhan.services;
 
 import io.quarkus.hibernate.reactive.panache.Panache;
+import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import kz.sabyrzhan.entities.UserEntity;
 import kz.sabyrzhan.exceptions.UserAlreadyExistsException;
@@ -13,6 +14,14 @@ import javax.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
 public class UserService {
+    private static final int ITEMS_PER_PAGE = 10;
+
+    public Multi<User> findUsers(int page) {
+        return UserEntity.<UserEntity>find("order by username")
+                .page(page - 1,ITEMS_PER_PAGE)
+                .stream().map(User::fromEntity);
+    }
+
     public Uni<User> findByUsernameAndPassword(String username, String password) {
         return UserEntity.<UserEntity>find("username = ?1 and password = ?2", username, password).singleResult()
                 .onItem().transform(User::fromEntity)

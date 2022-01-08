@@ -34,3 +34,11 @@ Accept: application/json
   "id": 1,
   "password": "123123"
 }
+
+### Get user roles
+GET http://localhost:8080/api/v1/dict/roles
+Accept: application/json
+
+### Get users
+GET http://localhost:8080/api/v1/users?page=1
+Accept: application/json

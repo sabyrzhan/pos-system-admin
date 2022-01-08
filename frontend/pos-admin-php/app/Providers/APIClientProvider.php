@@ -56,4 +56,24 @@ class APIClientProvider
             return $response->json();
         }
     }
+
+    public function getUserRoles() {
+        $response = $this->client->get('/api/v1/dict/roles');
+
+        if ($response->status() != 200) {
+            return false;
+        } else {
+            return $response->json();
+        }
+    }
+
+    public function getUsers($page = 1) {
+        $response = $this->client->get("/api/v1/users?page=" . $page);
+
+        if ($response->status() != 200) {
+            return false;
+        } else {
+            return $response->json();
+        }
+    }
 }

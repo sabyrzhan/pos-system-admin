@@ -18,7 +18,13 @@ class UsersController extends Controller
 
 
     public function addUserPage() {
-        return view('registration');
+        $page = request('page');
+        if (!$page) {
+            $page = 1;
+        }
+        $userRoles = $this->apiClient->getUserRoles();
+        $users = $this->apiClient->getUsers($page);
+        return view('registration', array('user_roles' => $userRoles, 'users' => $users));
     }
 
     public function changePasswordPage() {

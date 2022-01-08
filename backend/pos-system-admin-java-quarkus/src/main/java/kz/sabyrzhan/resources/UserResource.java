@@ -1,5 +1,6 @@
 package kz.sabyrzhan.resources;
 
+import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import kz.sabyrzhan.entities.UserEntity;
 import kz.sabyrzhan.model.User;
@@ -9,10 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 
 @Path("/api/v1/users")
@@ -25,6 +23,15 @@ public class UserResource {
     @POST
     public Uni<User> createUser(UserEntity user) {
         return userService.createUser(user);
+    }
+
+    @GET
+    public Multi<User> getUsers(@QueryParam("page") int page) {
+        if (page == 0) {
+            page = 1;
+        }
+
+        return userService.findUsers(page);
     }
 
     @GET

@@ -17,63 +17,75 @@
     <div class="content">
         <div class="container-fluid">
             <div class="row">
-                <div class="col-lg-6">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">Card title</h5>
-
-                            <p class="card-text">
-                                Some quick example text to build on the card title and make up the bulk of the card's
-                                content.
-                            </p>
-
-                            <a href="#" class="card-link">Card link</a>
-                            <a href="#" class="card-link">Another link</a>
-                        </div>
-                    </div>
-
-                    <div class="card card-primary card-outline">
-                        <div class="card-body">
-                            <h5 class="card-title">Card title</h5>
-
-                            <p class="card-text">
-                                Some quick example text to build on the card title and make up the bulk of the card's
-                                content.
-                            </p>
-                            <a href="#" class="card-link">Card link</a>
-                            <a href="#" class="card-link">Another link</a>
-                        </div>
-                    </div><!-- /.card -->
-                </div>
-                <!-- /.col-md-6 -->
-                <div class="col-lg-6">
-                    <div class="card">
+                <div class="col-md-4">
+                    <div class="card card-primary">
                         <div class="card-header">
-                            <h5 class="m-0">Featured</h5>
+                            <h3 class="card-title">Registration form</h3>
                         </div>
-                        <div class="card-body">
-                            <h6 class="card-title">Special title treatment</h6>
-
-                            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                            <a href="#" class="btn btn-primary">Go somewhere</a>
-                        </div>
-                    </div>
-
-                    <div class="card card-primary card-outline">
-                        <div class="card-header">
-                            <h5 class="m-0">Featured</h5>
-                        </div>
-                        <div class="card-body">
-                            <h6 class="card-title">Special title treatment</h6>
-
-                            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                            <a href="#" class="btn btn-primary">Go somewhere</a>
-                        </div>
+                        <form>
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <label for="username">Username</label>
+                                    <input type="text" class="form-control" id="username" name="username" placeholder="Enter username">
+                                </div>
+                                <div class="form-group">
+                                    <label for="username">Email address</label>
+                                    <input type="email" class="form-control" id="email" placeholder="Enter email">
+                                </div>
+                                <div class="form-group">
+                                    <label for="password">Password</label>
+                                    <input type="password" class="form-control" id="password" placeholder="Password">
+                                </div>
+                                <div class="form-group">
+                                    <label for="role">Role</label>
+                                    <select class="custom-select form-control-border" id="role">
+                                        <option value="">-- Choose --</option>
+                                        @foreach($user_roles as $role)
+                                            <option value="{{$role}}">{{ $role }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <button type="submit" class="btn btn-primary">Register</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
-                <!-- /.col-md-6 -->
+                <div class="col-md-8">
+                    <div class="card card-primary">
+                        <div class="card-header">
+                            <h3 class="card-title">Users list</h3>
+                        </div>
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>USERNAME</th>
+                                    <th>EMAIL</th>
+                                    <th>ROLE</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            @if($users)
+                                @foreach($users as $user)
+                                    <tr>
+                                        <td>{{ $user['id'] }}</td>
+                                        <td>{{ $user['username'] }}</td>
+                                        <td>{{ $user['email'] }}</td>
+                                        <td>{{ $user['role'] }}</td>
+                                    </tr>
+                                @endforeach
+                            @else
+                                <tr>
+                                    <td colspan="4">No users found.</td>
+                                </tr>
+                            @endif
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
-            <!-- /.row -->
         </div><!-- /.container-fluid -->
     </div>
     <!-- /.content -->
