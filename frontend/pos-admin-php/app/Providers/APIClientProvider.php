@@ -76,4 +76,14 @@ class APIClientProvider
             return $response->json();
         }
     }
+
+    public function addUser($params) {
+        $response = $this->client->post('/api/v1/users', $params);
+
+        if ($response->status() != 200 && !isset($response['error'])) {
+            return false;
+        } else {
+            return $response->json();
+        }
+    }
 }

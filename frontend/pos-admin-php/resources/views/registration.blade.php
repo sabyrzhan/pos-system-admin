@@ -22,7 +22,18 @@
                         <div class="card-header">
                             <h3 class="card-title">Registration form</h3>
                         </div>
-                        <form>
+                        @if(Session::has('error'))
+                            <div class="alert alert-danger" role="alert">
+                                {{ Session::get('error') }}
+                            </div>
+                        @endif
+                        @if(Session::has('success'))
+                            <div class="alert alert-primary" role="alert">
+                                {{ Session::get('success') }}
+                            </div>
+                        @endif
+                        <form method="post" action="{{  URL::route('add_user') }}">
+                            @csrf
                             <div class="card-body">
                                 <div class="form-group">
                                     <label for="username">Username</label>
@@ -30,16 +41,16 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="username">Email address</label>
-                                    <input type="email" class="form-control" id="email" placeholder="Enter email">
+                                    <input type="email" class="form-control" id="email" name="email" placeholder="Enter email">
                                 </div>
                                 <div class="form-group">
                                     <label for="password">Password</label>
-                                    <input type="password" class="form-control" id="password" placeholder="Password">
+                                    <input type="password" class="form-control" id="password" name="password" placeholder="Password">
                                 </div>
                                 <div class="form-group">
                                     <label for="role">Role</label>
-                                    <select class="custom-select form-control-border" id="role">
-                                        <option value="">-- Choose --</option>
+                                    <select class="custom-select form-control-border" id="role" name="role">
+                                        <option disabled selected>-- Choose --</option>
                                         @foreach($user_roles as $role)
                                             <option value="{{$role}}">{{ $role }}</option>
                                         @endforeach
@@ -64,6 +75,7 @@
                                     <th>USERNAME</th>
                                     <th>EMAIL</th>
                                     <th>ROLE</th>
+                                    <th>DELETE</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -74,11 +86,12 @@
                                         <td>{{ $user['username'] }}</td>
                                         <td>{{ $user['email'] }}</td>
                                         <td>{{ $user['role'] }}</td>
+                                        <td>DELETE</td>
                                     </tr>
                                 @endforeach
                             @else
                                 <tr>
-                                    <td colspan="4">No users found.</td>
+                                    <td colspan="5">No users found.</td>
                                 </tr>
                             @endif
                             </tbody>

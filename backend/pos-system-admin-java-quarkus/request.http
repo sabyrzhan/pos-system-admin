@@ -1,17 +1,16 @@
 GET http://localhost:80/api/item?id=99
 Accept: application/json
 
-###
+### Check user by username and password
 POST http://localhost:8080/api/v1/users/validate
 Accept: application/json
 
 {
-  "username": "sabyrzhan",
-  "password": "123123"
+  "username": "admin@local.kz",
+  "password": "1"
 }
 
 ### Get user by id
-
 GET http://localhost:8080/api/v1/users/2
 Accept: application/json
 

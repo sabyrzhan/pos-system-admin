@@ -27,6 +27,20 @@ class UsersController extends Controller
         return view('registration', array('user_roles' => $userRoles, 'users' => $users));
     }
 
+    public function addUser() {
+        $params = request(['username', 'email', 'password', 'role']);
+        $response = $this->apiClient->addUser($params);
+        if (!$response) {
+            return redirect()->route('add_user_page')->with('error', 'Error adding user. Try again!');
+        }
+
+        if (isset($response['error'])) {
+            return redirect()->route('add_user_page')->with('error', $response['error']);
+        }
+
+        return redirect()->route('add_user_page')->with('success', 'User added!');
+    }
+
     public function changePasswordPage() {
         return view('changepassword');
     }

@@ -44,11 +44,7 @@ public class UserResource {
     @Path("/validate")
     public Uni<Response> validateUserByUsernameAndPassword(UsernameAndPasswordRequest request) {
         return userService.findByUsernameAndPassword(request.getUsername(), request.getPassword())
-                .onItem().transform(user -> Response.ok(user).build())
-                .onFailure().recoverWithItem(throwable -> Response.status(Response.Status.BAD_REQUEST)
-                                                            .entity(new ErrorResponse(throwable.getMessage()))
-                                                            .build());
-
+                .onItem().transform(user -> Response.ok(user).build());
     }
 
     @POST
