@@ -7,7 +7,7 @@ Accept: application/json
 
 {
   "username": "admin@local.kz",
-  "password": "1"
+  "password": "123123"
 }
 
 ### Get user by id

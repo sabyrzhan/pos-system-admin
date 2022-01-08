@@ -29,10 +29,10 @@
                 Invalid username and/or password!
             </div>
         @endif
-      <form action="/login" method="post">
+      <form action="{{ URL::route('login') }}" method="post">
         @csrf
         <div class="input-group mb-3">
-          <input type="email" class="form-control" placeholder="Email" name="email" required>
+          <input type="text" class="form-control" placeholder="Username or email" name="email" required>
           <div class="input-group-append">
             <div class="input-group-text">
               <span class="fas fa-envelope"></span>

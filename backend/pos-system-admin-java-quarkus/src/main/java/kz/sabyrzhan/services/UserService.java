@@ -23,7 +23,7 @@ public class UserService {
     }
 
     public Uni<User> findByUsernameAndPassword(String username, String password) {
-        return UserEntity.<UserEntity>find("username = ?1 and password = ?2", username, password).singleResult()
+        return UserEntity.<UserEntity>find("(username = ?1 or email = ?1)and password = ?2", username, password).singleResult()
                 .onItem().transform(User::fromEntity)
                 .onFailure().transform(throwable -> new UserNotFoundException(throwable));
     }
