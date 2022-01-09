@@ -8,7 +8,6 @@ import kz.sabyrzhan.exceptions.UserAlreadyExistsException;
 import kz.sabyrzhan.exceptions.UserNotFoundException;
 import kz.sabyrzhan.model.User;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.commons.lang3.StringUtils;
 
 import javax.enterprise.context.ApplicationScoped;
 
@@ -35,7 +34,7 @@ public class UserService {
     }
 
     public Uni<User> createUser(UserEntity user) {
-        return UserEntity.<UserEntity>find("username = ?1", user.getUsername()).count()
+        return UserEntity.<UserEntity>find("username = ?1 or email = ?2", user.getUsername(), user.getEmail()).count()
                 .onItem().transformToUni(count -> {
                     if (count == 0) {
                         return createUserEntity(user);
