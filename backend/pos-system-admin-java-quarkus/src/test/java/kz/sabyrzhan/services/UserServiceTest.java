@@ -38,8 +38,8 @@ class UserServiceTest {
                 .when()
                 .post("/api/v1/users")
                 .then()
-                .contentType(ContentType.JSON)
-                .statusCode(200)
+                .contentType(equalTo(ContentType.JSON.toString()))
+                .statusCode(equalTo(200))
                 .and()
                 .body("username", equalTo(postData.getUsername()));
     }
@@ -57,8 +57,8 @@ class UserServiceTest {
                 .when()
                 .post("/api/v1/users")
                 .then()
-                .contentType(ContentType.JSON)
-                .statusCode(200)
+                .contentType(equalTo(ContentType.JSON.toString()))
+                .statusCode(equalTo(200))
                 .and()
                 .body("username", equalTo(user1.getUsername()));
 
@@ -68,8 +68,8 @@ class UserServiceTest {
                 .when()
                 .post("/api/v1/users")
                 .then()
-                .contentType(ContentType.JSON)
-                .statusCode(409)
+                .contentType(equalTo(ContentType.JSON.toString()))
+                .statusCode(equalTo(409))
                 .and()
                 .body("error", equalTo("User already exists"));
     }
@@ -87,8 +87,8 @@ class UserServiceTest {
                 .when()
                 .post("/api/v1/users")
                 .then()
-                .contentType(ContentType.JSON)
-                .statusCode(200)
+                .contentType(equalTo(ContentType.JSON.toString()))
+                .statusCode(equalTo(200))
                 .and()
                 .body("username", equalTo(user1.getUsername()));
 
@@ -98,8 +98,8 @@ class UserServiceTest {
                 .when()
                 .post("/api/v1/users")
                 .then()
-                .contentType(ContentType.JSON)
-                .statusCode(409)
+                .contentType(equalTo(ContentType.JSON.toString()))
+                .statusCode(equalTo(409))
                 .and()
                 .body("error", equalTo("User already exists"));
     }
