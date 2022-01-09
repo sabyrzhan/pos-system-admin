@@ -86,7 +86,11 @@
                                         <td>{{ $user['username'] }}</td>
                                         <td>{{ $user['email'] }}</td>
                                         <td>{{ $user['role'] }}</td>
-                                        <td>DELETE</td>
+                                        <td>
+                                            <a href="#" class="btn btn-danger delete-user-btn" role="button">
+                                                <span class="nav-icon fas fa-trash" title="Delete"></span>
+                                            </a>
+                                        </td>
                                     </tr>
                                 @endforeach
                             @else
