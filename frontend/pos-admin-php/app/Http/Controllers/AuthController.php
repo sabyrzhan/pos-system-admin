@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Crypt;
-
 class AuthController extends Controller
 {
     public function loginPage() {
@@ -16,7 +14,7 @@ class AuthController extends Controller
             return redirect('/login?error=invalid_credentials');
         }
 
-        return redirect('/')->cookie('token', Crypt::encrypt($token));
+        return redirect('/')->cookie('token', $token);
     }
 
     public function logout() {

@@ -87,7 +87,7 @@
                                         <td>{{ $user['email'] }}</td>
                                         <td>{{ $user['role'] }}</td>
                                         <td>
-                                            <a href="#" class="btn btn-danger delete-user-btn" role="button">
+                                            <a href="#" class="btn btn-danger delete-user-btn" role="button" user-id="{{ $user['id'] }}">
                                                 <span class="nav-icon fas fa-trash" title="Delete"></span>
                                             </a>
                                         </td>

@@ -1,0 +1,3 @@
+### Delete user
+DELETE http://localhost/api/users/15
+Accept: application/json

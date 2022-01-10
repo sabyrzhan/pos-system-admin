@@ -86,4 +86,9 @@ class APIClientProvider
             return $response->json();
         }
     }
+
+    public function deleteUser($userId) {
+        $response = $this->client->delete('/api/v1/users/' . $userId);
+        return $response->status() == 202;
+    }
 }

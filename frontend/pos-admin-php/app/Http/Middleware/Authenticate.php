@@ -3,11 +3,10 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use Illuminate\Auth\Middleware\Authenticate as Middleware;
 
-class Authenticate extends Middleware
+class Authenticate
 {
-    public function handle($request, Closure $next, ...$guards)
+    public function handle($request, Closure $next, $route)
     {
         $user = NULL;
         try {
@@ -16,7 +15,15 @@ class Authenticate extends Middleware
         }
 
         if (!$user) {
-            return redirect('login');
+            if ($route == 'api') {
+                if (env('APP_ENV') == 'local') {
+                    return $next($request);
+                } else {
+                    return response()->json(['error' => 'Authenticate'], 401);
+                }
+            } else {
+                return redirect('login');
+            }
         }
 
         return $next($request);

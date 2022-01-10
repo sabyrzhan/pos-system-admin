@@ -6,7 +6,6 @@ use App\Http\Controllers\DashboardRouterController;
 use App\Http\Controllers\UserDashboardController;
 use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\UsersController;
-use App\Http\Middleware\Authenticate;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -24,7 +23,7 @@ Route::get('login', [AuthController::class, 'loginPage'])->name('login');
 Route::post('login', [AuthController::class, 'authenticate']);
 Route::get('logout', [AuthController::class, 'logout']);
 
-Route::middleware([Authenticate::class])->group(function() {
+Route::middleware(['auth:web'])->group(function() {
     Route::get('/', [DashboardRouterController::class, 'index'])->name('home');
     Route::get('/admin_dashboard', [AdminDashboardController::class, 'index'])->middleware('authRole:ADMIN');
     Route::get('/user_dashboard', [UserDashboardController::class, 'index'])->middleware('authRole:USER');
