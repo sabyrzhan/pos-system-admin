@@ -68,6 +68,16 @@
                         <div class="card-header">
                             <h3 class="card-title">Users list</h3>
                         </div>
+                        @if(Request::get('error'))
+                            <div class="alert alert-danger" role="alert">
+                                {{ Request::get('error') }}
+                            </div>
+                        @endif
+                        @if(Request::has('success'))
+                            <div class="alert alert-primary" role="alert">
+                                {{ Request::get('success') }}
+                            </div>
+                        @endif
                         <table class="table table-striped">
                             <thead>
                                 <tr>

@@ -7,10 +7,10 @@ $(function() {
                     url: '/api/users/' + userId,
                     type: 'delete',
                     success: function() {
-
+                        window.location = location.pathname + '?success=User deleted!';
                     },
-                    error: function() {
-
+                    error: function(err) {
+                        window.location = location.pathname + '?error=Server error. Please try again!';
                     }
                 })
             }
