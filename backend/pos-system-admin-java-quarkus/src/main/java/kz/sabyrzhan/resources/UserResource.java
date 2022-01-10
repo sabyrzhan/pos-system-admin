@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("/api/v1/users")
@@ -55,5 +56,12 @@ public class UserResource {
                 .onFailure().recoverWithItem(throwable -> Response.status(Response.Status.NOT_FOUND)
                         .entity(new ErrorResponse(throwable.getMessage()))
                         .build());
+    }
+
+    @DELETE
+    @Path("/{id}")
+    public Uni<Response> deleteUser(@PathParam("id") int id) {
+        return userService.deleteUser(id)
+                .onItem().transform(v -> Response.accepted().type(MediaType.APPLICATION_JSON_TYPE).build());
     }
 }

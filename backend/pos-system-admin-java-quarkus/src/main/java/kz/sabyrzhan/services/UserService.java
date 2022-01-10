@@ -55,6 +55,10 @@ public class UserService {
                 .onFailure().transform(UserNotFoundException::new);
     }
 
+    public Uni<Boolean> deleteUser(int id) {
+        return Panache.withTransaction(() -> UserEntity.deleteById(id));
+    }
+
     private Uni<UserEntity> createUserEntity(UserEntity userEntity) {
         UserEntity save = new UserEntity();
         save.setUsername(userEntity.getUsername());
