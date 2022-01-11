@@ -30,9 +30,10 @@ Route::middleware(['auth:web'])->group(function() {
     Route::get('/admin_dashboard', [AdminDashboardController::class, 'index'])->middleware('authRole:ADMIN');
     Route::get('/users/add', [UsersController::class, 'addUserPage'])->name('add_user_page')->middleware('authRole:ADMIN');
     Route::post('/users/add', [UsersController::class, 'addUser'])->name('add_user')->middleware('authRole:ADMIN');
+    Route::get('/categories', [CategoriesController::class, 'categoriesPage'])->name('categories_page')->middleware('authRole:ADMIN');
+    Route::post('/categories/add', [CategoriesController::class, 'addCategory'])->name('add_category')->middleware('authRole:ADMIN');
 
     # User routes
-    Route::get('/categories', [CategoriesController::class, 'categoriesPage'])->name('categories');
     Route::get('/user_dashboard', [UserDashboardController::class, 'index'])->middleware('authRole:USER');
     Route::get('/change_password', [UsersController::class, 'changePasswordPage'])->name('changePasswordPage');
     Route::post('/change_password', [UsersController::class, 'changePassword']);
