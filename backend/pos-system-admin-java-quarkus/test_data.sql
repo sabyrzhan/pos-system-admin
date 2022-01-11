@@ -7,3 +7,11 @@ insert into pos_users(username, email, password, salt, role) values('test1', 'te
 insert into pos_users(username, email, password, salt, role) values('test2', 'test2@test.com', '123123', '123', 'USER');
 insert into pos_users(username, email, password, salt, role) values('test3', 'test3@test.com', '123123', '123', 'USER');
 insert into pos_users(username, email, password, salt, role) values('test4', 'test4@test.com', '123123', '123', 'USER');
+
+
+-- Initial categories
+insert into pos_categories(name) values('category1');
+insert into pos_categories(name) values('category2');
+insert into pos_categories(name) values('category3');
+insert into pos_categories(name) values('category4');
+insert into pos_categories(name) values('category5');

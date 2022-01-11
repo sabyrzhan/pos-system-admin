@@ -78,7 +78,7 @@
                                         <td>{{ $cat['name'] }}</td>
                                         <td>
                                             <a href="#" class="btn btn-danger edit-cat-btn" role="button" cat-id="{{ $cat['id'] }}">
-                                                <span class="nav-icon fas fa-pencil" title="Edit"></span>
+                                                <span class="nav-icon fas fa-pen" title="Edit"></span>
                                             </a>
                                         </td>
                                         <td>

@@ -77,6 +77,16 @@ class APIClientProvider
         }
     }
 
+    public function getCategories($page = 1) {
+        $response = $this->client->get("/api/v1/dict/categories?page=" . $page);
+
+        if ($response->status() != 200) {
+            return false;
+        } else {
+            return $response->json();
+        }
+    }
+
     public function addUser($params) {
         $response = $this->client->post('/api/v1/users', $params);
 

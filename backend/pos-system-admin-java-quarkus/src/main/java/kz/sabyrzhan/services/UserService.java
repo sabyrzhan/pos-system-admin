@@ -4,7 +4,7 @@ import io.quarkus.hibernate.reactive.panache.Panache;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import kz.sabyrzhan.entities.UserEntity;
-import kz.sabyrzhan.exceptions.UserAlreadyExistsException;
+import kz.sabyrzhan.exceptions.EntityAlreadyExistsException;
 import kz.sabyrzhan.exceptions.UserNotFoundException;
 import kz.sabyrzhan.model.User;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -37,9 +37,9 @@ public class UserService {
         return UserEntity.<UserEntity>find("username = ?1 or email = ?2", user.getUsername(), user.getEmail()).count()
                 .onItem().transformToUni(count -> {
                     if (count == 0) {
-                        return createUserEntity(user);
+                        return Panache.<UserEntity>withTransaction(user::persist);
                     } else {
-                        return Uni.createFrom().failure(new UserAlreadyExistsException());
+                        return Uni.createFrom().failure(new EntityAlreadyExistsException("User already exists"));
                     }
                 })
                 .onItem().transform(User::fromEntity);
@@ -57,17 +57,6 @@ public class UserService {
 
     public Uni<Boolean> deleteUser(int id) {
         return Panache.withTransaction(() -> UserEntity.deleteById(id));
-    }
-
-    private Uni<UserEntity> createUserEntity(UserEntity userEntity) {
-        UserEntity save = new UserEntity();
-        save.setUsername(userEntity.getUsername());
-        save.setEmail(userEntity.getEmail());
-        save.setPassword(userEntity.getPassword());
-        save.setSalt(generateSalt());
-        save.setRole(userEntity.getRole());
-
-        return Panache.withTransaction(save::persist);
     }
 
     private String generateSalt() {
