@@ -78,7 +78,7 @@
                                         <td>{{ $cat['id'] }}</td>
                                         <td>{{ $cat['name'] }}</td>
                                         <td>
-                                            <a href="{{ URL::route('categories_page') . '?id=' . $cat['id'] }}" class="btn btn-danger edit-cat-btn" role="button" cat-id="{{ $cat['id'] }}">
+                                            <a href="{{ URL::route('categories_page') . '?id=' . $cat['id'] }}" class="btn btn-danger" role="button">
                                                 <span class="nav-icon fas fa-pen" title="Edit"></span>
                                             </a>
                                         </td>

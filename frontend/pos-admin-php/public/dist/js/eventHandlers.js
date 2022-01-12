@@ -15,5 +15,24 @@ $(function() {
                 })
             }
         });
+    });
+
+    $('.delete-cat-btn').on('click', function() {
+        let catId = $(this).attr('cat-id');
+        bootbox.confirm("Do you really want to delete this category?", function(result){
+            if (result) {
+                $.ajax({
+                    url: '/api/categories/' + catId,
+                    type: 'delete',
+                    success: function() {
+                        window.location = location.pathname + '?success=Category deleted!';
+                    },
+                    error: function(err) {
+                        let json = JSON.parse(err.responseText);
+                        window.location = location.pathname + '?error=' + json.error;
+                    }
+                })
+            }
+        });
     })
 })
