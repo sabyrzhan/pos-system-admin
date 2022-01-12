@@ -32,16 +32,17 @@
                                 {{ Session::get('success') }}
                             </div>
                         @endif
-                        <form method="post" action="{{  URL::route('add_category') }}">
+                        <form method="post" action="{{  URL::route('add_edit_category') }}">
                             @csrf
                             <div class="card-body">
                                 <div class="form-group">
                                     <label for="category">Category</label>
-                                    <input type="text" class="form-control" id="name" name="name" placeholder="Enter category name">
+                                    <input type="hidden" name="id" value="{{ $category['id'] ?? '' }}" />
+                                    <input type="text" class="form-control" id="name" name="name" value="{{ $category['name'] ?? '' }}" placeholder="Enter category name">
                                 </div>
                             </div>
                             <div class="card-footer">
-                                <button type="submit" class="btn btn-primary">Add</button>
+                                <button type="submit" class="btn btn-primary">{{ isset($category['id']) ? 'Update' : 'Add' }}</button>
                             </div>
                         </form>
                     </div>
@@ -77,7 +78,7 @@
                                         <td>{{ $cat['id'] }}</td>
                                         <td>{{ $cat['name'] }}</td>
                                         <td>
-                                            <a href="#" class="btn btn-danger edit-cat-btn" role="button" cat-id="{{ $cat['id'] }}">
+                                            <a href="{{ URL::route('categories_page') . '?id=' . $cat['id'] }}" class="btn btn-danger edit-cat-btn" role="button" cat-id="{{ $cat['id'] }}">
                                                 <span class="nav-icon fas fa-pen" title="Edit"></span>
                                             </a>
                                         </td>

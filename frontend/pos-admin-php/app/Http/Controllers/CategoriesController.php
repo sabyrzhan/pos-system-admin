@@ -15,24 +15,41 @@ class CategoriesController extends Controller
 
     public function categoriesPage() {
         $page = request('page');
+        $id = request('id');
         if (!$page) {
             $page = 1;
         }
+
+        $category = null;
+        if ($id) {
+            $category = $this->apiClient->getCategory($id);
+        }
+
         $categories = $this->apiClient->getCategories($page);
-        return view('categories', ['categories' => $categories]);
+        return view('categories', ['categories' => $categories, 'category' => $category]);
     }
 
-    public function addCategory() {
-        $params = request(['name']);
-        $response = $this->apiClient->addCategory($params);
+    public function addOrEditCategory() {
+        $params = request(['id', 'name']);
+        if (isset($params['id'])) {
+            $response = $this->apiClient->updateCategory($params);
+        } else {
+            $response = $this->apiClient->addCategory($params);
+        }
         if (!$response) {
-            return redirect()->route('categories_page')->with('error', 'Error adding category. Try again!');
+            return redirect()->route('categories_page')->with('error', 'Error adding/updating category. Try again!');
         }
 
         if (isset($response['error'])) {
             return redirect()->route('categories_page')->with('error', $response['error']);
         }
 
-        return redirect()->route('categories_page')->with('success', 'Category added!');
+        if ($params['id']) {
+            $message = 'Category updated!';
+        } else {
+            $message = 'Category added';
+        }
+
+        return redirect()->route('categories_page')->with('success', $message);
     }
 }

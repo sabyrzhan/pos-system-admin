@@ -107,6 +107,26 @@ class APIClientProvider
         }
     }
 
+    public function updateCategory($params) {
+        $response = $this->client->put('/api/v1/dict/categories/' . $params['id'], $params);
+
+        if ($response->status() != 200 && !isset($response['error'])) {
+            return false;
+        } else {
+            return $response->json();
+        }
+    }
+
+    public function getCategory($id) {
+        $response = $this->client->get('/api/v1/dict/categories/' . $id);
+
+        if ($response->status() != 200 && !isset($response['error'])) {
+            return false;
+        } else {
+            return $response->json();
+        }
+    }
+
     public function deleteUser($userId) {
         $response = $this->client->delete('/api/v1/users/' . $userId);
         return $response->status() == 202;
