@@ -23,6 +23,16 @@ class CategoriesController extends Controller
     }
 
     public function addCategory() {
-        return view('categories');
+        $params = request(['name']);
+        $response = $this->apiClient->addCategory($params);
+        if (!$response) {
+            return redirect()->route('categories_page')->with('error', 'Error adding category. Try again!');
+        }
+
+        if (isset($response['error'])) {
+            return redirect()->route('categories_page')->with('error', $response['error']);
+        }
+
+        return redirect()->route('categories_page')->with('success', 'Category added!');
     }
 }

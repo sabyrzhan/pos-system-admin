@@ -97,6 +97,16 @@ class APIClientProvider
         }
     }
 
+    public function addCategory($params) {
+        $response = $this->client->post('/api/v1/dict/categories', $params);
+
+        if ($response->status() != 200 && !isset($response['error'])) {
+            return false;
+        } else {
+            return $response->json();
+        }
+    }
+
     public function deleteUser($userId) {
         $response = $this->client->delete('/api/v1/users/' . $userId);
         return $response->status() == 202;
