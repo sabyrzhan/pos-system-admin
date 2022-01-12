@@ -34,5 +34,8 @@ $(function() {
                 })
             }
         });
-    })
+    });
+
+    $('#categoriesTable').DataTable();
+    $('#usersTable').DataTable();
 })

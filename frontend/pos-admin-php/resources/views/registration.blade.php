@@ -78,8 +78,9 @@
                                 {{ Request::get('success') }}
                             </div>
                         @endif
-                        <table class="table table-striped">
-                            <thead>
+                        <div class="card-body">
+                            <table id="usersTable" class="table table-bordered table-striped">
+                                <thead>
                                 <tr>
                                     <th>#</th>
                                     <th>USERNAME</th>
@@ -87,29 +88,30 @@
                                     <th>ROLE</th>
                                     <th>DELETE</th>
                                 </tr>
-                            </thead>
-                            <tbody>
-                            @if($users)
-                                @foreach($users as $user)
+                                </thead>
+                                <tbody>
+                                @if($users)
+                                    @foreach($users as $user)
+                                        <tr>
+                                            <td>{{ $user['id'] }}</td>
+                                            <td>{{ $user['username'] }}</td>
+                                            <td>{{ $user['email'] }}</td>
+                                            <td>{{ $user['role'] }}</td>
+                                            <td>
+                                                <a href="#" class="btn btn-danger delete-user-btn" role="button" user-id="{{ $user['id'] }}">
+                                                    <span class="nav-icon fas fa-trash" title="Delete"></span>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                @else
                                     <tr>
-                                        <td>{{ $user['id'] }}</td>
-                                        <td>{{ $user['username'] }}</td>
-                                        <td>{{ $user['email'] }}</td>
-                                        <td>{{ $user['role'] }}</td>
-                                        <td>
-                                            <a href="#" class="btn btn-danger delete-user-btn" role="button" user-id="{{ $user['id'] }}">
-                                                <span class="nav-icon fas fa-trash" title="Delete"></span>
-                                            </a>
-                                        </td>
+                                        <td colspan="5">No users found.</td>
                                     </tr>
-                                @endforeach
-                            @else
-                                <tr>
-                                    <td colspan="5">No users found.</td>
-                                </tr>
-                            @endif
-                            </tbody>
-                        </table>
+                                @endif
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
