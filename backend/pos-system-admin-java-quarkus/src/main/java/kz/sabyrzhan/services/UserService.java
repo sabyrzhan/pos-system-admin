@@ -47,6 +47,7 @@ public class UserService {
         return UserEntity.<UserEntity>find("username = ?1 or email = ?2", user.getUsername(), user.getEmail()).count()
                 .onItem().transformToUni(count -> {
                     if (count == 0) {
+                        user.setSalt(generateSalt());
                         return Panache.<UserEntity>withTransaction(user::persist);
                     } else {
                         return Uni.createFrom().failure(new EntityAlreadyExistsException("User already exists"));
@@ -58,6 +59,7 @@ public class UserService {
     public Uni<User> changePassword(UserEntity userIdAndPassword) {
         return UserEntity.<UserEntity>findById(userIdAndPassword.getId())
                 .onItem().transformToUni(userEntity -> {
+                    userEntity.setSalt(generateSalt());
                     userEntity.setPassword(userIdAndPassword.getPassword());
                     return Panache.<UserEntity>withTransaction(userEntity::persist);
                 })

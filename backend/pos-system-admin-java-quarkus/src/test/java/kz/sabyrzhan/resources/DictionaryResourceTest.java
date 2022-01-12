@@ -1,8 +1,10 @@
 package kz.sabyrzhan.resources;
 
+import io.quarkus.test.common.QuarkusTestResource;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.http.ContentType;
 import io.vertx.mutiny.pgclient.PgPool;
+import kz.sabyrzhan.DbResource;
 import kz.sabyrzhan.clients.DictClient;
 import kz.sabyrzhan.entities.CategoryEntity;
 import kz.sabyrzhan.services.CategoryService;
@@ -18,6 +20,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @QuarkusTest
+@QuarkusTestResource(DbResource.class)
 class DictionaryResourceTest {
     @Inject
     @RestClient
