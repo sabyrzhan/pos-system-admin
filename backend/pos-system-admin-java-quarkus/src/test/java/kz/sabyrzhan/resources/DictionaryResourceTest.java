@@ -5,6 +5,7 @@ import io.restassured.http.ContentType;
 import io.vertx.mutiny.pgclient.PgPool;
 import kz.sabyrzhan.clients.DictClient;
 import kz.sabyrzhan.entities.CategoryEntity;
+import kz.sabyrzhan.services.CategoryService;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -64,6 +65,40 @@ class DictionaryResourceTest {
     }
 
     @Test
+    void updateCategory_success() {
+        CategoryEntity newCategory = dictClient.create(createCategory());
+
+        newCategory.setName("newName");
+
+        given()
+                .body(newCategory)
+                .contentType(ContentType.JSON)
+                .when()
+                .put("/api/v1/dict/categories/" + newCategory.getId())
+                .then()
+                .contentType(equalTo(ContentType.JSON.toString()))
+                .statusCode(equalTo(200))
+                .and()
+                .body("name", equalTo(newCategory.getName()));
+    }
+
+    @Test
+    void updateCategory_notFound() {
+        CategoryEntity updateCategory = createCategory();
+
+        given()
+                .body(updateCategory)
+                .contentType(ContentType.JSON)
+                .when()
+                .put("/api/v1/dict/categories/1")
+                .then()
+                .contentType(equalTo(ContentType.JSON.toString()))
+                .statusCode(equalTo(404))
+                .and()
+                .body("error", equalTo(CategoryService.CATEGORY_NOT_FOUND_MESSAGE));
+    }
+
+    @Test
     public void getCategoriesList_success() {
         CategoryEntity created = dictClient.create(createCategory());
 
@@ -80,6 +115,39 @@ class DictionaryResourceTest {
         assertEquals(1, result.length);
         assertEquals(created.getId(), result[0].getId());
         assertEquals(created.getName(), result[0].getName());
+    }
+
+    @Test
+    public void getCategoryById_success() {
+        CategoryEntity created = dictClient.create(createCategory());
+
+        CategoryEntity result = given()
+                .contentType(ContentType.JSON)
+                .when()
+                .get("/api/v1/dict/categories/" + created.getId())
+                .then()
+                .contentType(containsString(ContentType.JSON.toString()))
+                .statusCode(equalTo(200))
+                .and()
+                .extract().as(CategoryEntity.class);
+
+        assertEquals(created.getId(), result.getId());
+        assertEquals(created.getName(), result.getName());
+    }
+
+    @Test
+    public void getCategoryById_notFound() {
+        ErrorResponse result = given()
+                .contentType(ContentType.JSON)
+                .when()
+                .get("/api/v1/dict/categories/1")
+                .then()
+                .contentType(containsString(ContentType.JSON.toString()))
+                .statusCode(equalTo(404))
+                .and()
+                .extract().as(ErrorResponse.class);
+
+        assertEquals(result.getError(), CategoryService.CATEGORY_NOT_FOUND_MESSAGE);
     }
 
     private CategoryEntity createCategory() {

@@ -9,10 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.*;
 
 @Path("/api/v1/dict")
 @ApplicationScoped
@@ -43,5 +40,15 @@ public class DictionaryResource {
         return categoryService.getList(page);
     }
 
+    @GET
+    @Path("/categories/{id}")
+    public Uni<CategoryEntity> getCategoryById(@PathParam("id") int id) {
+        return categoryService.getCategory(id);
+    }
 
+    @PUT
+    @Path("/categories/{id}")
+    public Uni<CategoryEntity> updateCategory(@PathParam("id") int id, CategoryEntity entity) {
+        return categoryService.updateCategory(entity);
+    }
 }

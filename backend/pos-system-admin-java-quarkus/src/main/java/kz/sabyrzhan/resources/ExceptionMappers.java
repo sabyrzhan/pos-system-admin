@@ -1,7 +1,7 @@
 package kz.sabyrzhan.resources;
 
 import kz.sabyrzhan.exceptions.EntityAlreadyExistsException;
-import kz.sabyrzhan.exceptions.UserNotFoundException;
+import kz.sabyrzhan.exceptions.EntityNotFoundException;
 import org.jboss.resteasy.reactive.RestResponse;
 import org.jboss.resteasy.reactive.server.ServerExceptionMapper;
 
@@ -15,7 +15,7 @@ public class ExceptionMappers {
     }
 
     @ServerExceptionMapper
-    public RestResponse<ErrorResponse> handleUserNotFound(UserNotFoundException e) {
+    public RestResponse<ErrorResponse> handleEntityNotFound(EntityNotFoundException e) {
         return RestResponse.status(NOT_FOUND, new ErrorResponse(e.getMessage()));
     }
 }
