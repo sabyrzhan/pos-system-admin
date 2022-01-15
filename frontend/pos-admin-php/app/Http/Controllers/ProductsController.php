@@ -17,4 +17,8 @@ class ProductsController extends Controller
         $categories = $this->apiClient->getCategories();
         return view('addproduct', ['categories' => $categories]);
     }
+
+    public function addProduct() {
+        return redirect()->route('add_product_page');
+    }
 }

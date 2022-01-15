@@ -32,7 +32,7 @@
                                 {{ Session::get('success') }}
                             </div>
                         @endif
-                        <form method="post" action="{{  URL::route('add_user') }}">
+                        <form method="post" action="{{  URL::route('add_product') }}">
                             @csrf
                             <div class="row">
                                 <div class="col-md-6">
@@ -72,7 +72,7 @@
                                         </div>
                                         <div class="form-group">
                                             <label for="description">Product image</label>
-                                            <input type="file" class="input-group" name="image" required />
+                                            <input type="file" class="input-group" name="image" multiple />
                                             <p>upload image</p>
                                         </div>
                                     </div>
