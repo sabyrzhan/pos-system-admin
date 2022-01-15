@@ -13,8 +13,6 @@ create table pos_users
     role varchar(200) not null
 );
 
-create unique index pos_users_id_uindex on pos_users (id);
-
 -- Create categories table
 create table pos_categories
 (
@@ -22,7 +20,15 @@ create table pos_categories
     name varchar(255) not null
 );
 
-create unique index pos_categories_id_uindex on pos_categories (id);
-
---
-
+-- Create products table
+create table post_products
+(
+    id serial constraint post_products_pk primary key,
+    name varchar(100) not null,
+    category_id int not null,
+    purchase_price float not null,
+    sale_price float not null,
+    stock int not null,
+    description text not null,
+    images text
+);

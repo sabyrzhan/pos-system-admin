@@ -46,17 +46,17 @@
                                             <select class="custom-select form-control-border" id="category" name="category">
                                                 <option disabled selected>-- Choose --</option>
                                                 @foreach($categories as $cat)
-                                                    <option value="{{$cat}}">{{ $cat }}</option>
+                                                    <option value="{{$cat['id']}}">{{ $cat['name'] }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
                                         <div class="form-group">
                                             <label for="purchasePrice">Purchase price</label>
-                                            <input type="text" class="form-control" id="purchasePrice" name="purchasePrice" placeholder="Enter...">
+                                            <input type="number" step="1" min="1" class="form-control" id="purchasePrice" name="purchasePrice" placeholder="Enter...">
                                         </div>
                                         <div class="form-group">
                                             <label for="salePrice">Sale price</label>
-                                            <input type="text" class="form-control" id="salePrice" name="salePrice" placeholder="Enter...">
+                                            <input type="number" step="1" min="1" class="form-control" id="salePrice" name="salePrice" placeholder="Enter...">
                                         </div>
                                     </div>
                                 </div>
@@ -64,14 +64,22 @@
                                     <div class="card-body">
                                         <div class="form-group">
                                             <label for="stock">Stock</label>
-                                            <input type="text" class="form-control" id="stock" name="stock" placeholder="Enter...">
+                                            <input type="number" step="1" min="1" class="form-control" id="stock" name="stock" placeholder="Enter...">
                                         </div>
                                         <div class="form-group">
                                             <label for="description">Description</label>
                                             <textarea class="form-control" rows="3" name="description" name="description" placeholder="Enter ..."></textarea>
                                         </div>
+                                        <div class="form-group">
+                                            <label for="description">Product image</label>
+                                            <input type="file" class="input-group" name="image" required />
+                                            <p>upload image</p>
+                                        </div>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="card-footer">
+                                <button type="submit" class="btn btn-primary">Add</button>
                             </div>
                         </form>
                     </div>
