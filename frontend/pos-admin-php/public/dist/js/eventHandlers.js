@@ -38,4 +38,5 @@ $(function() {
 
     $('#categoriesTable').DataTable();
     $('#usersTable').DataTable();
+    $('#productsTable').DataTable();
 })

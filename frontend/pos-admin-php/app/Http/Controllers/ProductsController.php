@@ -50,4 +50,8 @@ class ProductsController extends Controller
 
         return redirect()->route('add_product_page')->with('success', $message);
     }
+
+    public function getProductsPage() {
+        return view('productlist', ['products' => []]);
+    }
 }
