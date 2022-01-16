@@ -45,7 +45,7 @@
                                             <td>{{ $prod['salePrice'] }}</td>
                                             <td>{{ $prod['stock'] }}</td>
                                             <td>{{ $prod['description'] }}</td>
-                                            <td>{{ $prod['image'] }}</td>
+                                            <td>{{ $prod['images'] }}</td>
                                             <td>
                                                 <a href="{{ URL::route('add_product_page') . '?id=' . $prod['id'] }}" class="btn btn-primary" role="button">
                                                     <span class="nav-icon fas fa-eye" title="View"></span>

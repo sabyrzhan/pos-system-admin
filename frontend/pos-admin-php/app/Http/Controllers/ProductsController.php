@@ -52,6 +52,11 @@ class ProductsController extends Controller
     }
 
     public function getProductsPage() {
-        return view('productlist', ['products' => []]);
+        $page = request('page');
+        if (!$page) {
+            $page = 1;
+        }
+        $products = $this->apiClient->getProducts($page);
+        return view('productlist', ['products' => $products]);
     }
 }

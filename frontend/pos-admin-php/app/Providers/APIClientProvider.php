@@ -142,6 +142,16 @@ class APIClientProvider
         }
     }
 
+    public function getProducts($page = 1) {
+        $response = $this->client->get('/api/v1/products?page=' . $page);
+
+        if ($response->status() != 200) {
+            return null;
+        } else {
+            return $response->json();
+        }
+    }
+
     public function addProduct($params) {
         $response = $this->client->post('/api/v1/products', $params);
         if ($response->status() != 200 && !isset($response['error'])) {
