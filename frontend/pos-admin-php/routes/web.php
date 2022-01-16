@@ -34,7 +34,7 @@ Route::middleware(['auth:web'])->group(function() {
     Route::get('/categories', [CategoriesController::class, 'categoriesPage'])->name('categories_page')->middleware('authRole:ADMIN');
     Route::post('/categories', [CategoriesController::class, 'addOrEditCategory'])->name('add_edit_category')->middleware('authRole:ADMIN');
     Route::get('/products/add', [ProductsController::class, 'addProductPage'])->name('add_product_page')->middleware('authRole:ADMIN');
-    Route::post('/products/add', [ProductsController::class, 'addProduct'])->name('add_product')->middleware('authRole:ADMIN');
+    Route::post('/products/add', [ProductsController::class, 'addUpdateProduct'])->name('add_product')->middleware('authRole:ADMIN');
 
     # User routes
     Route::get('/user_dashboard', [UserDashboardController::class, 'index'])->middleware('authRole:USER');

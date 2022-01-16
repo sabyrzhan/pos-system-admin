@@ -14,11 +14,35 @@ class ProductsController extends Controller
     }
 
     public function addProductPage() {
+        $id = request('id');
+        $product = null;
+        if ($id) {
+            $product = $this->apiClient->getProduct($id);
+        }
+
         $categories = $this->apiClient->getCategories();
-        return view('addproduct', ['categories' => $categories]);
+        return view('addproduct', ['categories' => $categories, 'product' => $product]);
     }
 
-    public function addProduct() {
-        return redirect()->route('add_product_page');
+    public function addUpdateProduct() {
+        $id = request('id');
+        $image = request('image');
+        $params = request(['name', 'categoryId', 'purchasePrice', 'salePrice', 'stock', 'description']);
+        $response = $this->apiClient->addProduct($params);
+        if (!$response) {
+            return redirect()->route('add_product_page')->with('error', 'Error adding/updating category. Try again!');
+        }
+
+        if (isset($response['error'])) {
+            return redirect()->route('add_product_page')->with('error', $response['error']);
+        }
+
+        if ($id) {
+            $message = 'Product updated!';
+        } else {
+            $message = 'Product added';
+        }
+
+        return redirect()->route('add_product_page')->with('success', $message);
     }
 }

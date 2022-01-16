@@ -131,4 +131,23 @@ class APIClientProvider
         $response = $this->client->delete('/api/v1/users/' . $userId);
         return $response->status() == 202;
     }
+
+    public function getProduct($id) {
+        $response = $this->client->get('/api/v1/products/' . $id);
+
+        if ($response->status() != 200) {
+            return null;
+        } else {
+            return $response->json();
+        }
+    }
+
+    public function addProduct($params) {
+        $response = $this->client->post('/api/v1/products', $params);
+        if ($response->status() != 200 && !isset($response['error'])) {
+            return false;
+        } else {
+            return $response->json();
+        }
+    }
 }
