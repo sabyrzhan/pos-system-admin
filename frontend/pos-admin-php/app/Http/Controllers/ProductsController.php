@@ -27,8 +27,13 @@ class ProductsController extends Controller
     public function addUpdateProduct() {
         $id = request('id');
         $image = request('image');
-        $params = request(['name', 'categoryId', 'purchasePrice', 'salePrice', 'stock', 'description']);
-        $response = $this->apiClient->addProduct($params);
+        $params = request(['id', 'name', 'categoryId', 'purchasePrice', 'salePrice', 'stock', 'description']);
+        if ($id) {
+            $response = $this->apiClient->updateProduct($params);
+        } else {
+            $response = $this->apiClient->addProduct($params);
+        }
+
         if (!$response) {
             return redirect()->route('add_product_page')->with('error', 'Error adding/updating category. Try again!');
         }

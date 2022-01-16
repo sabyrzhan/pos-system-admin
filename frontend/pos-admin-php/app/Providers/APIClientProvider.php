@@ -150,4 +150,13 @@ class APIClientProvider
             return $response->json();
         }
     }
+
+    public function updateProduct($params) {
+        $response = $this->client->put('/api/v1/products/' . $params['id'], $params);
+        if ($response->status() != 200 && !isset($response['error'])) {
+            return false;
+        } else {
+            return $response->json();
+        }
+    }
 }
