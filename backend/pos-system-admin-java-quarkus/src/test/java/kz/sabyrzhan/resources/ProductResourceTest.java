@@ -5,14 +5,18 @@ import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.http.ContentType;
 import io.vertx.mutiny.pgclient.PgPool;
 import kz.sabyrzhan.DbResource;
+import kz.sabyrzhan.clients.DictClient;
 import kz.sabyrzhan.clients.ProductClient;
 import kz.sabyrzhan.entities.ProductEntity;
+import kz.sabyrzhan.model.Product;
 import kz.sabyrzhan.repositories.ProductRepository;
+import lombok.SneakyThrows;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import javax.inject.Inject;
+import java.util.LinkedList;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.containsString;
@@ -25,6 +29,10 @@ class ProductResourceTest {
     @Inject
     @RestClient
     ProductClient productClient;
+
+    @Inject
+    @RestClient
+    DictClient dictClient;
 
     @Inject
     PgPool pgPool;
@@ -107,6 +115,44 @@ class ProductResourceTest {
                 .statusCode(equalTo(404))
                 .and()
                 .body("error", equalTo(ProductRepository.PRODUCT_NOT_FOUND_MESSAGE));
+    }
+
+    @Test
+    @SneakyThrows
+    public void getProducts_success() {
+        var category = dictClient.create(DictionaryResourceTest.createCategory());
+        LinkedList<ProductEntity> products = new LinkedList<>();
+        for(int i = 1; i <= 10; i++) {
+            var product = createProduct();
+            product.setName("TestName" + i);
+            product.setCategoryId(category.getId());
+            product = productClient.addProduct(product);
+            products.addFirst(product);
+            Thread.sleep(200); // Little delay so sort by created date really will work
+        }
+
+        var sizePerPage = 5;
+        var result = given()
+                .contentType(ContentType.JSON)
+                .when()
+                .get("/api/v1/products?page=2&sizePerPage=" + sizePerPage)
+                .then()
+                .contentType(containsString(ContentType.JSON.toString()))
+                .statusCode(equalTo(200))
+                .extract().as(Product[].class);
+
+        for(int i = 0; i < sizePerPage; i++) {
+            var ex = products.get(i + 5); // second page items
+            var re = result[i];
+            assertEquals(ex.getId(), re.getId());
+            assertEquals(ex.getName(), re.getName());
+            assertEquals(category.getName(), re.getCategory());
+            assertEquals(ex.getDescription(), re.getDescription());
+            assertEquals(ex.getPurchasePrice(), re.getPurchasePrice());
+            assertEquals(ex.getSalePrice(), re.getSalePrice());
+            assertEquals(ex.getStock(), re.getStock());
+            assertEquals(ex.getCreated(), re.getCreated());
+        }
     }
 
     private ProductEntity createProduct() {

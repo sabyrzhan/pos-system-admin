@@ -52,9 +52,10 @@ Accept: application/json
 
 ### Add product
 POST http://localhost:8080/api/v1/products
+Accept: application/json
 
 {
-  "name": "Test product3",
+  "name": "Test product4",
   "categoryId": 1,
   "description": "Test description",
   "purchasePrice": "1.0",
@@ -64,4 +65,8 @@ POST http://localhost:8080/api/v1/products
 
 ### Get product by id
 GET http://localhost:8080/api/v1/products/900
+Accept: application/json
+
+### Get products
+GET http://localhost:8080/api/v1/products
 Accept: application/json

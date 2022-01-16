@@ -4,6 +4,7 @@ import io.quarkus.hibernate.reactive.panache.PanacheEntityBase;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.time.Instant;
 
 @Entity
 @Table(name = "pos_products")
@@ -33,4 +34,7 @@ public class ProductEntity extends PanacheEntityBase {
 
     @Column
     private String images;
+
+    @Column
+    private Instant created = Instant.now();
 }

@@ -2,6 +2,7 @@ package kz.sabyrzhan.repositories;
 
 import io.quarkus.hibernate.reactive.panache.Panache;
 import io.quarkus.hibernate.reactive.panache.PanacheRepositoryBase;
+import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import kz.sabyrzhan.entities.ProductEntity;
 import kz.sabyrzhan.exceptions.EntityAlreadyExistsException;
@@ -36,5 +37,11 @@ public class ProductRepository implements PanacheRepositoryBase<ProductEntity, I
 
     public Uni<ProductEntity> persist(ProductEntity entity) {
         return Panache.withTransaction(entity::persist);
+    }
+
+    public Multi<ProductEntity> findProducts(int page, int sizePerPage) {
+        return find("order by created desc")
+                .page(page - 1, sizePerPage)
+                .stream();
     }
 }

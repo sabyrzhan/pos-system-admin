@@ -153,7 +153,7 @@ class DictionaryResourceTest {
         assertEquals(result.getError(), CategoryService.CATEGORY_NOT_FOUND_MESSAGE);
     }
 
-    private CategoryEntity createCategory() {
+    public static CategoryEntity createCategory() {
         CategoryEntity entity = new CategoryEntity();
         entity.setName("testCategory");
         return entity;

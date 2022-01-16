@@ -8,6 +8,7 @@ import kz.sabyrzhan.exceptions.EntityAlreadyExistsException;
 import kz.sabyrzhan.exceptions.EntityNotFoundException;
 
 import javax.enterprise.context.ApplicationScoped;
+import java.util.List;
 
 @ApplicationScoped
 public class CategoryService {
@@ -41,6 +42,10 @@ public class CategoryService {
         return CategoryEntity.<CategoryEntity>find("order by name")
                 .page(page - 1,ITEMS_PER_PAGE)
                 .stream();
+    }
+
+    public Uni<List<CategoryEntity>> getAll() {
+        return CategoryEntity.<CategoryEntity>findAll().list();
     }
 
     public Uni<CategoryEntity> getCategory(int id) {

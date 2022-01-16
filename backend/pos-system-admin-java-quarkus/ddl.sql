@@ -30,5 +30,6 @@ create table pos_products
     sale_price float not null,
     stock int not null,
     description text not null,
-    images text
+    images text,
+    created timestamp without time zone not null default current_timestamp
 );
