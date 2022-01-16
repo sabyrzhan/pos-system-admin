@@ -21,7 +21,7 @@ create table pos_categories
 );
 
 -- Create products table
-create table post_products
+create table pos_products
 (
     id serial constraint post_products_pk primary key,
     name varchar(100) not null,

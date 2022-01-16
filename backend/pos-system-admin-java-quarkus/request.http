@@ -49,3 +49,19 @@ Accept: application/json
 ### Get categories
 GET http://localhost:8080/api/v1/dict/categories
 Accept: application/json
+
+### Add product
+POST http://localhost:8080/api/v1/products
+
+{
+  "name": "Test product3",
+  "categoryId": 1,
+  "description": "Test description",
+  "purchasePrice": "1.0",
+  "salePrice": "2.0",
+  "stock": 100
+}
+
+### Get product by id
+GET http://localhost:8080/api/v1/products/900
+Accept: application/json
