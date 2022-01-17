@@ -39,4 +39,5 @@ $(function() {
     $('#categoriesTable').DataTable();
     $('#usersTable').DataTable();
     $('#productsTable').DataTable();
+    $('[data-toggle="tooltip"]').tooltip();
 })

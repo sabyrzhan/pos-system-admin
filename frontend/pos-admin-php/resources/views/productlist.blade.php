@@ -48,13 +48,13 @@
                                             <td>{{ $prod['images'] }}</td>
                                             <td>
                                                 <a href="{{ URL::route('add_product_page') . '?id=' . $prod['id'] }}" class="btn btn-primary" role="button">
-                                                    <span class="nav-icon fas fa-eye" title="View"></span>
+                                                    <span class="nav-icon fas fa-eye" data-toggle="tooltip" title="View product"></span>
                                                 </a>
                                                 <a href="{{ URL::route('add_product_page') . '?id=' . $prod['id'] }}" class="btn btn-warning" role="button">
-                                                    <span class="nav-icon fas fa-pen" title="Edit"></span>
+                                                    <span class="nav-icon fas fa-pen" data-toggle="tooltip" title="Edit product"></span>
                                                 </a>
                                                 <a href="#" class="btn btn-danger del-prod-btn" role="button">
-                                                    <span class="nav-icon fas fa-trash" title="Delete"></span>
+                                                    <span class="nav-icon fas fa-trash"  data-toggle="tooltip" title="Delete product"></span>
                                                 </a>
                                             </td>
                                         </tr>
