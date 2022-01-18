@@ -35,11 +35,11 @@ class ProductsController extends Controller
         }
 
         if (!$response) {
-            return redirect()->route('add_product_page')->with('error', 'Error adding/updating category. Try again!');
+            return redirect()->route('add_product_page', ['id' => $id])->with('error', 'Error adding/updating category. Try again!');
         }
 
         if (isset($response['error'])) {
-            return redirect()->route('add_product_page')->with('error', $response['error']);
+            return redirect()->route('add_product_page', ['id' => $id])->with('error', $response['error']);
         }
 
         if ($id) {
@@ -48,7 +48,7 @@ class ProductsController extends Controller
             $message = 'Product added';
         }
 
-        return redirect()->route('add_product_page')->with('success', $message);
+        return redirect()->route('add_product_page', ['id' => $id])->with('success', $message);
     }
 
     public function getProductsPage() {

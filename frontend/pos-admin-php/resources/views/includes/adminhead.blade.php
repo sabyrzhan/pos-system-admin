@@ -84,6 +84,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
             <!-- Sidebar Menu -->
             <nav class="mt-2">
                 <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                    <li class="nav-header">MAIN</li>
                     <li class="nav-item">
                         <a href="{{ URL::route('home') }}" class="nav-link">
                             <i class="nav-icon fas fa-tachometer-alt"></i>
@@ -99,7 +100,20 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     <li class="nav-item">
                         <a href="{{ URL::route('add_user_page') }}" class="nav-link">
                             <i class="nav-icon fas fa-user-plus"></i>
-                            <p>Registration</p>
+                            <p>User registration</p>
+                        </a>
+                    </li>
+                    <li class="nav-header">PRODUCTS</li>
+                    <li class="nav-item">
+                        <a href="{{ URL::route('products_page') }}" class="nav-link">
+                            <i class="nav-icon fas fa-user-plus"></i>
+                            <p>Products list</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ URL::route('add_product_page') }}" class="nav-link">
+                            <i class="nav-icon fas fa-plus"></i>
+                            <p>Add product</p>
                         </a>
                     </li>
                 </ul>
