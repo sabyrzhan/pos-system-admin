@@ -20,6 +20,16 @@
                 <div class="col-lg-12">
                     <div class="card card-primary card-outline">
                         <div class="card-body">
+                            @if(Session::has('error'))
+                                <div class="alert alert-danger" role="alert">
+                                    {{ Session::get('error') }}
+                                </div>
+                            @endif
+                            @if(Session::has('success'))
+                                <div class="alert alert-primary" role="alert">
+                                    {{ Session::get('success') }}
+                                </div>
+                            @endif
                             <table class="table table-bordered table-striped" id="productsTable">
                                 <thead>
                                 <tr>
@@ -47,7 +57,7 @@
                                             <td>{{ $prod['description'] }}</td>
                                             <td>{{ $prod['images'] }}</td>
                                             <td>
-                                                <a href="{{ URL::route('add_product_page') . '?id=' . $prod['id'] }}" class="btn btn-primary" role="button">
+                                                <a href="{{ URL::route('view_product', [$prod['id']]) }}" class="btn btn-primary" role="button">
                                                     <span class="nav-icon fas fa-eye" data-toggle="tooltip" title="View product"></span>
                                                 </a>
                                                 <a href="{{ URL::route('add_product_page') . '?id=' . $prod['id'] }}" class="btn btn-warning" role="button">

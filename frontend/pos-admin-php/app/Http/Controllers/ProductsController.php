@@ -59,4 +59,12 @@ class ProductsController extends Controller
         $products = $this->apiClient->getProducts($page);
         return view('productlist', ['products' => $products]);
     }
+
+    public function viewProduct($productId) {
+        $product = $this->apiClient->getProduct($productId);
+        if (!$product) {
+            return redirect()->route('products_page')->with('error', 'Product not found');
+        }
+        return view('viewproduct', ['product' => $product]);
+    }
 }
