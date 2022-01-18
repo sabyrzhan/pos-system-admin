@@ -54,8 +54,13 @@ public class ProductResource {
 
     @GET
     @Path("/{id}")
-    public Uni<ProductEntity> getById(@PathParam("id") int id) {
-        return productService.getProduct(id);
+    public Uni<Product> getById(@PathParam("id") int id) {
+        return productService.getProduct(id)
+                .onItem()
+                .transformToUni(product -> categoryService.getCategory(product.getCategoryId())
+                                                .onItem()
+                                                .transform(category -> Product.fromEntity(product, category))
+                );
     }
 
     @POST
