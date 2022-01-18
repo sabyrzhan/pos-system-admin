@@ -11,6 +11,7 @@ public class Product {
     private int id;
     private String name;
     private String category;
+    private int categoryId;
     private float purchasePrice;
     private float salePrice;
     private int stock;
@@ -23,6 +24,7 @@ public class Product {
         result.setId(entity.getId());
         result.setName(entity.getName());
         result.setCategory(categoryEntity.getName());
+        result.setCategoryId(categoryEntity.getId());
         result.setPurchasePrice(entity.getPurchasePrice());
         result.setSalePrice(entity.getSalePrice());
         result.setStock(entity.getStock());

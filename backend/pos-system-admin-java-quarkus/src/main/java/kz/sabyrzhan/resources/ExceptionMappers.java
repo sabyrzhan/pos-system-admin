@@ -6,6 +6,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.jboss.resteasy.reactive.RestResponse;
 import org.jboss.resteasy.reactive.server.ServerExceptionMapper;
 
+import javax.ws.rs.NotAllowedException;
+
 import static org.jboss.resteasy.reactive.RestResponse.Status.*;
 
 @Slf4j
@@ -24,5 +26,10 @@ public class ExceptionMappers {
     public RestResponse<ErrorResponse> handleException(Exception e) {
         log.error("Internal Server Error: {}", e, e);
         return RestResponse.status(INTERNAL_SERVER_ERROR, new ErrorResponse("Internal Server Error"));
+    }
+
+    @ServerExceptionMapper
+    public RestResponse<ErrorResponse> handleMethodNotAllowed(NotAllowedException e) {
+        return RestResponse.status(METHOD_NOT_ALLOWED, new ErrorResponse("Method not allowed"));
     }
 }

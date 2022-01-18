@@ -7,6 +7,7 @@ import io.vertx.mutiny.pgclient.PgPool;
 import kz.sabyrzhan.DbResource;
 import kz.sabyrzhan.clients.DictClient;
 import kz.sabyrzhan.clients.ProductClient;
+import kz.sabyrzhan.entities.CategoryEntity;
 import kz.sabyrzhan.entities.ProductEntity;
 import kz.sabyrzhan.model.Product;
 import kz.sabyrzhan.repositories.ProductRepository;
@@ -19,6 +20,8 @@ import javax.inject.Inject;
 import java.util.LinkedList;
 
 import static io.restassured.RestAssured.given;
+import static kz.sabyrzhan.repositories.CategoryRepository.CATEGORY_NOT_FOUND_MESSAGE;
+import static kz.sabyrzhan.services.ProductService.PRODUCT_NAME_ALREADY_EXISTS;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -39,6 +42,7 @@ class ProductResourceTest {
 
     @BeforeEach
     public void setUp() {
+        pgPool.query("DELETE FROM pos_categories").execute().await().indefinitely();
         pgPool.query("DELETE FROM pos_products").execute().await().indefinitely();
     }
 
@@ -76,12 +80,87 @@ class ProductResourceTest {
                 .contentType(containsString(ContentType.JSON.toString()))
                 .statusCode(equalTo(409))
                 .and()
-                .body("error", equalTo(ProductRepository.PRODUCT_NAME_ALREADY_EXISTS));
+                .body("error", equalTo(PRODUCT_NAME_ALREADY_EXISTS));
+    }
+
+    @Test
+    public void updateProduct_success() {
+        var categoryData = dictClient.create(DictionaryResourceTest.createCategory());
+        var postData = createProduct();
+        postData.setCategoryId(categoryData.getId());
+        postData = productClient.addProduct(postData);
+        postData.setName(postData.getName() + "_newName");
+
+        given()
+                .body(postData)
+                .contentType(ContentType.JSON)
+                .when()
+                .put("/api/v1/products/" + postData.getId())
+                .then()
+                .contentType(containsString(ContentType.JSON.toString()))
+                .statusCode(equalTo(200))
+                .and()
+                .body("id", equalTo(postData.getId()))
+                .and()
+                .body("name", equalTo(postData.getName()));
+    }
+
+    @Test
+    public void updateProduct_sameNameExists() {
+        var categoryData1 = DictionaryResourceTest.createCategory();
+        categoryData1.setName("Cat1");
+        categoryData1 = dictClient.create(categoryData1);
+        CategoryEntity categoryData2 = DictionaryResourceTest.createCategory();
+        categoryData2.setName("Cat2");
+        categoryData2 = dictClient.create(categoryData2);
+
+        var postData1 = createProduct();
+        postData1.setCategoryId(categoryData1.getId());
+        postData1 = productClient.addProduct(postData1);
+
+        var postData2 = createProduct();
+        postData2.setCategoryId(categoryData2.getId());
+        postData2.setName(postData2.getName() + "newName");
+        postData2 = productClient.addProduct(postData2);
+        postData2.setName(postData1.getName());
+
+        given()
+                .body(postData2)
+                .contentType(ContentType.JSON)
+                .when()
+                .put("/api/v1/products/" + postData2.getId())
+                .then()
+                .contentType(containsString(ContentType.JSON.toString()))
+                .statusCode(equalTo(409))
+                .and()
+                .body("error", equalTo(PRODUCT_NAME_ALREADY_EXISTS));
+    }
+
+    @Test
+    public void updateProduct_categoryNotFound() {
+        var categoryData = dictClient.create(DictionaryResourceTest.createCategory());
+        var postData = createProduct();
+        postData.setCategoryId(categoryData.getId());
+        postData = productClient.addProduct(postData);
+        postData.setCategoryId(-1);
+
+        given()
+                .body(postData)
+                .contentType(ContentType.JSON)
+                .when()
+                .put("/api/v1/products/" + postData.getId())
+                .then()
+                .contentType(containsString(ContentType.JSON.toString()))
+                .statusCode(equalTo(404))
+                .and()
+                .body("error", equalTo(CATEGORY_NOT_FOUND_MESSAGE));
     }
 
     @Test
     public void getById_success() {
-        ProductEntity requestData = createProduct();
+        var cat = dictClient.create(DictionaryResourceTest.createCategory());
+        var requestData = createProduct();
+        requestData.setCategoryId(cat.getId());
         var savedData = productClient.addProduct(requestData);
 
         var response = given()
@@ -92,7 +171,7 @@ class ProductResourceTest {
                 .then()
                 .contentType(containsString(ContentType.JSON.toString()))
                 .statusCode(equalTo(200))
-                .extract().as(ProductEntity.class);
+                .extract().as(Product.class);
 
         assertEquals(requestData.getName(), response.getName());
         assertEquals(requestData.getCategoryId(), response.getCategoryId());

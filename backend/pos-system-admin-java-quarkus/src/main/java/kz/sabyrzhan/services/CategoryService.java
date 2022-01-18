@@ -5,15 +5,19 @@ import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import kz.sabyrzhan.entities.CategoryEntity;
 import kz.sabyrzhan.exceptions.EntityAlreadyExistsException;
-import kz.sabyrzhan.exceptions.EntityNotFoundException;
+import kz.sabyrzhan.repositories.CategoryRepository;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import java.util.List;
 
 @ApplicationScoped
 public class CategoryService {
     private static final int ITEMS_PER_PAGE = 10;
-    public static final String CATEGORY_NOT_FOUND_MESSAGE = "Category not found";
+    public static final String CATEGORY_NAME_ALREADY_EXISTS = "Category with this name already exists";
+
+    @Inject
+    CategoryRepository categoryRepository;
 
     public Uni<CategoryEntity> addCategory(CategoryEntity entity) {
         return CategoryEntity.<CategoryEntity>find("name = ?1", entity.getName()).count()
@@ -21,21 +25,24 @@ public class CategoryService {
                     if (count == 0) {
                         return Panache.withTransaction(entity::persist);
                     } else {
-                        return Uni.createFrom().failure(new EntityAlreadyExistsException("Category with this name already exists"));
+                        return Uni.createFrom().failure(new EntityAlreadyExistsException(CATEGORY_NAME_ALREADY_EXISTS));
                     }
                 });
     }
 
     public Uni<CategoryEntity> updateCategory(CategoryEntity entity) {
-        return CategoryEntity.<CategoryEntity>findById(entity.getId())
-                .onItem().transformToUni(foundCategory -> {
-                    if (foundCategory == null) {
-                        return Uni.createFrom().failure(new EntityNotFoundException(CATEGORY_NOT_FOUND_MESSAGE));
-                    }
-
-                    foundCategory.setName(entity.getName());
-                    return Panache.withTransaction(foundCategory::persist);
-                });
+        return categoryRepository.findById(entity.getId())
+                .onItem()
+                .transformToUni(foundCategory -> categoryRepository.findByName(entity.getName())
+                            .onItemOrFailure()
+                            .transformToUni((v,t) -> {
+                                if (v != null && v.getId() != entity.getId()) {
+                                    return Uni.createFrom().failure(new EntityAlreadyExistsException(CATEGORY_NAME_ALREADY_EXISTS));
+                                }
+                                foundCategory.setName(entity.getName());
+                                return categoryRepository.persist(foundCategory);
+                            })
+                );
     }
 
     public Multi<CategoryEntity> getList(int page) {
@@ -49,12 +56,6 @@ public class CategoryService {
     }
 
     public Uni<CategoryEntity> getCategory(int id) {
-        return CategoryEntity.<CategoryEntity>findById(id).
-                onItem().transformToUni(c -> {
-                    if (c == null) {
-                        return Uni.createFrom().failure(new EntityNotFoundException(CATEGORY_NOT_FOUND_MESSAGE));
-                    }
-                    return Uni.createFrom().item(c);
-                });
+        return categoryRepository.findById(id);
     }
 }

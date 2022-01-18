@@ -67,4 +67,11 @@ public class ProductResource {
     public Uni<ProductEntity> addProduct(ProductEntity entity) {
         return productService.addProduct(entity);
     }
+
+    @PUT
+    @Path("/{id}")
+    public Uni<Product> updateProduct(@PathParam("id") int id, ProductEntity entity) {
+        entity.setId(id);
+        return productService.updateProduct(entity);
+    }
 }
