@@ -28,9 +28,13 @@
         <script src="/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
         <script src="/plugins/datatables-buttons/js/buttons.print.min.js"></script>
         <script src="/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
-
         <!-- BootBox -->
         <script src="/dist/js/bootbox.min.js"></script>
+        <!-- InputMask -->
+        <script src="/plugins/moment/moment.min.js"></script>
+        <script src="/plugins/inputmask/jquery.inputmask.min.js"></script>
+        <!-- Tempusdominus Bootstrap 4 (datetimepicker) -->
+        <script src="/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
 
         <!-- App -->
         <script src="/dist/js/eventHandlers.js"></script>

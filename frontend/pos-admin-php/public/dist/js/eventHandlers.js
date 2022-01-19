@@ -59,4 +59,5 @@ $(function() {
     $('#usersTable').DataTable();
     $('#productsTable').DataTable();
     $('[data-toggle="tooltip"]').tooltip();
+    $('#orderDatePicker').datetimepicker({ format: 'L' });
 })
