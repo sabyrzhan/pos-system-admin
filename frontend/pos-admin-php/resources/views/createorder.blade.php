@@ -24,7 +24,12 @@
                                 <div class="card-body">
                                     <div class="form-group">
                                         <label for="name">Customer name</label>
-                                        <input type="text" class="form-control" id="customerName" name="customerName" value="" placeholder="Enter name...">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <div class="input-group-text"><i class="fa fa-user"></i></div>
+                                            </div>
+                                            <input type="text" class="form-control" id="customerName" name="customerName" placeholder="Enter name...">
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -41,6 +46,116 @@
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="card-body">
+                                    <table class="table table-bordered table-striped" id="orderProductsTable">
+                                        <thead>
+                                            <tr class="text-center">
+                                                <th>#</th>
+                                                <th>Name</th>
+                                                <th>Stock</th>
+                                                <th>Price</th>
+                                                <th>Quantity</th>
+                                                <th>Total</th>
+                                                <th>
+                                                    <a href="#" class="btn btn-primary btn-sm add-order-product-btn" role="button">
+                                                        <span class="nav-icon fas fa-plus" data-toggle="tooltip" title="Add new product"></span>
+                                                    </a>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="card-body">
+                                    <div class="form-group">
+                                        <label for="name">Subtotal</label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <div class="input-group-text"><i class="fa fa-dollar-sign"></i></div>
+                                            </div>
+                                            <input type="text" class="form-control" id="subtotal" name="subtotal">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="name">Tax (%)</label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <div class="input-group-text"><i class="fa fa-dollar-sign"></i></div>
+                                            </div>
+                                            <input type="text" class="form-control" id="tax" name="tax">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="name">Discount (%)</label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <div class="input-group-text"><i class="fa fa-dollar-sign"></i></div>
+                                            </div>
+                                            <input type="text" class="form-control" id="discount" name="tax">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="card-body">
+                                    <div class="form-group">
+                                        <label for="name">Total</label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <div class="input-group-text"><i class="fa fa-dollar-sign"></i></div>
+                                            </div>
+                                            <input type="text" class="form-control" id="total" name="total">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="name">Paid</label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <div class="input-group-text"><i class="fa fa-dollar-sign"></i></div>
+                                            </div>
+                                            <input type="text" class="form-control" id="paid" name="paid">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="name">Due</label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <div class="input-group-text"><i class="fa fa-dollar-sign"></i></div>
+                                            </div>
+                                            <input type="text" class="form-control" id="due" name="due">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="name">Payment method</label>
+                                        <div class="input-group">
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="paymentMethod" id="paymentMethodCash" value="CASH">
+                                                <label class="form-check-label" for="paymentMethodCash">CASH</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="paymentMethod" id="paymentMethodCard" value="CARD">
+                                                <label class="form-check-label" for="paymentMethodCard">CARD</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="paymentMethod" id="paymentMethodCheck" value="CHECK">
+                                                <label class="form-check-label" for="paymentMethodCheck">CHECK</label>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <button type="submit" class="btn btn-primary float-right">Create order</button>
                         </div>
                     </div>
                 </div>
