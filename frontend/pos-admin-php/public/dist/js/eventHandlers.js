@@ -57,7 +57,6 @@ $(function() {
 
     $('.add-order-product-btn').on('click', function() {
         let productsOptions = '';
-        console.log(AppGlobals.Common.products);
         for(let product of AppGlobals.Common.products) {
             productsOptions += '<option value="' + product['id'] + '">' + product['name'] + '</option>'
         }
