@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\CategoriesController;
+use App\Http\Controllers\Api\ProductsController;
 use App\Http\Controllers\Api\UsersController;
 use Illuminate\Support\Facades\Route;
 
@@ -18,4 +19,5 @@ use Illuminate\Support\Facades\Route;
 Route::middleware(['auth:api'])->group(function() {
     Route::delete('/users/{userId}', [UsersController::class, 'deleteUser']);
     Route::delete('/categories/{catId}', [CategoriesController::class, 'deleteCategory']);
+    Route::delete('/products/{id}', [ProductsController::class, 'deleteProduct']);
 });

@@ -30,6 +30,16 @@
                                     {{ Session::get('success') }}
                                 </div>
                             @endif
+                            @if(Request::get('error'))
+                                <div class="alert alert-danger" role="alert">
+                                    {{ Request::get('error') }}
+                                </div>
+                            @endif
+                            @if(Request::has('success'))
+                                <div class="alert alert-primary" role="alert">
+                                    {{ Request::get('success') }}
+                                </div>
+                            @endif
                             <table class="table table-bordered table-striped" id="productsTable">
                                 <thead>
                                 <tr>
@@ -63,7 +73,7 @@
                                                 <a href="{{ URL::route('add_product_page') . '?id=' . $prod['id'] }}" class="btn btn-warning" role="button">
                                                     <span class="nav-icon fas fa-pen" data-toggle="tooltip" title="Edit product"></span>
                                                 </a>
-                                                <a href="#" class="btn btn-danger del-prod-btn" role="button">
+                                                <a href="#" class="btn btn-danger del-prod-btn" role="button" id="{{ $prod['id'] }}">
                                                     <span class="nav-icon fas fa-trash"  data-toggle="tooltip" title="Delete product"></span>
                                                 </a>
                                             </td>

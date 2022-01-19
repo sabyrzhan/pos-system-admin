@@ -36,6 +36,25 @@ $(function() {
         });
     });
 
+    $('.del-prod-btn').on('click', function() {
+        let id = $(this).attr('id');
+        bootbox.confirm("Do you really want to delete this product?", function (result) {
+            if (result) {
+                $.ajax({
+                    url: '/api/products/' + id,
+                    type: 'delete',
+                    success: function () {
+                        window.location = location.pathname + '?success=Product deleted!';
+                    },
+                    error: function (err) {
+                        let json = JSON.parse(err.responseText);
+                        window.location = location.pathname + '?error=' + json.error;
+                    }
+                })
+            }
+        });
+    });
+
     $('#categoriesTable').DataTable();
     $('#usersTable').DataTable();
     $('#productsTable').DataTable();
