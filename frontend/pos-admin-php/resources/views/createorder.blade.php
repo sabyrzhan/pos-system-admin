@@ -66,7 +66,7 @@
                                                 </th>
                                             </tr>
                                         </thead>
-                                        <tbody>
+                                        <tbody id="orderProductsTableBody">
                                         </tbody>
                                     </table>
                                 </div>
@@ -164,6 +164,14 @@
         </div><!-- /.container-fluid -->
     </div>
     <!-- /.content -->
+    <script type="text/javascript">
+        $(function() {
+            @if(isset($products))
+            let products = @json($products);
+            AppGlobals.Common.products = products;
+            @endif
+        });
+    </script>
 </div>
 <!-- /.content-wrapper -->
 @include('includes.foot')

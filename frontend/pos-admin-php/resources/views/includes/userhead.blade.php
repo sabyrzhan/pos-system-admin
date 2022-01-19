@@ -15,6 +15,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <link rel="stylesheet" href="/plugins/fontawesome-free/css/all.min.css">
     <!-- Theme style -->
     <link rel="stylesheet" href="/dist/css/adminlte.min.css">
+    <!-- jQuery -->
+    <script src="/plugins/jquery/jquery.min.js"></script>
+    <!-- AppGlobals variables containers -->
+    <script src="/dist/js/appglobals.js"></script>
 </head>
 <body class="hold-transition sidebar-mini">
 <div class="wrapper">
