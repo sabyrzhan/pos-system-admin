@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardRouterController;
+use App\Http\Controllers\OrdersController;
 use App\Http\Controllers\UserDashboardController;
 use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\UsersController;
@@ -37,6 +38,8 @@ Route::middleware(['auth:web'])->group(function() {
     Route::post('/products/add', [ProductsController::class, 'addUpdateProduct'])->name('add_product')->middleware('authRole:ADMIN');
     Route::get('/products/{productId}', [ProductsController::class, 'viewProduct'])->name('view_product')->middleware('authRole:ADMIN');
     Route::get('/products', [ProductsController::class, 'getProductsPage'])->name('products_page')->middleware('authRole:ADMIN');
+    Route::get('/orders', [OrdersController::class, 'getOrdersPage'])->name('get_orders_page')->middleware('authRole:ADMIN');
+    Route::get('/orders/add', [OrdersController::class, 'addOrderPage'])->name('add_order_page')->middleware('authRole:ADMIN');
 
     # User routes
     Route::get('/user_dashboard', [UserDashboardController::class, 'index'])->middleware('authRole:USER');

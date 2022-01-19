@@ -116,6 +116,19 @@ scratch. This page gets rid of all links and provides the needed markup only.
                             <p>Add product</p>
                         </a>
                     </li>
+                    <li class="nav-header">ORDERS</li>
+                    <li class="nav-item">
+                        <a href="{{ URL::route('get_orders_page') }}" class="nav-link">
+                            <i class="nav-icon fas fa-list"></i>
+                            <p>Orders list</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ URL::route('add_order_page') }}" class="nav-link">
+                            <i class="nav-icon fas fa-plus"></i>
+                            <p>Create new order</p>
+                        </a>
+                    </li>
                 </ul>
             </nav>
             <!-- /.sidebar-menu -->
