@@ -63,40 +63,42 @@
                             </div>
                         @endif
                         <div class="card-body">
-                            <table class="table table-bordered table-striped" id="categoriesTable">
-                                <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>CATEGORY</th>
-                                    <th>EDIT</th>
-                                    <th>DELETE</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                @if($categories)
-                                    @foreach($categories as $cat)
-                                        <tr>
-                                            <td>{{ $cat['id'] }}</td>
-                                            <td>{{ $cat['name'] }}</td>
-                                            <td>
-                                                <a href="{{ URL::route('categories_page') . '?id=' . $cat['id'] }}" class="btn btn-danger" role="button">
-                                                    <span class="nav-icon fas fa-pen" title="Edit"></span>
-                                                </a>
-                                            </td>
-                                            <td>
-                                                <a href="#" class="btn btn-danger delete-cat-btn" role="button" cat-id="{{ $cat['id'] }}">
-                                                    <span class="nav-icon fas fa-trash" title="Delete"></span>
-                                                </a>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                @else
+                            <div style="overflow-x: auto">
+                                <table class="table table-bordered table-striped" id="categoriesTable">
+                                    <thead>
                                     <tr>
-                                        <td colspan="5">No categories found.</td>
+                                        <th>#</th>
+                                        <th>CATEGORY</th>
+                                        <th>EDIT</th>
+                                        <th>DELETE</th>
                                     </tr>
-                                @endif
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody>
+                                    @if($categories)
+                                        @foreach($categories as $cat)
+                                            <tr>
+                                                <td>{{ $cat['id'] }}</td>
+                                                <td>{{ $cat['name'] }}</td>
+                                                <td>
+                                                    <a href="{{ URL::route('categories_page') . '?id=' . $cat['id'] }}" class="btn btn-danger" role="button">
+                                                        <span class="nav-icon fas fa-pen" title="Edit"></span>
+                                                    </a>
+                                                </td>
+                                                <td>
+                                                    <a href="#" class="btn btn-danger delete-cat-btn" role="button" cat-id="{{ $cat['id'] }}">
+                                                        <span class="nav-icon fas fa-trash" title="Delete"></span>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    @else
+                                        <tr>
+                                            <td colspan="5">No categories found.</td>
+                                        </tr>
+                                    @endif
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>

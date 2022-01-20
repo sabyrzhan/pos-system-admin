@@ -50,8 +50,9 @@
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="card-body">
-                                    <table class="table table-bordered table-striped" id="orderProductsTable">
-                                        <thead>
+                                    <div style="overflow-x: auto">
+                                        <table class="table table-bordered" id="orderProductsTable">
+                                            <thead>
                                             <tr class="text-center">
                                                 <th>#</th>
                                                 <th>Name</th>
@@ -65,10 +66,11 @@
                                                     </a>
                                                 </th>
                                             </tr>
-                                        </thead>
-                                        <tbody id="orderProductsTableBody">
-                                        </tbody>
-                                    </table>
+                                            </thead>
+                                            <tbody id="orderProductsTableBody">
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
                         </div>

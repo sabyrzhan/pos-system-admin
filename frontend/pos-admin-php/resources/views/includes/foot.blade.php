@@ -32,6 +32,8 @@
         <script src="/plugins/inputmask/jquery.inputmask.min.js"></script>
         <!-- Tempusdominus Bootstrap 4 (datetimepicker) -->
         <script src="/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
+        <!-- Select2 -->
+        <script src="/plugins/select2/js/select2.full.min.js"></script>
 
         <!-- App -->
         <script src="/dist/js/eventHandlers.js"></script>

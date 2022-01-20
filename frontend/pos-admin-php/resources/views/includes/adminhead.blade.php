@@ -21,9 +21,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <link rel="stylesheet" href="/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
     <!-- Tempusdominus Bootstrap 4 (datetimepicker) -->
     <link rel="stylesheet" href="/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
+    <!-- Select2 -->
+    <link rel="stylesheet" href="/plugins/select2/css/select2.min.css">
     <!-- jQuery -->
     <script src="/plugins/jquery/jquery.min.js"></script>
-
     <!-- AppGlobals variables containers -->
     <script src="/dist/js/appglobals.js"></script>
 </head>

@@ -40,52 +40,54 @@
                                     {{ Request::get('success') }}
                                 </div>
                             @endif
-                            <table class="table table-bordered table-striped" id="productsTable">
-                                <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Name</th>
-                                    <th>Category</th>
-                                    <th>Purchase price</th>
-                                    <th>Sale price</th>
-                                    <th>Stock</th>
-                                    <th>Description</th>
-                                    <th>Image</th>
-                                    <th>Actions</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                @if($products)
-                                    @foreach($products as $prod)
-                                        <tr>
-                                            <td>{{ $prod['id'] }}</td>
-                                            <td>{{ $prod['name'] }}</td>
-                                            <td>{{ $prod['category'] }}</td>
-                                            <td>{{ $prod['purchasePrice'] }}</td>
-                                            <td>{{ $prod['salePrice'] }}</td>
-                                            <td>{{ $prod['stock'] }}</td>
-                                            <td>{{ $prod['description'] }}</td>
-                                            <td>{{ $prod['images'] }}</td>
-                                            <td>
-                                                <a href="{{ URL::route('view_product', [$prod['id']]) }}" class="btn btn-primary" role="button">
-                                                    <span class="nav-icon fas fa-eye" data-toggle="tooltip" title="View product"></span>
-                                                </a>
-                                                <a href="{{ URL::route('add_product_page') . '?id=' . $prod['id'] }}" class="btn btn-warning" role="button">
-                                                    <span class="nav-icon fas fa-pen" data-toggle="tooltip" title="Edit product"></span>
-                                                </a>
-                                                <a href="#" class="btn btn-danger del-prod-btn" role="button" id="{{ $prod['id'] }}">
-                                                    <span class="nav-icon fas fa-trash"  data-toggle="tooltip" title="Delete product"></span>
-                                                </a>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                @else
+                            <div style="overflow-x: auto">
+                                <table class="table table-bordered table-striped" id="productsTable">
+                                    <thead>
                                     <tr>
-                                        <td colspan="9">No Products found.</td>
+                                        <th>#</th>
+                                        <th>Name</th>
+                                        <th>Category</th>
+                                        <th>Purchase price</th>
+                                        <th>Sale price</th>
+                                        <th>Stock</th>
+                                        <th>Description</th>
+                                        <th>Image</th>
+                                        <th>Actions</th>
                                     </tr>
-                                @endif
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody>
+                                    @if($products)
+                                        @foreach($products as $prod)
+                                            <tr>
+                                                <td>{{ $prod['id'] }}</td>
+                                                <td>{{ $prod['name'] }}</td>
+                                                <td>{{ $prod['category'] }}</td>
+                                                <td>{{ $prod['purchasePrice'] }}</td>
+                                                <td>{{ $prod['salePrice'] }}</td>
+                                                <td>{{ $prod['stock'] }}</td>
+                                                <td>{{ $prod['description'] }}</td>
+                                                <td>{{ $prod['images'] }}</td>
+                                                <td>
+                                                    <a href="{{ URL::route('view_product', [$prod['id']]) }}" class="btn btn-primary" role="button">
+                                                        <span class="nav-icon fas fa-eye" data-toggle="tooltip" title="View product"></span>
+                                                    </a>
+                                                    <a href="{{ URL::route('add_product_page') . '?id=' . $prod['id'] }}" class="btn btn-warning" role="button">
+                                                        <span class="nav-icon fas fa-pen" data-toggle="tooltip" title="Edit product"></span>
+                                                    </a>
+                                                    <a href="#" class="btn btn-danger del-prod-btn" role="button" id="{{ $prod['id'] }}">
+                                                        <span class="nav-icon fas fa-trash"  data-toggle="tooltip" title="Delete product"></span>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    @else
+                                        <tr>
+                                            <td colspan="9">No Products found.</td>
+                                        </tr>
+                                    @endif
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div><!-- /.card -->
                 </div>
