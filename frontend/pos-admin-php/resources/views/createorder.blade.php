@@ -62,7 +62,7 @@
                                                 <th>Total</th>
                                                 <th>
                                                     <a href="#" class="btn btn-primary btn-sm add-order-product-btn" role="button">
-                                                        <span class="nav-icon fas fa-plus" data-toggle="tooltip" title="Add new product"></span>
+                                                        <span class="nav-icon fas fa-plus" title="Add new product"></span>
                                                     </a>
                                                 </th>
                                             </tr>
@@ -76,7 +76,7 @@
                         </div>
                         <div class="row">
                             <div class="col-lg-6">
-                                <div class="card-body">
+                                <div class="card-body order-fields-container">
                                     <div class="form-group">
                                         <label for="name">Subtotal</label>
                                         <div class="input-group">
@@ -166,14 +166,15 @@
         </div><!-- /.container-fluid -->
     </div>
     <!-- /.content -->
-    <script type="text/javascript">
-        $(function() {
-            @if(isset($products))
-            let products = @json($products);
-            AppGlobals.Common.products = products;
-            @endif
-        });
-    </script>
 </div>
 <!-- /.content-wrapper -->
-@include('includes.foot')
+@include('includes.foot_start')
+<script type="text/javascript">
+    $(function() {
+        @if(isset($products))
+            AppGlobals.Common.products = @json($products);
+        @endif
+    });
+</script>
+<script src="/dist/js/eventHandlers.orders.create.js"></script>
+@include('includes.foot_end')

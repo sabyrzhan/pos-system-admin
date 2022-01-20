@@ -55,46 +55,8 @@ $(function() {
         });
     });
 
-    $('.add-order-product-btn').on('click', function() {
-        let productsOptions = '';
-        for(let product of AppGlobals.Common.products) {
-            productsOptions += '<option value="' + product['id'] + '">' + product['name'] + '</option>'
-        }
-
-        let tbody = $('#orderProductsTableBody');
-        let html = '';
-        html += '<tr>';
-        html += '<td><input type="hidden" class="form-control pname" name="productName[]" readonly></td>';
-        html += '<td>' +
-                    '<select class="form-control pid" name="productId[]" style="width: 100%" required>' +
-                        '<option disabled selected>-- Select product --</option>' +
-                        productsOptions +
-                    '</select>' +
-                '</td>';
-        html += '<td><input type="number" class="form-control stock" name="stock[]" readonly></td>';
-        html += '<td><input type="number" class="form-control price" name="price[]" readonly></td>';
-        html += '<td><input type="number" class="form-control qty" name="qty[]" required></td>';
-        html += '<td><input type="number" class="form-control total" name="total[]" readonly></td>';
-        html += '<td class="text-center">' +
-                    '<a href="#" class="btn btn-danger btn-sm delete-order-product-btn" role="button">' +
-                        '<span class="nav-icon fas fa-times" data-toggle="tooltip" title="Delete product"></span>' +
-                    '</a>' +
-                '</td>';
-        html += '</tr>';
-        tbody.append(html);
-        $('.pid').select2();
-    });
-
-    $('.pid').select2();
-
-    $('#orderProductsTableBody').on('click', 'a.delete-order-product-btn', function() {
-        let closestTr = $(this).closest('tr');
-        closestTr.remove();
-    })
-
     $('#categoriesTable').DataTable();
     $('#usersTable').DataTable();
     $('#productsTable').DataTable();
     $('[data-toggle="tooltip"]').tooltip();
-    $('#orderDatePicker').datetimepicker({ format: 'L' });
 })
