@@ -96,12 +96,12 @@
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label for="name">Discount (%)</label>
+                                        <label for="name">Discount</label>
                                         <div class="input-group">
                                             <div class="input-group-prepend">
                                                 <div class="input-group-text"><i class="fa fa-dollar-sign"></i></div>
                                             </div>
-                                            <input type="text" class="form-control" id="discount" name="tax">
+                                            <input type="number" min="0" step="1" class="form-control" id="discount" name="discount" value="0">
                                         </div>
                                     </div>
                                 </div>
@@ -123,7 +123,7 @@
                                             <div class="input-group-prepend">
                                                 <div class="input-group-text"><i class="fa fa-dollar-sign"></i></div>
                                             </div>
-                                            <input type="text" class="form-control" id="paid" name="paid">
+                                            <input type="number" min="0" value="0" class="form-control" id="paid" name="paid">
                                         </div>
                                     </div>
                                     <div class="form-group">

@@ -76,18 +76,16 @@ $(function() {
     }
 
     function calculateOrder() {
-        let subtotal = 0;
-        let tax = 0;
-        let discount = 0;
-        let total = 0;
-        let paid = 0;
-        let due = 0;
-
-        $('.total').each(function(i,v) {
-            subtotal += parseFloat($(v).val());
-        });
+        let subtotal = $('.total').toArray().reduce((result,item) => result + parseFloat($(item).val()), 0);
+        let tax = AppGlobals.Common.calculateTax(subtotal);
+        let total = subtotal + tax - parseInt($('#discount').val());
+        let paid = parseInt($('#paid').val());
+        let due = paid - total;
 
         $('#subtotal').val(subtotal.toFixed(2));
+        $('#tax').val(tax.toFixed(2));
+        $('#total').val(total.toFixed(2));
+        $('#due').val(due);
     }
 
     $('#orderDatePicker').datetimepicker({ format: 'L' });
