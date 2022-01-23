@@ -33,3 +33,31 @@ create table pos_products
     images text,
     created timestamp without time zone not null default current_timestamp
 );
+
+-- Create invoices table
+create table pos_invoices
+(
+    id serial constraint pos_invoice_pk primary key,
+    customer_name varchar(255) not null,
+    subtotal float not null,
+    tax float not null,
+    discount float not null,
+    total float not null,
+    paid float not null,
+    due float not null,
+    payment_type varchar(100) not null,
+    created timestamp without time zone default CURRENT_TIMESTAMP not null
+);
+
+-- Create invoice details table
+
+create table pos_invoice_details
+(
+    id serial constraint pos_invoice_details_pk primary key,
+    invoice_id int not null,
+    product_id int not null,
+    product_name varchar(100) not null,
+    quantity int not null,
+    price float not null,
+    created timestamp without time zone default CURRENT_TIMESTAMP not null
+);
