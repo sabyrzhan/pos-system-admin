@@ -1,5 +1,6 @@
 let AppGlobals = {
     Common: {
+        taxPercent: 5,
         products: [],
         categories: [],
         findProductById: function(id) {
@@ -14,6 +15,9 @@ let AppGlobals = {
             }
 
             return null;
+        },
+        calculateTax: function(price) {
+            return price * (this.taxPercent / 100);
         }
     },
     Orders: {

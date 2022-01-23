@@ -45,7 +45,6 @@ $(function() {
     })
 
     $('#orderProductsTableBody').on('change', 'input.qty', function() {
-        clearOrderFields();
         let qty = $(this).val() * 1;
         if (!Number.isInteger(qty) || qty <= 0) {
             bootbox.alert("Quantity must be at least 1");
@@ -66,28 +65,42 @@ $(function() {
     $('#orderProductsTableBody').on('click', 'a.delete-order-product-btn', function() {
         let closestTr = $(this).closest('tr');
         closestTr.remove();
-    })
+        calculateOrder();
+    });
+
+    $('#discount').on('keyup', function() {
+        calculateOrder();
+    });
+
+    $('#paid').on('keyup', function() {
+        calculateOrder();
+    });
 
     function clearOrderFields() {
-        let inputs = $('.order-fields-container').find('input[type="text"]');
+        let inputs = $('.order-fields-container').find('[type="text"],[type="number"]');
         for(let i of inputs) {
             $(i).val('');
         }
     }
 
     function calculateOrder() {
-        let subtotal = 0;
-        let tax = 0;
-        let discount = 0;
-        let total = 0;
-        let paid = 0;
-        let due = 0;
-
-        $('.total').each(function(i,v) {
-            subtotal += parseFloat($(v).val());
-        });
+        let subtotal = $('.total').toArray().reduce((result,item) => result + parseFloat($(item).val()), 0);
+        let tax = AppGlobals.Common.calculateTax(subtotal);
+        let discount = parseInt($('#discount').val());
+        if (Number.isNaN(discount) || discount < 0) {
+            discount = 0;
+        }
+        let paid = parseInt($('#paid').val());
+        if (Number.isNaN(paid) || paid < 0) {
+            paid = 0;
+        }
+        let total = subtotal + tax - discount;
+        let due = paid - total;
 
         $('#subtotal').val(subtotal.toFixed(2));
+        $('#tax').val(tax.toFixed(2));
+        $('#total').val(total.toFixed(2));
+        $('#due').val(due);
     }
 
     $('#orderDatePicker').datetimepicker({ format: 'L' });
