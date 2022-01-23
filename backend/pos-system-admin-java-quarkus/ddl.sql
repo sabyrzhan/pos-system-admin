@@ -35,9 +35,9 @@ create table pos_products
 );
 
 -- Create invoices table
-create table pos_invoices
+create table pos_orders
 (
-    id serial constraint pos_invoice_pk primary key,
+    id serial constraint pos_order_pk primary key,
     customer_name varchar(255) not null,
     subtotal float not null,
     tax float not null,
@@ -51,10 +51,10 @@ create table pos_invoices
 
 -- Create invoice details table
 
-create table pos_invoice_details
+create table pos_order_details
 (
-    id serial constraint pos_invoice_details_pk primary key,
-    invoice_id int not null,
+    id serial constraint pos_order_details_pk primary key,
+    order_id int not null,
     product_id int not null,
     product_name varchar(100) not null,
     quantity int not null,

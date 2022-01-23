@@ -2,6 +2,7 @@ package kz.sabyrzhan.resources;
 
 import kz.sabyrzhan.exceptions.EntityAlreadyExistsException;
 import kz.sabyrzhan.exceptions.EntityNotFoundException;
+import kz.sabyrzhan.exceptions.InvalidOrderItemsException;
 import lombok.extern.slf4j.Slf4j;
 import org.jboss.resteasy.reactive.RestResponse;
 import org.jboss.resteasy.reactive.server.ServerExceptionMapper;
@@ -31,5 +32,10 @@ public class ExceptionMappers {
     @ServerExceptionMapper
     public RestResponse<ErrorResponse> handleMethodNotAllowed(NotAllowedException e) {
         return RestResponse.status(METHOD_NOT_ALLOWED, new ErrorResponse("Method not allowed"));
+    }
+
+    @ServerExceptionMapper
+    public RestResponse<ErrorResponse> handleInvalidOrderItems(InvalidOrderItemsException e) {
+        return RestResponse.status(BAD_REQUEST, new ErrorResponse(e.getMessage()));
     }
 }

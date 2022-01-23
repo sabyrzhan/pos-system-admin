@@ -6,11 +6,12 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.time.ZonedDateTime;
+import java.util.List;
 
 @Entity
-@Table(name = "pos_invoices")
+@Table(name = "pos_orders")
 @Data
-public class InvoiceEntity extends PanacheEntityBase {
+public class OrderEntity extends PanacheEntityBase {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -42,4 +43,7 @@ public class InvoiceEntity extends PanacheEntityBase {
 
     @Column
     private ZonedDateTime created;
+
+    @Transient
+    private List<OrderDetailsEntity> items;
 }
