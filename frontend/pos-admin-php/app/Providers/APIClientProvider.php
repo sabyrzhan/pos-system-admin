@@ -169,4 +169,13 @@ class APIClientProvider
             return $response->json();
         }
     }
+
+    public function createOrder($params) {
+        $response = $this->client->post('/api/v1/orders', $params);
+        if ($response->status() != 200 && !isset($response['error'])) {
+            return false;
+        } else {
+            return $response->json();
+        }
+    }
 }
