@@ -41,7 +41,7 @@
                                             <div class="input-group-prepend" data-target="#orderDatePicker" data-toggle="datetimepicker">
                                                 <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                             </div>
-                                            <input type="text" class="form-control datetimepicker-input" name="orderDate" data-target="#orderDatePicker" />
+                                            <input type="text" class="form-control datetimepicker-input" name="orderDate" data-target="#orderDatePicker" value="{{ date('d.m.Y') }}" readonly />
                                         </div>
                                     </div>
                                 </div>
@@ -83,7 +83,7 @@
                                             <div class="input-group-prepend">
                                                 <div class="input-group-text"><i class="fa fa-dollar-sign"></i></div>
                                             </div>
-                                            <input type="text" class="form-control" id="subtotal" name="subtotal">
+                                            <input type="text" class="form-control" id="subtotal" name="subtotal" readonly>
                                         </div>
                                     </div>
                                     <div class="form-group">
@@ -92,7 +92,7 @@
                                             <div class="input-group-prepend">
                                                 <div class="input-group-text"><i class="fa fa-dollar-sign"></i></div>
                                             </div>
-                                            <input type="text" class="form-control" id="tax" name="tax">
+                                            <input type="text" class="form-control" id="tax" name="tax" readonly>
                                         </div>
                                     </div>
                                     <div class="form-group">
@@ -114,7 +114,7 @@
                                             <div class="input-group-prepend">
                                                 <div class="input-group-text"><i class="fa fa-dollar-sign"></i></div>
                                             </div>
-                                            <input type="text" class="form-control" id="total" name="total">
+                                            <input type="text" class="form-control" id="total" name="total" readonly>
                                         </div>
                                     </div>
                                     <div class="form-group">
@@ -132,7 +132,7 @@
                                             <div class="input-group-prepend">
                                                 <div class="input-group-text"><i class="fa fa-dollar-sign"></i></div>
                                             </div>
-                                            <input type="text" class="form-control" id="due" name="due">
+                                            <input type="text" class="form-control" id="due" name="due" readonly>
                                         </div>
                                     </div>
                                     <div class="form-group">

@@ -103,5 +103,5 @@ $(function() {
         $('#due').val(due);
     }
 
-    $('#orderDatePicker').datetimepicker({ format: 'L' });
+    $('#orderDatePicker').datetimepicker({ format: 'DD.MM.YYYY' });
 });
