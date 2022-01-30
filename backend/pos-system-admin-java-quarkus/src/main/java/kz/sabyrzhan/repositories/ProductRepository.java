@@ -8,6 +8,8 @@ import kz.sabyrzhan.entities.ProductEntity;
 import kz.sabyrzhan.exceptions.EntityNotFoundException;
 
 import javax.enterprise.context.ApplicationScoped;
+import java.util.List;
+import java.util.Set;
 
 @ApplicationScoped
 public class ProductRepository implements PanacheRepositoryBase<ProductEntity, Integer> {
@@ -41,5 +43,9 @@ public class ProductRepository implements PanacheRepositoryBase<ProductEntity, I
         return find("order by created desc")
                 .page(page - 1, sizePerPage)
                 .stream();
+    }
+
+    public Uni<List<ProductEntity>> list(Set<Integer> productIds) {
+        return list("id in ?1", productIds.toArray());
     }
 }

@@ -7,9 +7,9 @@ import javax.persistence.*;
 import java.time.ZonedDateTime;
 
 @Entity
-@Table(name = "pos_order_details")
+@Table(name = "pos_order_items")
 @Data
-public class OrderDetailsEntity extends PanacheEntityBase {
+public class OrderItemEntity extends PanacheEntityBase {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;

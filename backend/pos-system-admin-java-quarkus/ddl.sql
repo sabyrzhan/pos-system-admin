@@ -51,7 +51,7 @@ create table pos_orders
 
 -- Create invoice details table
 
-create table pos_order_details
+create table pos_order_items
 (
     id serial constraint pos_order_details_pk primary key,
     order_id int not null,

@@ -45,5 +45,5 @@ public class OrderEntity extends PanacheEntityBase {
     private ZonedDateTime created;
 
     @Transient
-    private List<OrderDetailsEntity> items;
+    private List<OrderItemEntity> items;
 }
