@@ -1,7 +1,6 @@
 package kz.sabyrzhan.services;
 
 import io.smallrye.mutiny.Uni;
-import io.smallrye.mutiny.tuples.Tuple2;
 import kz.sabyrzhan.entities.OrderItemEntity;
 import kz.sabyrzhan.entities.OrderEntity;
 import kz.sabyrzhan.entities.ProductEntity;
@@ -13,6 +12,8 @@ import kz.sabyrzhan.repositories.OrderItemRepository;
 import kz.sabyrzhan.repositories.OrderRepository;
 import kz.sabyrzhan.repositories.ProductRepository;
 import kz.sabyrzhan.repositories.StoreConfigRepository;
+import kz.sabyrzhan.services.dto.TransientHolder;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -25,6 +26,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @ApplicationScoped
+@Slf4j
 public class OrderService {
     @Inject
     ProductRepository productRepository;
@@ -39,6 +41,7 @@ public class OrderService {
     OrderRepository orderRepository;
 
     public Uni<Void> createOrder(final OrderEntity requestOrder) {
+        final TransientHolder holder = new TransientHolder();
         return Uni.createFrom().item(requestOrder.getItems())
                 .onItem().transformToUni(items -> {
                     Map<Integer, Integer> productToQuantityMap = new HashMap<>();
@@ -84,32 +87,77 @@ public class OrderService {
                             product.decreaseStockAmount(orderItem.getQuantity());
                             updatedProducts.add(product);
                         }
+                        requestOrder.setItems(orderItems);
 
-                        return Uni.createFrom().item(Tuple2.of(orderItems, updatedProducts));
+                        holder.setProductsEntities(updatedProducts);
+                        return Uni.createFrom().nullItem();
                     });
                 })
-                .onItem().transformToUni(items -> {
-                    List<ProductEntity> products = items.getItem2();
-                    return productRepository.persistAll(products).onItem().transform(v -> items.getItem1());
+                .onItem().transformToUni(v -> {
+                    List<ProductEntity> products = holder.getProductsEntities();
+                    return productRepository.persistAll(products).onItem().transform(savedProducts -> {
+                        holder.setProductsEntities(savedProducts);
+                        return null;
+                    });
                 })
-                .onItem().transformToUni(orderItems -> storeConfigRepository.findByConfigKey(ConfigKey.TAX_PERCENT)
-                                                        .onItem()
-                                                        .transform(storeConfigEntity -> Tuple2.of(storeConfigEntity, orderItems)))
-                .onItem().transformToUni(map -> {
-                    StoreConfigEntity taxConfig = map.getItem1();
-                    List<OrderItemEntity> items = map.getItem2();
+                .onItem().transformToUni(v -> {
+                    return storeConfigRepository.findByConfigKey(ConfigKey.TAX_PERCENT)
+                            .onItem()
+                            .transform(taxConfig -> {
+                                holder.putConfig(ConfigKey.TAX_PERCENT, taxConfig);
+                                return null;
+                            });
+                })
+                .onItem().transformToUni(v -> {
+                    StoreConfigEntity taxConfig = holder.getConfig(ConfigKey.TAX_PERCENT);
 
-                    requestOrder.setItems(items);
-                    OrderEntity orderEntityToPersist = calculateAndCreateOrderEntity(requestOrder, taxConfig);
+                    validateOrderEntity(requestOrder, taxConfig, holder);
 
-                    Uni<List<OrderItemEntity>> itemsUni = orderItemRepository.persistAll(orderEntityToPersist.getItems());
-                    Uni<OrderEntity> orderUni = orderRepository.persist(orderEntityToPersist);
+                    Uni<List<OrderItemEntity>> itemsUni = orderItemRepository.persistAll(requestOrder.getItems());
+                    Uni<OrderEntity> orderUni = orderRepository.persist(requestOrder);
 
-                    return Uni.combine().all().unis(orderUni, itemsUni).asTuple().onItem().transform(v -> null);
+                    return Uni.combine().all().unis(orderUni, itemsUni).asTuple().onItem().transform(vv -> null);
                 });
     }
 
-    private OrderEntity calculateAndCreateOrderEntity(OrderEntity requestEntity, StoreConfigEntity taxConfig) {
-        return new OrderEntity();
+    private void validateOrderEntity(OrderEntity requestEntity,
+                                     StoreConfigEntity taxConfig,
+                                     TransientHolder holder) {
+        Map<Integer, ProductEntity> productMap = holder.getProductsAsMap();
+
+        float subtotal = 0;
+        float total = 0;
+        float tax = 0;
+        float discount = requestEntity.getDiscount();
+        float paid = requestEntity.getPaid();
+        float due = 0;
+
+        for(OrderItemEntity orderItem : requestEntity.getItems()) {
+            subtotal += productMap.get(orderItem.getProductId()).getSalePrice() * orderItem.getQuantity();
+        }
+
+        tax = subtotal * (Float.valueOf(taxConfig.getConfigValue()) / 100);
+        total = subtotal + tax - discount;
+        due = paid - subtotal;
+
+        if (subtotal != requestEntity.getSubtotal()) {
+            log.info("Invalid subtotal: expected='{}', actual='{}'", subtotal, requestEntity.getSubtotal());
+            throw new IllegalArgumentException("Subtotal is invalid");
+        }
+
+        if (tax != requestEntity.getTax()) {
+            log.info("Invalid tax: expected='{}', actual='{}'", tax, requestEntity.getTax());
+            throw new IllegalArgumentException("Tax is invalid");
+        }
+
+        if (total != requestEntity.getTotal()) {
+            log.info("Invalid total: expected='{}', actual='{}'", total, requestEntity.getTotal());
+            throw new IllegalArgumentException("Total is invalid");
+        }
+
+        if (due != requestEntity.getDue()) {
+            log.info("Invalid due: expected='{}', actual='{}'", due, requestEntity.getDue());
+            throw new IllegalArgumentException("Due is invalid");
+        }
     }
 }
