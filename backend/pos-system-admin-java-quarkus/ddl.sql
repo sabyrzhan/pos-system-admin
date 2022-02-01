@@ -61,3 +61,14 @@ create table pos_order_items
     price float not null,
     created timestamp without time zone default CURRENT_TIMESTAMP not null
 );
+
+-- Create store configs table
+
+create table pos_store_configs
+(
+    id serial constraint pos_store_configs_pk primary key,
+    config_key varchar(100) not null,
+    config_value varchar(100) not null,
+    created timestamp without time zone default CURRENT_TIMESTAMP not null,
+    updated timestamp without time zone default CURRENT_TIMESTAMP not null
+);

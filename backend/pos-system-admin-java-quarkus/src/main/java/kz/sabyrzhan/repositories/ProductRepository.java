@@ -8,6 +8,7 @@ import kz.sabyrzhan.entities.ProductEntity;
 import kz.sabyrzhan.exceptions.EntityNotFoundException;
 
 import javax.enterprise.context.ApplicationScoped;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -37,6 +38,15 @@ public class ProductRepository implements PanacheRepositoryBase<ProductEntity, I
 
     public Uni<ProductEntity> persist(ProductEntity entity) {
         return Panache.withTransaction(entity::persist);
+    }
+
+    public Uni<List<ProductEntity>> persistAll(List<ProductEntity> updatedEntities) {
+        List<Uni<ProductEntity>> unis = new ArrayList<>();
+        for(ProductEntity entity : updatedEntities) {
+            unis.add(Panache.withTransaction(entity::persist));
+        }
+
+        return Uni.combine().all().unis(unis).combinedWith(products -> (List<ProductEntity>) products);
     }
 
     public Multi<ProductEntity> findProducts(int page, int sizePerPage) {

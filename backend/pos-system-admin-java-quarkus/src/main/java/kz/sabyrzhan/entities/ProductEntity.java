@@ -37,4 +37,8 @@ public class ProductEntity extends PanacheEntityBase {
 
     @Column
     private Instant created = Instant.now();
+
+    public void decreaseStockAmount(int purchasedQuantity) {
+        setStock(getStock() - purchasedQuantity);
+    }
 }
