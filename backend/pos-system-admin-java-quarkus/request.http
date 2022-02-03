@@ -70,3 +70,11 @@ Accept: application/json
 ### Get products
 GET http://localhost:8080/api/v1/products
 Accept: application/json
+
+### Create config
+POST http://localhost:8080/api/v1/dict/configs
+
+{
+  "configKey": "TAX_PERCENT",
+  "configValue": "5"
+}

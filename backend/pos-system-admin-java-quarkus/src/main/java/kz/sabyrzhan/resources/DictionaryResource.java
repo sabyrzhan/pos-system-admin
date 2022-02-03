@@ -1,9 +1,13 @@
 package kz.sabyrzhan.resources;
 
+import io.quarkus.hibernate.reactive.panache.common.runtime.ReactiveTransactional;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import kz.sabyrzhan.entities.CategoryEntity;
+import kz.sabyrzhan.entities.StoreConfigEntity;
+import kz.sabyrzhan.model.ConfigKey;
 import kz.sabyrzhan.model.UserRole;
+import kz.sabyrzhan.repositories.StoreConfigRepository;
 import kz.sabyrzhan.services.CategoryService;
 import lombok.extern.slf4j.Slf4j;
 
@@ -17,6 +21,9 @@ import javax.ws.rs.*;
 public class DictionaryResource {
     @Inject
     CategoryService categoryService;
+
+    @Inject
+    StoreConfigRepository storeConfigRepository;
 
     @GET
     @Path("/roles")
@@ -50,5 +57,18 @@ public class DictionaryResource {
     @Path("/categories/{id}")
     public Uni<CategoryEntity> updateCategory(@PathParam("id") int id, CategoryEntity entity) {
         return categoryService.updateCategory(entity);
+    }
+
+    @GET
+    @Path("/configs/{configKey}")
+    public Uni<StoreConfigEntity> getConfigs(@PathParam("configKey") ConfigKey configKey) {
+        return storeConfigRepository.findByConfigKey(configKey);
+    }
+
+    @POST
+    @Path("/configs")
+    @ReactiveTransactional
+    public Uni<StoreConfigEntity> addConfig(StoreConfigEntity entity) {
+        return storeConfigRepository.persist(entity);
     }
 }

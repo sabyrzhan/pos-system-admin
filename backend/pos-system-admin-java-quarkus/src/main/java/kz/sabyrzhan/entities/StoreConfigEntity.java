@@ -16,7 +16,7 @@ public class StoreConfigEntity extends PanacheEntityBase {
     private int id;
 
     @Column(name = "config_key")
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     private ConfigKey configKey;
 
     @Column(name = "config_value")

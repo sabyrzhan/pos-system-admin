@@ -27,3 +27,7 @@ INSERT INTO pos_products (name, category_id, purchase_price, sale_price, stock, 
                   VALUES ('Test product 4', 4, 40, 400, 40, 'Test product 4 description', null, current_timestamp);
 INSERT INTO pos_products (name, category_id, purchase_price, sale_price, stock, description, images, created)
                   VALUES ('Test product 5', 5, 50, 500, 50, 'Test product 5 description', null, current_timestamp);
+
+-- Test configs
+INSERT INTO pos_store_configs (config_key, config_value, created, updated)
+                VALUES ('TAX_PERCENT', '5', current_timestamp, current_timestamp);

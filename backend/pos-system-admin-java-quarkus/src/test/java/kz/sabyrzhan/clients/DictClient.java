@@ -1,12 +1,11 @@
 package kz.sabyrzhan.clients;
 
 import kz.sabyrzhan.entities.CategoryEntity;
+import kz.sabyrzhan.entities.StoreConfigEntity;
+import kz.sabyrzhan.model.ConfigKey;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.*;
 import java.util.List;
 
 @Path("/api/v1/dict")
@@ -19,4 +18,12 @@ public interface DictClient {
     @POST
     @Path("/categories")
     CategoryEntity create(CategoryEntity entity);
+
+    @POST
+    @Path("/configs")
+    StoreConfigEntity create(StoreConfigEntity entity);
+
+    @GET
+    @Path("/configs/{configKey}")
+    StoreConfigEntity getByConfigKey(@PathParam("configKey") ConfigKey configKey);
 }

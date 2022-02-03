@@ -7,6 +7,8 @@ import io.vertx.mutiny.pgclient.PgPool;
 import kz.sabyrzhan.DbResource;
 import kz.sabyrzhan.clients.DictClient;
 import kz.sabyrzhan.entities.CategoryEntity;
+import kz.sabyrzhan.entities.StoreConfigEntity;
+import kz.sabyrzhan.model.ConfigKey;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,9 +18,8 @@ import javax.inject.Inject;
 import static io.restassured.RestAssured.given;
 import static kz.sabyrzhan.repositories.CategoryRepository.CATEGORY_NOT_FOUND_MESSAGE;
 import static kz.sabyrzhan.services.CategoryService.CATEGORY_NAME_ALREADY_EXISTS;
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.equalTo;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.hamcrest.Matchers.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 @QuarkusTest
 @QuarkusTestResource(DbResource.class)
@@ -33,6 +34,7 @@ class DictionaryResourceTest {
     @BeforeEach
     public void setUp() {
         pgPool.query("DELETE FROM pos_categories").execute().await().indefinitely();
+        pgPool.query("DELETE FROM pos_store_configs").execute().await().indefinitely();
     }
 
     @Test
@@ -177,9 +179,61 @@ class DictionaryResourceTest {
         assertEquals(result.getError(), CATEGORY_NOT_FOUND_MESSAGE);
     }
 
+    @Test
+    void createConfig_success() {
+        StoreConfigEntity postData = createConfig();
+
+        given()
+                .body(postData)
+                .contentType(ContentType.JSON)
+                .when()
+                .post("/api/v1/dict/configs")
+                .then()
+                .contentType(containsString(ContentType.JSON.toString()))
+                .statusCode(equalTo(200));
+
+        StoreConfigEntity result = dictClient.getByConfigKey(postData.getConfigKey());
+        assertNotNull(result);
+        assertTrue(result.getId() > 0);
+        assertEquals(postData.getConfigKey(), result.getConfigKey());
+        assertEquals(postData.getConfigValue(), result.getConfigValue());
+        assertEquals(postData.getCreated(), result.getCreated());
+        assertEquals(postData.getUpdated(), result.getUpdated());
+    }
+
+    @Test
+    void createConfig_successGetByKey() {
+        StoreConfigEntity expected = dictClient.create(createConfig());
+
+        StoreConfigEntity result = given()
+                .contentType(ContentType.JSON)
+                .when()
+                .get("/api/v1/dict/configs/" + expected.getConfigKey())
+                .then()
+                .contentType(containsString(ContentType.JSON.toString()))
+                .statusCode(equalTo(200))
+                .and()
+                .extract().body().as(StoreConfigEntity.class);
+
+        assertNotNull(result);
+        assertEquals(expected.getId(), result.getId());
+        assertEquals(expected.getConfigKey(), result.getConfigKey());
+        assertEquals(expected.getConfigValue(), result.getConfigValue());
+        assertEquals(expected.getCreated(), result.getCreated());
+        assertEquals(expected.getUpdated(), result.getUpdated());
+    }
+
     public static CategoryEntity createCategory() {
         CategoryEntity entity = new CategoryEntity();
         entity.setName("testCategory");
+        return entity;
+    }
+
+    public static StoreConfigEntity createConfig() {
+        StoreConfigEntity entity = new StoreConfigEntity();
+        entity.setConfigKey(ConfigKey.TAX_PERCENT);
+        entity.setConfigValue("5");
+
         return entity;
     }
 }
