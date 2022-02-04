@@ -19,7 +19,7 @@ public class OrdersResource {
     OrderService orderService;
 
     @POST
-    public Uni<Response> createOrder(OrderEntity order) {
-        return orderService.createOrder(order).onItem().transform(v -> Response.ok().build());
+    public Uni<OrderEntity> createOrder(OrderEntity order) {
+        return orderService.createOrder(order);
     }
 }

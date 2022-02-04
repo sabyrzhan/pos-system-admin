@@ -234,7 +234,7 @@ class ProductResourceTest {
         }
     }
 
-    private ProductEntity createProduct() {
+    public static ProductEntity createProduct() {
         var entity = new ProductEntity();
         entity.setCategoryId(1);
         entity.setName("TestProduct");

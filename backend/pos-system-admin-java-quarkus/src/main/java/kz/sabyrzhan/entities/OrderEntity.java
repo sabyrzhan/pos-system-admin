@@ -6,6 +6,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -38,12 +39,12 @@ public class OrderEntity extends PanacheEntityBase {
     private float due;
 
     @Column(name = "payment_type")
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     private PaymentType paymentType;
 
     @Column
     private ZonedDateTime created;
 
     @Transient
-    private List<OrderItemEntity> items;
+    private List<OrderItemEntity> items = new ArrayList<>();
 }

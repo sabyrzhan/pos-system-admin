@@ -56,6 +56,6 @@ public class ProductRepository implements PanacheRepositoryBase<ProductEntity, I
     }
 
     public Uni<List<ProductEntity>> list(Set<Integer> productIds) {
-        return list("id in ?1", productIds.toArray());
+        return list("id in (?1)", productIds);
     }
 }

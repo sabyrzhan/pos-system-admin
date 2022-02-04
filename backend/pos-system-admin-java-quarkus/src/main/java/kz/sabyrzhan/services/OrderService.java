@@ -1,5 +1,6 @@
 package kz.sabyrzhan.services;
 
+import io.quarkus.hibernate.reactive.panache.common.runtime.ReactiveTransactional;
 import io.smallrye.mutiny.Uni;
 import kz.sabyrzhan.entities.OrderItemEntity;
 import kz.sabyrzhan.entities.OrderEntity;
@@ -40,7 +41,8 @@ public class OrderService {
     @Inject
     OrderRepository orderRepository;
 
-    public Uni<Void> createOrder(final OrderEntity requestOrder) {
+    @ReactiveTransactional
+    public Uni<OrderEntity> createOrder(final OrderEntity requestOrder) {
         final TransientHolder holder = new TransientHolder();
         return Uni.createFrom().item(requestOrder.getItems())
                 .onItem().transformToUni(items -> {
@@ -113,14 +115,16 @@ public class OrderService {
 
                     validateOrderEntity(requestOrder, taxConfig, holder);
 
-                    Uni<List<OrderItemEntity>> itemsUni = orderItemRepository.persistAll(requestOrder.getItems());
-                    Uni<OrderEntity> orderUni = orderRepository.persist(requestOrder);
-
-                    return Uni.combine().all().unis(orderUni, itemsUni).asTuple().onItem().transform(vv -> null);
+                    return orderRepository.persist(requestOrder).onItem().transformToUni(savedOrderEntity -> {
+                        savedOrderEntity.getItems().forEach(item -> item.setOrderId(savedOrderEntity.getId()));
+                        return orderItemRepository.persistAll(requestOrder.getItems())
+                                .onItem()
+                                .transformToUni(savedItems -> Uni.createFrom().item(savedOrderEntity));
+                    });
                 });
     }
 
-    private void validateOrderEntity(OrderEntity requestEntity,
+    public void validateOrderEntity(OrderEntity requestEntity,
                                      StoreConfigEntity taxConfig,
                                      TransientHolder holder) {
         Map<Integer, ProductEntity> productMap = holder.getProductsAsMap();
@@ -138,7 +142,7 @@ public class OrderService {
 
         tax = subtotal * (Float.valueOf(taxConfig.getConfigValue()) / 100);
         total = subtotal + tax - discount;
-        due = paid - subtotal;
+        due = paid - total;
 
         if (subtotal != requestEntity.getSubtotal()) {
             log.info("Invalid subtotal: expected='{}', actual='{}'", subtotal, requestEntity.getSubtotal());
