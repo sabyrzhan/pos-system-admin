@@ -5,17 +5,18 @@ import kz.sabyrzhan.model.PaymentType;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Table(name = "pos_orders")
 @Data
 public class OrderEntity extends PanacheEntityBase {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private String id = UUID.randomUUID().toString();
 
     @Column(name = "customer_name")
     private String customerName;
@@ -43,7 +44,7 @@ public class OrderEntity extends PanacheEntityBase {
     private PaymentType paymentType;
 
     @Column
-    private ZonedDateTime created;
+    private Instant created = Instant.now();
 
     @Transient
     private List<OrderItemEntity> items = new ArrayList<>();

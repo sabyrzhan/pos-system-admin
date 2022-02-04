@@ -64,7 +64,7 @@ Accept: application/json
 }
 
 ### Get product by id
-GET http://localhost:8080/api/v1/products/900
+GET http://localhost:8080/api/v1/products/10
 Accept: application/json
 
 ### Get products

@@ -37,7 +37,7 @@ create table pos_products
 -- Create invoices table
 create table pos_orders
 (
-    id serial constraint pos_order_pk primary key,
+    id varchar(255) constraint pos_order_pk primary key,
     customer_name varchar(255) not null,
     subtotal float not null,
     tax float not null,
@@ -54,7 +54,7 @@ create table pos_orders
 create table pos_order_items
 (
     id serial constraint pos_order_details_pk primary key,
-    order_id int not null,
+    order_id varchar(255) not null,
     product_id int not null,
     product_name varchar(100) not null,
     quantity int not null,

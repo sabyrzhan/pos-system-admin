@@ -109,7 +109,7 @@ class OrdersResourceTest {
                 .extract().body().as(OrderEntity.class);
 
         assertNotNull(response);
-        assertTrue(response.getId() > 0);
+        assertNotNull(response.getId());
         assertEquals(orderRequest.getPaid(), response.getPaid());
         assertEquals(orderRequest.getTax(), response.getTax());
         assertEquals(orderRequest.getDue(), response.getDue());
@@ -131,6 +131,39 @@ class OrdersResourceTest {
             assertEquals(resultItem.getQuantity(), expectedItem.getQuantity());
             assertEquals(resultItem.getPrice(), expectedItem.getPrice());
         }
+        int expectedProduct1Stock = product1.getStock() - 1;
+        int expectedProduct2Stock = product2.getStock() - 1;
+        int expectedProduct3Stock = product3.getStock() - 1;
+        var updatedProduct1 = productClient.getById(product1.getId());
+        var updatedProduct2 = productClient.getById(product2.getId());
+        var updatedProduct3 = productClient.getById(product3.getId());
+        assertEquals(expectedProduct1Stock, updatedProduct1.getStock());
+        assertEquals(expectedProduct2Stock, updatedProduct2.getStock());
+        assertEquals(expectedProduct3Stock, updatedProduct3.getStock());
+    }
+
+    @Test
+    public void createOrder_invalidTotal() {
+        var orderRequest = createOrder();
+        orderRequest.setTotal(500);
+
+        given()
+                .body(orderRequest)
+                .contentType(ContentType.JSON)
+                .when()
+                .post("/api/v1/orders")
+                .then()
+                .contentType(containsString(ContentType.JSON.toString()))
+                .statusCode(equalTo(400))
+                .and()
+                .body("error", equalTo("Total is invalid"));
+
+        var updatedProduct1 = productClient.getById(product1.getId());
+        var updatedProduct2 = productClient.getById(product2.getId());
+        var updatedProduct3 = productClient.getById(product3.getId());
+        assertEquals(product1.getStock(), updatedProduct1.getStock());
+        assertEquals(product2.getStock(), updatedProduct2.getStock());
+        assertEquals(product3.getStock(), updatedProduct3.getStock());
     }
 
     public OrderEntity createOrder() {
@@ -142,7 +175,7 @@ class OrdersResourceTest {
         orderEntity.setDiscount(20);
         orderEntity.setPaymentType(PaymentType.CREDIT);
         orderEntity.setSubtotal(600);
-        orderEntity.setTotal(630);
+        orderEntity.setTotal(610);
 
         OrderItemEntity item1 = new OrderItemEntity();
         item1.setProductId(product1.getId());

@@ -41,7 +41,6 @@ public class OrderService {
     @Inject
     OrderRepository orderRepository;
 
-    @ReactiveTransactional
     public Uni<OrderEntity> createOrder(final OrderEntity requestOrder) {
         final TransientHolder holder = new TransientHolder();
         return Uni.createFrom().item(requestOrder.getItems())
@@ -96,13 +95,6 @@ public class OrderService {
                     });
                 })
                 .onItem().transformToUni(v -> {
-                    List<ProductEntity> products = holder.getProductsEntities();
-                    return productRepository.persistAll(products).onItem().transform(savedProducts -> {
-                        holder.setProductsEntities(savedProducts);
-                        return null;
-                    });
-                })
-                .onItem().transformToUni(v -> {
                     return storeConfigRepository.findByConfigKey(ConfigKey.TAX_PERCENT)
                             .onItem()
                             .transform(taxConfig -> {
@@ -111,15 +103,29 @@ public class OrderService {
                             });
                 })
                 .onItem().transformToUni(v -> {
-                    StoreConfigEntity taxConfig = holder.getConfig(ConfigKey.TAX_PERCENT);
-
-                    validateOrderEntity(requestOrder, taxConfig, holder);
-
+                    try {
+                        validateOrderEntity(requestOrder, holder.getConfig(ConfigKey.TAX_PERCENT), holder);
+                        return Uni.createFrom().nullItem();
+                    } catch (IllegalArgumentException e) {
+                        return Uni.createFrom().failure(e);
+                    }
+                })
+                .onItem().transformToUni(v -> {
+                    List<ProductEntity> products = holder.getProductsEntities();
+                    return productRepository.persistAll(products).onItem().transform(savedProducts -> {
+                        holder.setProductsEntities(savedProducts);
+                        return null;
+                    });
+                })
+                .onItem().transformToUni(v -> {
                     return orderRepository.persist(requestOrder).onItem().transformToUni(savedOrderEntity -> {
                         savedOrderEntity.getItems().forEach(item -> item.setOrderId(savedOrderEntity.getId()));
                         return orderItemRepository.persistAll(requestOrder.getItems())
                                 .onItem()
-                                .transformToUni(savedItems -> Uni.createFrom().item(savedOrderEntity));
+                                .transformToUni(savedItems -> {
+                                    savedOrderEntity.setItems(savedItems);
+                                    return Uni.createFrom().item(savedOrderEntity);
+                                });
                     });
                 });
     }

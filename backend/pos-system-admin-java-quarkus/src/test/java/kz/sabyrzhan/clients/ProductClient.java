@@ -1,6 +1,7 @@
 package kz.sabyrzhan.clients;
 
 import kz.sabyrzhan.entities.ProductEntity;
+import kz.sabyrzhan.model.Product;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 
 import javax.ws.rs.*;
@@ -10,8 +11,8 @@ import java.util.List;
 @RegisterRestClient(baseUri = "http://localhost:8081")
 public interface ProductClient {
     @GET
-    @Path("/{id}}")
-    List<ProductEntity> getById(@PathParam("id") int id);
+    @Path("/{id}")
+    Product getById(@PathParam("id") int id);
 
     @POST
     ProductEntity addProduct(ProductEntity entity);

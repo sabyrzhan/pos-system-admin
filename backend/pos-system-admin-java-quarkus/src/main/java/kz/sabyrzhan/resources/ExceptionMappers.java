@@ -38,4 +38,9 @@ public class ExceptionMappers {
     public RestResponse<ErrorResponse> handleInvalidOrderItems(InvalidOrderItemsException e) {
         return RestResponse.status(BAD_REQUEST, new ErrorResponse(e.getMessage()));
     }
+
+    @ServerExceptionMapper
+    public RestResponse<ErrorResponse> handleIllegalArgumentException(IllegalArgumentException e) {
+        return RestResponse.status(BAD_REQUEST, new ErrorResponse(e.getMessage()));
+    }
 }
