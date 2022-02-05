@@ -59,7 +59,7 @@
                                     @if($orders)
                                         @foreach($orders as $order)
                                             <tr>
-                                                <td>{{ substr($order['id'], 0, 3) . '...' }}</td>
+                                                <td><span data-toggle="tooltip" title="{{ $order['id'] }}">{{ substr($order['id'], 0, 3) . '...' }}</span></td>
                                                 <td>{{ $order['customerName'] }}</td>
                                                 <td>{{ $order['created'] }}</td>
                                                 <td>{{ $order['total'] }}</td>
