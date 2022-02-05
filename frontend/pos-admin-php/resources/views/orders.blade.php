@@ -67,13 +67,13 @@
                                                 <td>{{ $order['paymentType'] }}</td>
                                                 <td>
                                                     <a href="{{ URL::route('view_product', [$order['id']]) }}" class="btn btn-primary" role="button">
-                                                        <span class="nav-icon fas fa-eye" data-toggle="tooltip" title="Print invoice"></span>
+                                                        <span class="nav-icon fas fa-print" data-toggle="tooltip" title="Print invoice"></span>
                                                     </a>
                                                     <a href="{{ URL::route('view_product', [$order['id']]) }}" class="btn btn-warning" role="button">
                                                         <span class="nav-icon fas fa-eye" data-toggle="tooltip" title="Order details"></span>
                                                     </a>
                                                     <a href="{{ URL::route('add_product_page') . '?id=' . $order['id'] }}" class="btn btn-danger" role="button">
-                                                        <span class="nav-icon fas fa-pen" data-toggle="tooltip" title="Cancel order"></span>
+                                                        <span class="nav-icon fas fa-trash" data-toggle="tooltip" title="Cancel order"></span>
                                                     </a>
                                                 </td>
                                             </tr>
