@@ -170,4 +170,20 @@ public class OrderService {
             throw new IllegalArgumentException("Due is invalid");
         }
     }
+
+    public Uni<OrderEntity> cancelOrder(String id) {
+        return orderRepository.cancelOrder(id)
+                .onItem().transformToUni(canceledOrder -> {
+                    return orderItemRepository.findByOrderId(canceledOrder.getId())
+                            .onItem().transform(items -> {
+                                canceledOrder.setItems(items);
+                                return canceledOrder;
+                            });
+                })
+                .onItem().transformToUni(canceledOrder -> {
+                    var productIdToQuantityMap = canceledOrder.getItems().stream()
+                            .collect(Collectors.toMap(OrderItemEntity::getProductId, OrderItemEntity::getQuantity));
+                    return productRepository.returnQuantities(productIdToQuantityMap).onItem().transform(v -> canceledOrder);
+                });
+    }
 }

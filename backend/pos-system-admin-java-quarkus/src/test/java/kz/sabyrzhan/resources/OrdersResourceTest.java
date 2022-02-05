@@ -177,6 +177,9 @@ class OrdersResourceTest {
 
     @Test
     public void cancelOrder_success() {
+        var prod1Stock = product1.getStock();
+        var prod2Stock = product2.getStock();
+        var prod3Stock = product3.getStock();
         var orderRequest = createOrder();
         var createdOrder = orderClient.create(orderRequest);
 
@@ -193,6 +196,12 @@ class OrdersResourceTest {
         var updatedOrder = orderClient.getById(createdOrder.getId());
         assertNotNull(updatedOrder);
         assertEquals(OrderStatus.CANCELLED, updatedOrder.getStatus());
+        var restoredProd1 = productClient.getById(product1.getId());
+        var restoredProd2 = productClient.getById(product2.getId());
+        var restoredProd3 = productClient.getById(product3.getId());
+        assertEquals(prod1Stock, restoredProd1.getStock());
+        assertEquals(prod2Stock, restoredProd2.getStock());
+        assertEquals(prod3Stock, restoredProd3.getStock());
     }
 
     @Test
@@ -200,6 +209,9 @@ class OrdersResourceTest {
         var orderRequest = createOrder();
         var createdOrder = orderClient.create(orderRequest);
         OrderEntity.update("status = ?1 where id = ?2", OrderStatus.PROCESSING, createdOrder.getId()).await().indefinitely();
+        var expectedProd1 = productClient.getById(product1.getId());
+        var expectedProd2 = productClient.getById(product2.getId());
+        var expectedProd3 = productClient.getById(product3.getId());
 
         given()
                 .contentType(ContentType.JSON)
@@ -214,6 +226,12 @@ class OrdersResourceTest {
         var updatedOrder = orderClient.getById(createdOrder.getId());
         assertNotNull(updatedOrder);
         assertEquals(OrderStatus.PROCESSING, updatedOrder.getStatus());
+        var unchangedProd1 = productClient.getById(product1.getId());
+        var unchangedProd2 = productClient.getById(product2.getId());
+        var unchangedProd3 = productClient.getById(product3.getId());
+        assertEquals(expectedProd1.getStock(), unchangedProd1.getStock());
+        assertEquals(expectedProd2.getStock(), unchangedProd2.getStock());
+        assertEquals(expectedProd3.getStock(), unchangedProd3.getStock());
     }
 
     @Test

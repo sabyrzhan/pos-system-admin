@@ -21,4 +21,8 @@ public class OrderItemRepository implements PanacheRepositoryBase<OrderItemEntit
 
         return Uni.combine().all().unis(unis).combinedWith(savedItems -> (List<OrderItemEntity>) savedItems);
     }
+
+    public Uni<List<OrderItemEntity>> findByOrderId(String orderId) {
+        return find("order_id = ?1", orderId).list();
+    }
 }

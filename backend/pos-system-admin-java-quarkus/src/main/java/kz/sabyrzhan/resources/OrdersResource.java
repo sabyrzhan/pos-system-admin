@@ -44,6 +44,6 @@ public class OrdersResource {
     @DELETE
     @Path("/{orderId}")
     public Uni<OrderEntity> cancelOrder(@PathParam("orderId") String orderId) {
-        return orderRepository.cancelOrder(orderId);
+        return orderService.cancelOrder(orderId);
     }
 }

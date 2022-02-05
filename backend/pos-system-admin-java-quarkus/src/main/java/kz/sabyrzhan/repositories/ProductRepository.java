@@ -10,6 +10,7 @@ import kz.sabyrzhan.exceptions.EntityNotFoundException;
 import javax.enterprise.context.ApplicationScoped;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 @ApplicationScoped
@@ -57,5 +58,14 @@ public class ProductRepository implements PanacheRepositoryBase<ProductEntity, I
 
     public Uni<List<ProductEntity>> list(Set<Integer> productIds) {
         return list("id in (?1)", productIds);
+    }
+
+    public Uni<Void> returnQuantities(Map<Integer, Integer> productIdToQuantityMap) {
+        List<Uni<Integer>> updates = new ArrayList<>();
+        for(Map.Entry<Integer, Integer> entry : productIdToQuantityMap.entrySet()) {
+            updates.add(update("stock = stock + ?1 where id = ?2", entry.getValue(), entry.getKey()));
+        }
+
+        return Uni.combine().all().unis(updates).combinedWith(v -> null);
     }
 }
