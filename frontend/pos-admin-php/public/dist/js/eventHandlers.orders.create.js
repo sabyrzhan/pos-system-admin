@@ -104,4 +104,7 @@ $(function() {
     }
 
     $('#orderDatePicker').datetimepicker({ format: 'DD.MM.YYYY' });
+    $('#ordersTable').DataTable({
+        ordering: false
+    });
 });

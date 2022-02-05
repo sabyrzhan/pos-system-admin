@@ -20,7 +20,12 @@ class OrdersController extends Controller
     }
 
     public function getOrdersPage() {
-        return view('orders');
+        $page = request('page');
+        if (!$page) {
+            $page = 1;
+        }
+        $orders = $this->apiClient->getOrders($page);
+        return view('orders', ['orders' => $orders]);
     }
 
     public function addOrder() {

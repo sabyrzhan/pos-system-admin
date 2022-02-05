@@ -178,4 +178,14 @@ class APIClientProvider
             return $response->json();
         }
     }
+
+    public function getOrders($page = 1) {
+        $response = $this->client->get('/api/v1/orders?page=' . $page);
+
+        if ($response->status() != 200) {
+            return null;
+        } else {
+            return $response->json();
+        }
+    }
 }
