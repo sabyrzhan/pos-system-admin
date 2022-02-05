@@ -1,6 +1,7 @@
 package kz.sabyrzhan.entities;
 
 import io.quarkus.hibernate.reactive.panache.PanacheEntityBase;
+import kz.sabyrzhan.model.OrderStatus;
 import kz.sabyrzhan.model.PaymentType;
 import lombok.Data;
 
@@ -45,6 +46,10 @@ public class OrderEntity extends PanacheEntityBase {
 
     @Column
     private Instant created = Instant.now();
+
+    @Column
+    @Enumerated(EnumType.STRING)
+    private OrderStatus status = OrderStatus.NEW;
 
     @Transient
     private List<OrderItemEntity> items = new ArrayList<>();

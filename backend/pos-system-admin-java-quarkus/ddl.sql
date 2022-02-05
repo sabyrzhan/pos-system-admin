@@ -46,6 +46,7 @@ create table pos_orders
     paid float not null,
     due float not null,
     payment_type varchar(100) not null,
+    status varchar(100) not null,
     created timestamp without time zone default CURRENT_TIMESTAMP not null
 );
 
