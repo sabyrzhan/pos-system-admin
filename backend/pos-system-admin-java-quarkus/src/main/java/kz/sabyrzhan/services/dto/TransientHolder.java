@@ -1,6 +1,6 @@
 package kz.sabyrzhan.services.dto;
 
-import kz.sabyrzhan.entities.OrderItemEntity;
+import kz.sabyrzhan.entities.OrderEntity;
 import kz.sabyrzhan.entities.ProductEntity;
 import kz.sabyrzhan.entities.StoreConfigEntity;
 import kz.sabyrzhan.model.ConfigKey;
@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 public class TransientHolder {
     private List<ProductEntity> productsEntities = new ArrayList<>();
     private Map<ConfigKey, StoreConfigEntity> configs = new ConcurrentHashMap<>();
+    private OrderEntity orderEntity;
 
     public void putConfig(ConfigKey key, StoreConfigEntity entity) {
         configs.put(key, entity);

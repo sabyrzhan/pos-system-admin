@@ -236,10 +236,10 @@ class OrdersResourceTest {
 
     @Test
     public void getById_success() {
-        var orderRequest = createOrder();
-        var createdOrder = orderClient.create(orderRequest);
+        var createdOrder = orderClient.create(createOrder());
+        var requestItemMap = createdOrder.getItems().stream().collect(Collectors.toMap(OrderItemEntity::getProductId, Function.identity()));
 
-        given()
+        var response = given()
                 .contentType(ContentType.JSON)
                 .when()
                 .get("/api/v1/orders/" + createdOrder.getId())
@@ -247,7 +247,35 @@ class OrdersResourceTest {
                 .contentType(containsString(ContentType.JSON.toString()))
                 .statusCode(equalTo(200))
                 .and()
-                .body("id", equalTo(createdOrder.getId()));
+                .extract().as(OrderEntity.class);
+
+        assertNotNull(response);
+        assertEquals(createdOrder.getId(), response.getId());
+        assertEquals(createdOrder.getPaid(), response.getPaid());
+        assertEquals(createdOrder.getTax(), response.getTax());
+        assertEquals(createdOrder.getDue(), response.getDue());
+        assertEquals(createdOrder.getCustomerName(), response.getCustomerName());
+        assertEquals(createdOrder.getDiscount(), response.getDiscount());
+        assertEquals(createdOrder.getPaymentType(), response.getPaymentType());
+        assertEquals(createdOrder.getSubtotal(), response.getSubtotal());
+        assertEquals(createdOrder.getTotal(), response.getTotal());
+        assertEquals(createdOrder.getCreated(), response.getCreated());
+
+        var responseItems = response.getItems();
+        assertNotNull(responseItems);
+        var responseItemMap = responseItems.stream().collect(Collectors.toMap(OrderItemEntity::getProductId, Function.identity()));
+        assertEquals(requestItemMap.size(), responseItemMap.size());
+        for(var expectedEntry : requestItemMap.entrySet()) {
+            var expected = expectedEntry.getValue();
+            var actual = responseItemMap.get(expectedEntry.getKey());
+            assertEquals(expected.getId(), actual.getId());
+            assertEquals(expected.getOrderId(), actual.getOrderId());
+            assertEquals(expected.getProductId(), actual.getProductId());
+            assertEquals(expected.getProductName(), actual.getProductName());
+            assertEquals(expected.getQuantity(), actual.getQuantity());
+            assertEquals(expected.getPrice(), actual.getPrice());
+            assertEquals(expected.getCreated(), actual.getCreated());
+        }
     }
 
     @Test

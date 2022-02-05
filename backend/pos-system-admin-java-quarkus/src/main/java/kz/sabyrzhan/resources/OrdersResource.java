@@ -3,8 +3,10 @@ package kz.sabyrzhan.resources;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import kz.sabyrzhan.entities.OrderEntity;
+import kz.sabyrzhan.repositories.OrderItemRepository;
 import kz.sabyrzhan.repositories.OrderRepository;
 import kz.sabyrzhan.services.OrderService;
+import kz.sabyrzhan.services.dto.TransientHolder;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -21,6 +23,9 @@ public class OrdersResource {
     @Inject
     OrderRepository orderRepository;
 
+    @Inject
+    OrderItemRepository orderItemRepository;
+
     @POST
     public Uni<OrderEntity> createOrder(OrderEntity order) {
         return orderService.createOrder(order);
@@ -29,7 +34,16 @@ public class OrdersResource {
     @GET
     @Path("/{id}")
     public Uni<OrderEntity> getById(@PathParam("id") String id) {
-        return orderRepository.findById(id);
+        var holder = new TransientHolder();
+        return orderRepository.findById(id)
+                .onItem().transformToUni(orderEntity -> {
+                    holder.setOrderEntity(orderEntity);
+                    return orderItemRepository.findByOrderId(orderEntity.getId());
+                })
+                .onItem().transform(items -> {
+                    holder.getOrderEntity().setItems(items);
+                    return holder.getOrderEntity();
+                });
     }
 
     @GET
