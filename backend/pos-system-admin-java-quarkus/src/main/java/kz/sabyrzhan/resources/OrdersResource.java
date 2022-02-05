@@ -9,10 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.*;
 
 @Path("/api/v1/orders")
 @ApplicationScoped
@@ -30,11 +27,23 @@ public class OrdersResource {
     }
 
     @GET
+    @Path("/{id}")
+    public Uni<OrderEntity> getById(@PathParam("id") String id) {
+        return orderRepository.findById(id);
+    }
+
+    @GET
     public Multi<OrderEntity> getList(@QueryParam("page") int page) {
         if (page == 0) {
             page = 1;
         }
 
         return orderRepository.list(page, 30);
+    }
+
+    @DELETE
+    @Path("/{orderId}")
+    public Uni<OrderEntity> cancelOrder(@PathParam("orderId") String orderId) {
+        return orderRepository.cancelOrder(orderId);
     }
 }

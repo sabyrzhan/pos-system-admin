@@ -6,9 +6,11 @@ import io.restassured.http.ContentType;
 import io.vertx.mutiny.pgclient.PgPool;
 import kz.sabyrzhan.DbResource;
 import kz.sabyrzhan.clients.DictClient;
+import kz.sabyrzhan.clients.OrderClient;
 import kz.sabyrzhan.clients.ProductClient;
 import kz.sabyrzhan.entities.*;
 import kz.sabyrzhan.model.ConfigKey;
+import kz.sabyrzhan.model.OrderStatus;
 import kz.sabyrzhan.model.PaymentType;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,6 +18,7 @@ import org.junit.jupiter.api.Test;
 
 import javax.inject.Inject;
 import java.util.Map;
+import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -34,6 +37,10 @@ class OrdersResourceTest {
     @Inject
     @RestClient
     ProductClient productClient;
+
+    @Inject
+    @RestClient
+    OrderClient orderClient;
 
     @Inject
     PgPool pgPool;
@@ -166,6 +173,76 @@ class OrdersResourceTest {
         assertEquals(product1.getStock(), updatedProduct1.getStock());
         assertEquals(product2.getStock(), updatedProduct2.getStock());
         assertEquals(product3.getStock(), updatedProduct3.getStock());
+    }
+
+    @Test
+    public void cancelOrder_success() {
+        var orderRequest = createOrder();
+        var createdOrder = orderClient.create(orderRequest);
+
+        given()
+                .contentType(ContentType.JSON)
+                .when()
+                .delete("/api/v1/orders/" + createdOrder.getId())
+                .then()
+                .contentType(containsString(ContentType.JSON.toString()))
+                .statusCode(equalTo(200))
+                .and()
+                .body("id", equalTo(createdOrder.getId()));
+
+        var updatedOrder = orderClient.getById(createdOrder.getId());
+        assertNotNull(updatedOrder);
+        assertEquals(OrderStatus.CANCELLED, updatedOrder.getStatus());
+    }
+
+    @Test
+    public void cancelOrder_cannotCancelProcessing() {
+        var orderRequest = createOrder();
+        var createdOrder = orderClient.create(orderRequest);
+        OrderEntity.update("status = ?1 where id = ?2", OrderStatus.PROCESSING, createdOrder.getId()).await().indefinitely();
+
+        given()
+                .contentType(ContentType.JSON)
+                .when()
+                .delete("/api/v1/orders/" + createdOrder.getId())
+                .then()
+                .contentType(containsString(ContentType.JSON.toString()))
+                .statusCode(equalTo(403))
+                .and()
+                .body("error", equalTo("Cannot cancel processing order"));
+
+        var updatedOrder = orderClient.getById(createdOrder.getId());
+        assertNotNull(updatedOrder);
+        assertEquals(OrderStatus.PROCESSING, updatedOrder.getStatus());
+    }
+
+    @Test
+    public void getById_success() {
+        var orderRequest = createOrder();
+        var createdOrder = orderClient.create(orderRequest);
+
+        given()
+                .contentType(ContentType.JSON)
+                .when()
+                .get("/api/v1/orders/" + createdOrder.getId())
+                .then()
+                .contentType(containsString(ContentType.JSON.toString()))
+                .statusCode(equalTo(200))
+                .and()
+                .body("id", equalTo(createdOrder.getId()));
+    }
+
+    @Test
+    public void getById_notFound() {
+        given()
+                .contentType(ContentType.JSON)
+                .when()
+                .get("/api/v1/orders/" + UUID.randomUUID())
+                .then()
+                .contentType(containsString(ContentType.JSON.toString()))
+                .statusCode(equalTo(404))
+                .and()
+                .body("error", equalTo("Order not found"));
     }
 
     public OrderEntity createOrder() {
