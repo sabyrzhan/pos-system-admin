@@ -81,7 +81,7 @@ public class OrderService {
                                 return Uni.createFrom().failure(new InvalidOrderItemsException("Order item quantity is more than stock for productId=" + orderItem.getProductId()));
                             }
                             orderItem.setProductName(product.getName());
-                            orderItem.setCreated(ZonedDateTime.now());
+                            orderItem.setCreated(requestOrder.getCreated());
                             orderItem.setPrice(product.getSalePrice());
                             orderItems.add(orderItem);
 

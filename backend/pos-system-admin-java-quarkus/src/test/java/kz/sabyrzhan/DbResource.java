@@ -18,7 +18,6 @@ public class DbResource implements QuarkusTestResourceLifecycleManager {
 
     @Override
     public Map<String, String> start() {
-        if (true) return Map.of();
         dbContainer.start();
         String url = "vertx-reactive:postgresql://localhost:" + dbContainer.getMappedPort(5432) + "/" + DB_NAME;
         return Map.of(
@@ -32,7 +31,6 @@ public class DbResource implements QuarkusTestResourceLifecycleManager {
 
     @Override
     public void stop() {
-        if (true) return;
         dbContainer.stop();
     }
 }

@@ -4,7 +4,7 @@ import io.quarkus.hibernate.reactive.panache.PanacheEntityBase;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.time.ZonedDateTime;
+import java.time.Instant;
 
 @Entity
 @Table(name = "pos_order_items")
@@ -30,5 +30,5 @@ public class OrderItemEntity extends PanacheEntityBase {
     private float price;
 
     @Column
-    private ZonedDateTime created;
+    private Instant created;
 }
