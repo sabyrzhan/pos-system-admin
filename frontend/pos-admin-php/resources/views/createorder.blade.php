@@ -19,6 +19,16 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="card">
+                        @if(Session::has('error'))
+                            <div class="alert alert-danger" role="alert">
+                                {{ Session::get('error') }}
+                            </div>
+                        @endif
+                        @if(Session::has('success'))
+                            <div class="alert alert-primary" role="alert">
+                                {{ Session::get('success') }}
+                            </div>
+                        @endif
                         <form action="{{ URL::route('add_order') }}" method="post">
                             @csrf
                             <div class="row">
@@ -43,7 +53,7 @@
                                                 <div class="input-group-prepend" data-target="#orderDatePicker" data-toggle="datetimepicker">
                                                     <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                                 </div>
-                                                <input type="text" class="form-control datetimepicker-input" name="orderDate" data-target="#orderDatePicker" value="{{ date('d.m.Y') }}" readonly />
+                                                <input type="text" class="form-control datetimepicker-input" name="created" data-target="#orderDatePicker" value="{{ date('d.m.Y') }}" readonly />
                                             </div>
                                         </div>
                                     </div>
@@ -141,16 +151,16 @@
                                             <label for="name">Payment method</label>
                                             <div class="input-group">
                                                 <div class="form-check form-check-inline">
-                                                    <input class="form-check-input" type="radio" name="paymentMethod" id="paymentMethodCash" value="CASH">
-                                                    <label class="form-check-label" for="paymentMethodCash">CASH</label>
+                                                    <input class="form-check-input" type="radio" name="paymentType" id="paymentTypeCash" value="CASH">
+                                                    <label class="form-check-label" for="paymentTypeCash">CASH</label>
                                                 </div>
                                                 <div class="form-check form-check-inline">
-                                                    <input class="form-check-input" type="radio" name="paymentMethod" id="paymentMethodCard" value="CARD">
-                                                    <label class="form-check-label" for="paymentMethodCard">CARD</label>
+                                                    <input class="form-check-input" type="radio" name="paymentType" id="paymentTypeCard" value="CREDIT">
+                                                    <label class="form-check-label" for="paymentTypeCard">CARD</label>
                                                 </div>
                                                 <div class="form-check form-check-inline">
-                                                    <input class="form-check-input" type="radio" name="paymentMethod" id="paymentMethodCheck" value="CHECK">
-                                                    <label class="form-check-label" for="paymentMethodCheck">CHECK</label>
+                                                    <input class="form-check-input" type="radio" name="paymentType" id="paymentTypeCheck" value="CHECK">
+                                                    <label class="form-check-label" for="paymentTypeCheck">CHECK</label>
                                                 </div>
 
                                             </div>

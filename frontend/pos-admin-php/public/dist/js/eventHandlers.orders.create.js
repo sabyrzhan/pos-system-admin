@@ -17,7 +17,7 @@ $(function() {
             '</td>';
         html += '<td><input type="number" class="form-control stock" name="stock[]" readonly></td>';
         html += '<td><input type="number" class="form-control price" name="price[]" readonly></td>';
-        html += '<td><input type="number" step="1" min="1" class="form-control qty" name="qty[]" readonly required></td>';
+        html += '<td><input type="number" step="1" min="1" class="form-control quantity" name="quantity[]" readonly required></td>';
         html += '<td><input type="number" class="form-control total" name="total[]" readonly></td>';
         html += '<td class="text-center">' +
             '<a href="#" class="btn btn-danger btn-sm delete-order-product-btn" role="button">' +
@@ -36,17 +36,17 @@ $(function() {
         let parentTr = $(this).closest('tr');
         $(parentTr).find('.stock').val(product.stock);
         $(parentTr).find('.price').val(product.salePrice);
-        let qty = $(parentTr).find('.qty');
-        qty.val(1);
-        qty.removeAttr('readonly');
+        let quantity = $(parentTr).find('.quantity');
+        quantity.val(1);
+        quantity.removeAttr('readonly');
         $(parentTr).find('.total').val(product.salePrice);
         calculateOrder();
 
     })
 
-    $('#orderProductsTableBody').on('change', 'input.qty', function() {
-        let qty = $(this).val() * 1;
-        if (!Number.isInteger(qty) || qty <= 0) {
+    $('#orderProductsTableBody').on('change', 'input.quantity', function() {
+        let quantity = $(this).val() * 1;
+        if (!Number.isInteger(quantity) || quantity <= 0) {
             bootbox.alert("Quantity must be at least 1");
             return false;
         }
@@ -57,7 +57,7 @@ $(function() {
             bootbox.alert("Product with ID=" + productId + " not found.");
             return false;
         }
-        let totalPrice = qty * product.salePrice;
+        let totalPrice = quantity * product.salePrice;
         $(parentTr).find('.total').val(totalPrice);
         calculateOrder();
     })
