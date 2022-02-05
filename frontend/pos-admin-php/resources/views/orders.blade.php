@@ -50,6 +50,7 @@
                                         <th>Total</th>
                                         <th>Paid</th>
                                         <th>Due</th>
+                                        <th>Status</th>
                                         <th>Payment type</th>
                                         <th>Actions</th>
                                     </tr>
@@ -64,6 +65,25 @@
                                                 <td>{{ $order['total'] }}</td>
                                                 <td>{{ $order['paid'] }}</td>
                                                 <td>{{ $order['due'] }}</td>
+                                                <td>
+                                                    @switch($order['status'])
+                                                        @case('NEW')
+                                                            <span class="badge bg-primary">{{ $order['status'] }}</span>
+                                                        @break
+                                                        @case('PROCESSING')
+                                                            <span class="badge bg-warning">{{ $order['status'] }}</span>
+                                                        @break
+                                                        @case('DONE')
+                                                            <span class="badge bg-green">{{ $order['status'] }}</span>
+                                                        @break
+                                                        @case('CANCELLED')
+                                                            <span class="badge bg-red">{{ $order['status'] }}</span>
+                                                        @break
+                                                        @default
+                                                            <span>{{ $order['status'] }}</span>
+                                                        @break
+                                                    @endswitch
+                                                </td>
                                                 <td>{{ $order['paymentType'] }}</td>
                                                 <td>
                                                     <a href="{{ URL::route('view_product', [$order['id']]) }}" class="btn btn-primary" role="button">
@@ -72,15 +92,20 @@
                                                     <a href="{{ URL::route('view_product', [$order['id']]) }}" class="btn btn-warning" role="button">
                                                         <span class="nav-icon fas fa-eye" data-toggle="tooltip" title="Order details"></span>
                                                     </a>
-                                                    <a href="{{ URL::route('add_product_page') . '?id=' . $order['id'] }}" class="btn btn-danger" role="button">
-                                                        <span class="nav-icon fas fa-trash" data-toggle="tooltip" title="Cancel order"></span>
+                                                    <a href="{{ URL::route('add_product_page') . '?id=' . $order['id'] }}" class="btn btn-info" role="button">
+                                                        <span class="nav-icon fas fa-copy" data-toggle="tooltip" title="Create copy"></span>
                                                     </a>
+                                                    @if($order['status'] == 'NEW')
+                                                        <a href="{{ URL::route('add_product_page') . '?id=' . $order['id'] }}" class="btn btn-danger" role="button">
+                                                            <span class="nav-icon fas fa-trash" data-toggle="tooltip" title="Cancel order"></span>
+                                                        </a>
+                                                    @endif
                                                 </td>
                                             </tr>
                                         @endforeach
                                     @else
                                         <tr>
-                                            <td colspan="9">No Products found.</td>
+                                            <td colspan="9">No orders found.</td>
                                         </tr>
                                     @endif
                                     </tbody>
