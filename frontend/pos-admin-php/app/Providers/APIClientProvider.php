@@ -188,4 +188,10 @@ class APIClientProvider
             return $response->json();
         }
     }
+
+    public function cancelOrder($id) {
+        $response = $this->client->delete('/api/v1/orders/' . $id);
+        return $response->status() == 200;
+    }
+
 }

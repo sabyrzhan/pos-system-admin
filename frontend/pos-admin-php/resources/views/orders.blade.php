@@ -96,7 +96,7 @@
                                                         <span class="nav-icon fas fa-copy" data-toggle="tooltip" title="Create copy"></span>
                                                     </a>
                                                     @if($order['status'] == 'NEW')
-                                                        <a href="{{ URL::route('add_product_page') . '?id=' . $order['id'] }}" class="btn btn-danger" role="button">
+                                                        <a href="#" class="btn btn-danger cancel-order-btn" role="button" id="{{ $order['id'] }}">
                                                             <span class="nav-icon fas fa-trash" data-toggle="tooltip" title="Cancel order"></span>
                                                         </a>
                                                     @endif

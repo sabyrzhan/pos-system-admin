@@ -76,6 +76,25 @@ $(function() {
         calculateOrder();
     });
 
+    $('.cancel-order-btn').on('click', function() {
+        let id = $(this).attr('id');
+        bootbox.confirm("Do you really want to cancel this order?", function (result) {
+            if (result) {
+                $.ajax({
+                    url: '/api/orders/' + id,
+                    type: 'delete',
+                    success: function () {
+                        window.location = location.pathname + '?success=Order cancelled!';
+                    },
+                    error: function (err) {
+                        let json = JSON.parse(err.responseText);
+                        window.location = location.pathname + '?error=' + json.error;
+                    }
+                })
+            }
+        });
+    });
+
     function clearOrderFields() {
         let inputs = $('.order-fields-container').find('[type="text"],[type="number"]');
         for(let i of inputs) {
