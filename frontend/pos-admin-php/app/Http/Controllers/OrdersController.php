@@ -64,6 +64,19 @@ class OrdersController extends Controller
         return redirect()->route('get_orders_page')->with('success', 'Order created successfully');
     }
 
+    public function generateInvoice($orderId) {
+        $invoice = $this->apiClient->generateInvoice($orderId);
+        if (!$invoice) {
+            return redirect()->route('get_orders_page')->with('error', 'Error while generating invoice. Please try again!');
+        }
+
+        if (isset($invoice['url'])) {
+            return redirect($invoice['url']);
+        } else {
+            return redirect()->route('get_orders_page')->with('error', 'Error while trying to show invoice. Did not receive invoice URL.');
+        }
+    }
+
     private function cleanOrderRequest($requestOrder) {
         foreach($requestOrder as $key => $value) {
             if ($value == null) {

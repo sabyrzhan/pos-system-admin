@@ -86,7 +86,7 @@
                                                 </td>
                                                 <td>{{ $order['paymentType'] }}</td>
                                                 <td>
-                                                    <a href="{{ URL::route('view_product', [$order['id']]) }}" class="btn btn-primary" role="button">
+                                                    <a href="{{ URL::route('generate_invoice', [$order['id']]) }}" class="btn btn-primary" role="button" target="_blank">
                                                         <span class="nav-icon fas fa-print" data-toggle="tooltip" title="Print invoice"></span>
                                                     </a>
                                                     <a href="{{ URL::route('view_product', [$order['id']]) }}" class="btn btn-warning" role="button">
