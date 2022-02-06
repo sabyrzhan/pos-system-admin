@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<page>
+    <header>
+        <company>
+            <name>InventoryPOS</name>
+            <address>1 InventoryPOS Way, Almaty, Kazakhstan</address>
+            <phone>+7 777 1234 567</phone>
+            <email>info@inventorypos.com</email>
+            <website>https://www.inventorypos.com</website>
+        </company>
+        <invoice>
+            <id>#INVOICE_ID</id>
+            <date>INVOICE_DATE</date>
+            <billTo>BILL_TO</billTo>
+        </invoice>
+    </header>
+    <body>
+        ITEMS_AND_SUMS
+        <infos>
+            <info>
+                <text>No item will be replaced or refunded if you don't have this invoice with you. You can refund within 2 days of purchase.</text>
+            </info>
+        </infos>
+    </body>
+</page>

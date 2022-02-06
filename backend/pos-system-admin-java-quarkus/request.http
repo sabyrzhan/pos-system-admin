@@ -81,3 +81,6 @@ POST http://localhost:8080/api/v1/dict/configs
 
 ### Cancel order
 DELETE http://localhost:8080/api/v1/orders/f78a8cdc-5f5f-4452-8f7c-6aba92e90ba6
+
+### Generate invoice
+POST http://localhost:8080/api/v1/orders/f78a8cdc-5f5f-4452-8f7c-6aba92e90ba6/invoice

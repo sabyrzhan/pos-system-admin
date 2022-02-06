@@ -1,9 +1,6 @@
 package kz.sabyrzhan.resources;
 
-import kz.sabyrzhan.exceptions.EntityAlreadyExistsException;
-import kz.sabyrzhan.exceptions.EntityNotFoundException;
-import kz.sabyrzhan.exceptions.InvalidOrderItemsException;
-import kz.sabyrzhan.exceptions.InvalidStatusException;
+import kz.sabyrzhan.exceptions.*;
 import lombok.extern.slf4j.Slf4j;
 import org.jboss.resteasy.reactive.RestResponse;
 import org.jboss.resteasy.reactive.server.ServerExceptionMapper;
@@ -48,5 +45,10 @@ public class ExceptionMappers {
     @ServerExceptionMapper
     public RestResponse<ErrorResponse> handleInvalidStatusException(InvalidStatusException e) {
         return RestResponse.status(FORBIDDEN, new ErrorResponse(e.getMessage()));
+    }
+
+    @ServerExceptionMapper
+    public RestResponse<ErrorResponse> handleInvoiceException(InvoiceException e) {
+        return RestResponse.status(INTERNAL_SERVER_ERROR, new ErrorResponse(e.getMessage()));
     }
 }

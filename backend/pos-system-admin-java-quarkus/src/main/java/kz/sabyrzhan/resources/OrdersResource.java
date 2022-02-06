@@ -3,8 +3,10 @@ package kz.sabyrzhan.resources;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import kz.sabyrzhan.entities.OrderEntity;
+import kz.sabyrzhan.model.InvoiceResult;
 import kz.sabyrzhan.repositories.OrderItemRepository;
 import kz.sabyrzhan.repositories.OrderRepository;
+import kz.sabyrzhan.services.InvoiceService;
 import kz.sabyrzhan.services.OrderService;
 import kz.sabyrzhan.services.dto.TransientHolder;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +27,9 @@ public class OrdersResource {
 
     @Inject
     OrderItemRepository orderItemRepository;
+
+    @Inject
+    InvoiceService invoiceService;
 
     @POST
     public Uni<OrderEntity> createOrder(OrderEntity order) {
@@ -59,5 +64,11 @@ public class OrdersResource {
     @Path("/{orderId}")
     public Uni<OrderEntity> cancelOrder(@PathParam("orderId") String orderId) {
         return orderService.cancelOrder(orderId);
+    }
+
+    @POST
+    @Path("/{orderId}/invoice")
+    public Uni<InvoiceResult> generateOrderInvoice(@PathParam("orderId") String orderId) {
+        return getById(orderId).onItem().transformToUni(orderEntity -> invoiceService.generatePdf(orderEntity));
     }
 }
