@@ -82,7 +82,7 @@ $(function() {
         let tbody = $('#orderProductsTableBody');
         let html = '';
         html += '<tr>';
-        html += '<td><input type="hidden" class="form-control pname" name="productName[]" readonly></td>';
+        html += '<td></td>';
         html += '<td>' +
             '<select class="form-control pid" name="productId[]" style="width: 100%" required>' +
             '<option disabled selected>-- Select product --</option>' +
