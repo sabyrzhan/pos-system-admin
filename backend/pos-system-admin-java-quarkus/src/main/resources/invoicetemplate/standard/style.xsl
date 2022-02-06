@@ -131,14 +131,14 @@
         </fo:table>
         <fo:block><xsl:text>&#160;</xsl:text></fo:block>
         <fo:table table-layout="fixed" width="100%">
-            <fo:table-column column-width="5%"/>
-            <fo:table-column column-width="95%"/>
+            <fo:table-column column-width="20%"/>
+            <fo:table-column column-width="80%"/>
             <fo:table-body margin-left="1mm">
                 <xsl:for-each select="infos/info">
                     <fo:table-row>
-                        <fo:table-cell background-color="grey" font-weight="bold" display-align="center">
+                        <fo:table-cell background-color="grey" font-weight="bold" display-align="center" text-align="center">
                             <fo:block>
-                                Info
+                                Important notice:
                             </fo:block>
                         </fo:table-cell>
                         <fo:table-cell>
