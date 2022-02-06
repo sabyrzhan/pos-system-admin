@@ -1,9 +1,8 @@
 package kz.sabyrzhan.services;
 
-import io.quarkus.hibernate.reactive.panache.common.runtime.ReactiveTransactional;
 import io.smallrye.mutiny.Uni;
-import kz.sabyrzhan.entities.OrderItemEntity;
 import kz.sabyrzhan.entities.OrderEntity;
+import kz.sabyrzhan.entities.OrderItemEntity;
 import kz.sabyrzhan.entities.ProductEntity;
 import kz.sabyrzhan.entities.StoreConfigEntity;
 import kz.sabyrzhan.exceptions.EntityNotFoundException;
@@ -18,11 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -45,24 +40,30 @@ public class OrderService {
         final TransientHolder holder = new TransientHolder();
         return Uni.createFrom().item(requestOrder.getItems())
                 .onItem().transformToUni(items -> {
-                    Map<Integer, Integer> productToQuantityMap = new HashMap<>();
+                    Set<Integer> productIds = new HashSet<>();
+                    Map<Integer, OrderItemEntity> itemsWithoutDuplicates = new HashMap<>();
                     if (requestOrder.getItems() != null) {
                         for(OrderItemEntity item : requestOrder.getItems()) {
-                            productToQuantityMap.putIfAbsent(item.getProductId(), 0);
-                            productToQuantityMap.computeIfPresent(item.getProductId(), (key, oldValue) -> productToQuantityMap.get(key));
+                            productIds.add(item.getProductId());
+                            if (itemsWithoutDuplicates.get(item.getProductId()) == null) {
+                                itemsWithoutDuplicates.put(item.getProductId(), item.clone());
+                            } else {
+                                itemsWithoutDuplicates.get(item.getProductId()).addQuantity(item.getQuantity());
+                            }
                         }
+                        requestOrder.setItems(itemsWithoutDuplicates.values().stream().collect(Collectors.toList()));
                     }
 
-                    if (productToQuantityMap.isEmpty()) {
+                    if (productIds.isEmpty()) {
                         return Uni.createFrom().failure(new InvalidOrderItemsException("Order items not specified"));
                     }
 
-                    return Uni.createFrom().item(productToQuantityMap);
+                    return Uni.createFrom().item(productIds);
                 })
-                .onItem().transformToUni(productToQuantityMap -> {
-                    Uni<List<ProductEntity>> productsUni = productRepository.list(productToQuantityMap.keySet());
+                .onItem().transformToUni(productIds -> {
+                    Uni<List<ProductEntity>> productsUni = productRepository.list(productIds);
                     return productsUni.onItem().transformToUni(products -> {
-                        if (products.size() != productToQuantityMap.size()) {
+                        if (products.size() != productIds.size()) {
                             return Uni.createFrom().failure(new InvalidOrderItemsException("Invalid products specified"));
                         }
 
