@@ -15,8 +15,16 @@ class OrdersController extends Controller
     }
 
     public function addOrderPage() {
+        $copyFromId = request('copyFrom');
+        $otherOrder = null;
+        if ($copyFromId) {
+            $otherOrder = $this->apiClient->getOrderById($copyFromId);
+            if ($otherOrder) {
+                $otherOrder['created'] = DateTime::createFromFormat("Y-m-d\TH:i:sp", $otherOrder['created'])->format('d.m.Y');
+            }
+        }
         $products = $this->apiClient->getProducts();
-        return view('createorder', ['products' => $products]);
+        return view('createorder', ['products' => $products, 'otherOrder' => $otherOrder]);
     }
 
     public function getOrdersPage() {
@@ -38,12 +46,19 @@ class OrdersController extends Controller
         $order = $this->cleanOrderRequest($order);
 
         $response = $this->apiClient->createOrder($order);
+
+        $routeParams = [];
+        $copyFromId = request('copyFrom');
+        if ($copyFromId) {
+            $routeParams['copyFrom'] = $copyFromId;
+        }
+
         if (!$response) {
-            return redirect()->route('add_order_page')->with('error', 'Internal Server Error. Please try again!');
+            return redirect()->route('add_order_page', $routeParams)->with('error', 'Internal Server Error. Please try again!');
         }
 
         if (isset($response['error'])) {
-            return redirect()->route('add_order_page')->with('error', $response['error']);
+            return redirect()->route('add_order_page', $routeParams)->with('error', $response['error']);
         }
 
         return redirect()->route('get_orders_page')->with('success', 'Order created successfully');

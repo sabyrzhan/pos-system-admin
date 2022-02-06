@@ -92,7 +92,7 @@
                                                     <a href="{{ URL::route('view_product', [$order['id']]) }}" class="btn btn-warning" role="button">
                                                         <span class="nav-icon fas fa-eye" data-toggle="tooltip" title="Order details"></span>
                                                     </a>
-                                                    <a href="{{ URL::route('add_product_page') . '?id=' . $order['id'] }}" class="btn btn-info" role="button">
+                                                    <a href="{{ URL::route('add_order_page') . '?copyFrom=' . $order['id'] }}" class="btn btn-info" role="button">
                                                         <span class="nav-icon fas fa-copy" data-toggle="tooltip" title="Create copy"></span>
                                                     </a>
                                                     @if($order['status'] == 'NEW')

@@ -189,6 +189,16 @@ class APIClientProvider
         }
     }
 
+    public function getOrderById($id) {
+        $response = $this->client->get('/api/v1/orders/' . $id);
+
+        if ($response->status() != 200) {
+            return false;
+        } else {
+            return $response->json();
+        }
+    }
+
     public function cancelOrder($id) {
         $response = $this->client->delete('/api/v1/orders/' . $id);
         return $response->status() == 200;

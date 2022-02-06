@@ -1,32 +1,6 @@
 $(function() {
     $('.add-order-product-btn').on('click', function() {
-        let productsOptions = '';
-        for(let product of AppGlobals.Common.products) {
-            productsOptions += '<option value="' + product['id'] + '">' + product['name'] + '</option>'
-        }
-
-        let tbody = $('#orderProductsTableBody');
-        let html = '';
-        html += '<tr>';
-        html += '<td><input type="hidden" class="form-control pname" name="productName[]" readonly></td>';
-        html += '<td>' +
-            '<select class="form-control pid" name="productId[]" style="width: 100%" required>' +
-            '<option disabled selected>-- Select product --</option>' +
-            productsOptions +
-            '</select>' +
-            '</td>';
-        html += '<td><input type="number" class="form-control stock" name="stock[]" readonly></td>';
-        html += '<td><input type="number" class="form-control price" name="price[]" readonly></td>';
-        html += '<td><input type="number" step="1" min="1" class="form-control quantity" name="quantity[]" readonly required></td>';
-        html += '<td><input type="number" class="form-control total" name="total[]" readonly></td>';
-        html += '<td class="text-center">' +
-            '<a href="#" class="btn btn-danger btn-sm delete-order-product-btn" role="button">' +
-            '<span class="nav-icon fas fa-times" data-toggle="tooltip" title="Delete product"></span>' +
-            '</a>' +
-            '</td>';
-        html += '</tr>';
-        tbody.append(html);
-        $('.pid').select2();
+        appendOrderItem(null);
     });
 
     $('#orderProductsTableBody').on('change', 'select.pid', function() {
@@ -95,6 +69,49 @@ $(function() {
         });
     });
 
+    function appendOrderItem(orderItem) {
+        let productsOptions = '';
+        for(let product of AppGlobals.Common.products) {
+            if (orderItem && orderItem['productId'] == product['id']) {
+                productsOptions += '<option selected value="' + product['id'] + '">' + product['name'] + '</option>'
+            } else {
+                productsOptions += '<option value="' + product['id'] + '">' + product['name'] + '</option>'
+            }
+        }
+
+        let tbody = $('#orderProductsTableBody');
+        let html = '';
+        html += '<tr>';
+        html += '<td><input type="hidden" class="form-control pname" name="productName[]" readonly></td>';
+        html += '<td>' +
+            '<select class="form-control pid" name="productId[]" style="width: 100%" required>' +
+            '<option disabled selected>-- Select product --</option>' +
+            productsOptions +
+            '</select>' +
+            '</td>';
+        if (orderItem && AppGlobals.Common.findProductById(orderItem['productId'])) {
+            let product = AppGlobals.Common.findProductById(orderItem['productId']);
+            html += '<td><input type="number" class="form-control stock" name="stock[]" value="' + product['stock'] + '" readonly></td>';
+            html += '<td><input type="number" class="form-control price" name="price[]" value="' + product['salePrice'] + '" readonly></td>';
+            let total = orderItem['quantity'] * product['salePrice'];
+            html += '<td><input type="number" step="1" min="1" class="form-control quantity" name="quantity[]" value="' + orderItem['quantity'] + '" required></td>';
+            html += '<td><input type="number" class="form-control total" name="total[]" value="' + total + '" readonly></td>';
+        } else {
+            html += '<td><input type="number" class="form-control stock" name="stock[]" readonly></td>';
+            html += '<td><input type="number" class="form-control price" name="price[]" readonly></td>';
+            html += '<td><input type="number" step="1" min="1" class="form-control quantity" name="quantity[]" readonly required></td>';
+            html += '<td><input type="number" class="form-control total" name="total[]" readonly></td>';
+        }
+        html += '<td class="text-center">' +
+            '<a href="#" class="btn btn-danger btn-sm delete-order-product-btn" role="button">' +
+            '<span class="nav-icon fas fa-times" data-toggle="tooltip" title="Delete product"></span>' +
+            '</a>' +
+            '</td>';
+        html += '</tr>';
+        tbody.append(html);
+        $('.pid').select2();
+    }
+
     function clearOrderFields() {
         let inputs = $('.order-fields-container').find('[type="text"],[type="number"]');
         for(let i of inputs) {
@@ -120,6 +137,13 @@ $(function() {
         $('#tax').val(tax.toFixed(2));
         $('#total').val(total.toFixed(2));
         $('#due').val(due);
+    }
+
+    if (AppGlobals.Common.order != null) {
+        for(let item of AppGlobals.Common.order['items']) {
+            appendOrderItem(item);
+            calculateOrder();
+        }
     }
 
     $('#orderDatePicker').datetimepicker({ format: 'DD.MM.YYYY' });

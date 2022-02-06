@@ -2,6 +2,7 @@ let AppGlobals = {
     Common: {
         taxPercent: 5,
         products: [],
+        order: null,
         categories: [],
         findProductById: function(id) {
             if (!this.products) {

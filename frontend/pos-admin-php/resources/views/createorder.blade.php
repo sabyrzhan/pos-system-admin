@@ -40,7 +40,7 @@
                                                 <div class="input-group-prepend">
                                                     <div class="input-group-text"><i class="fa fa-user"></i></div>
                                                 </div>
-                                                <input type="text" class="form-control" id="customerName" name="customerName" placeholder="Enter name...">
+                                                <input type="text" class="form-control" id="customerName" name="customerName" placeholder="Enter name..." required>
                                             </div>
                                         </div>
                                     </div>
@@ -135,7 +135,7 @@
                                                 <div class="input-group-prepend">
                                                     <div class="input-group-text"><i class="fa fa-dollar-sign"></i></div>
                                                 </div>
-                                                <input type="number" min="0" class="form-control" id="paid" name="paid">
+                                                <input type="number" min="0" class="form-control" id="paid" name="paid" required>
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -151,15 +151,15 @@
                                             <label for="name">Payment method</label>
                                             <div class="input-group">
                                                 <div class="form-check form-check-inline">
-                                                    <input class="form-check-input" type="radio" name="paymentType" id="paymentTypeCash" value="CASH">
+                                                    <input class="form-check-input" type="radio" name="paymentType" id="paymentTypeCash" value="CASH" required>
                                                     <label class="form-check-label" for="paymentTypeCash">CASH</label>
                                                 </div>
                                                 <div class="form-check form-check-inline">
-                                                    <input class="form-check-input" type="radio" name="paymentType" id="paymentTypeCard" value="CREDIT">
+                                                    <input class="form-check-input" type="radio" name="paymentType" id="paymentTypeCard" value="CREDIT" required>
                                                     <label class="form-check-label" for="paymentTypeCard">CARD</label>
                                                 </div>
                                                 <div class="form-check form-check-inline">
-                                                    <input class="form-check-input" type="radio" name="paymentType" id="paymentTypeCheck" value="CHECK">
+                                                    <input class="form-check-input" type="radio" name="paymentType" id="paymentTypeCheck" value="CHECK" required>
                                                     <label class="form-check-label" for="paymentTypeCheck">CHECK</label>
                                                 </div>
 
@@ -169,6 +169,7 @@
                                 </div>
                             </div>
                             <div class="card-footer">
+                                <input type="hidden" name="copyFrom" value="{{ $otherOrder['id'] ?? '' }}" />
                                 <button type="submit" class="btn btn-primary float-right">Create order</button>
                             </div>
                         </form>
@@ -183,11 +184,12 @@
 <!-- /.content-wrapper -->
 @include('includes.foot_start')
 <script type="text/javascript">
-    $(function() {
-        @if(isset($products))
-            AppGlobals.Common.products = @json($products);
-        @endif
-    });
+    @if($products)
+        AppGlobals.Common.products = @json($products);
+    @endif
+    @if($otherOrder)
+        AppGlobals.Common.order = @json($otherOrder);
+    @endif
 </script>
 <script src="/dist/js/eventHandlers.orders.create.js"></script>
 @include('includes.foot_end')
