@@ -10,11 +10,11 @@
             </fo:layout-master-set>
             <fo:page-sequence master-reference="simpleA4">
                 <fo:flow flow-name="xsl-region-body">
-                    <fo:block>
+                    <fo:block font-size="8pt">
                         <xsl:apply-templates select="header"/>
                     </fo:block>
                     <fo:block><xsl:text>&#160;</xsl:text></fo:block>
-                    <fo:block font-size="10pt">
+                    <fo:block font-size="8pt">
                         <xsl:apply-templates select="body"/>
                     </fo:block>
                 </fo:flow>
@@ -24,10 +24,10 @@
     <xsl:template match="header">
         <fo:table table-layout="fixed" width="100%">
             <fo:table-column column-width="100%"/>
-            <fo:table-body font-size="10pt" text-align="center">
+            <fo:table-body text-align="center">
                 <fo:table-row>
                     <fo:table-cell border-width="1px" border-style="solid" display-align="center" text-align="center" padding="2mm">
-                        <fo:block font-size="16pt" font-style="italic">
+                        <fo:block font-size="12pt" font-style="italic">
                             <xsl:value-of select="company/name"/>
                         </fo:block>
                     </fo:table-cell>
