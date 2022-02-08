@@ -6,6 +6,7 @@ import io.smallrye.mutiny.Uni;
 import kz.sabyrzhan.entities.CategoryEntity;
 import kz.sabyrzhan.entities.StoreConfigEntity;
 import kz.sabyrzhan.model.ConfigKey;
+import kz.sabyrzhan.model.PaymentType;
 import kz.sabyrzhan.model.UserRole;
 import kz.sabyrzhan.repositories.StoreConfigRepository;
 import kz.sabyrzhan.services.CategoryService;
@@ -70,5 +71,11 @@ public class DictionaryResource {
     @ReactiveTransactional
     public Uni<StoreConfigEntity> addConfig(StoreConfigEntity entity) {
         return storeConfigRepository.persist(entity);
+    }
+
+    @GET
+    @Path("/paymentTypes")
+    public Uni<PaymentType[]> getPaymentTypes() {
+        return Uni.createFrom().item(PaymentType.values());
     }
 }
