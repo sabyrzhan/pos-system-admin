@@ -28,21 +28,21 @@
             <fo:table-body font-size="10pt">
                 <fo:table-row>
                     <fo:table-cell>
-                        <fo:block font-size="16pt" font-style="italic">
+                        <fo:block font-size="16pt" font-style="italic" font-weight="bold">
                             <xsl:value-of select="company/name"/>
                         </fo:block>
                         <fo:block><xsl:text>&#160;</xsl:text></fo:block>
                         <fo:block>
-                            Address: <xsl:value-of select="company/address"/>
+                            <fo:inline font-weight="bold">Address:</fo:inline> <xsl:value-of select="company/address"/>
                         </fo:block>
                         <fo:block>
-                            Phone: <xsl:value-of select="company/phone"/>
+                            <fo:inline font-weight="bold">Phone:</fo:inline> <xsl:value-of select="company/phone"/>
                         </fo:block>
                         <fo:block>
-                            Email: <xsl:value-of select="company/email"/>
+                            <fo:inline font-weight="bold">Email:</fo:inline> <xsl:value-of select="company/email"/>
                         </fo:block>
                         <fo:block>
-                            Website: <xsl:value-of select="company/website"/>
+                            <fo:inline font-weight="bold">Website:</fo:inline> <xsl:value-of select="company/website"/>
                         </fo:block>
                     </fo:table-cell>
                     <fo:table-cell margin-left="2cm">
@@ -51,13 +51,15 @@
                         </fo:block>
                         <fo:block><xsl:text>&#160;</xsl:text></fo:block>
                         <fo:block>
-                            InvoiceID: <xsl:value-of select="invoice/id"/>
+                            <fo:inline font-weight="bold">InvoiceID:</fo:inline>
+                            <fo:block/>
+                            <xsl:value-of select="invoice/id"/>
                         </fo:block>
                         <fo:block>
-                            Date: <xsl:value-of select="invoice/date"/>
+                            <fo:inline font-weight="bold">Date:</fo:inline> <xsl:value-of select="invoice/date"/>
                         </fo:block>
                         <fo:block>
-                            Bill to: <xsl:value-of select="invoice/billTo"/>
+                            <fo:inline font-weight="bold">Bill to:</fo:inline> <xsl:value-of select="invoice/billTo"/>
                         </fo:block>
                     </fo:table-cell>
                 </fo:table-row>
@@ -116,7 +118,7 @@
                         <fo:table-cell border-width="1px"><fo:block></fo:block></fo:table-cell>
                         <fo:table-cell border-width="1px"><fo:block></fo:block></fo:table-cell>
                         <fo:table-cell border-width="1px" border-style="solid" background-color="grey" padding="1mm">
-                            <fo:block font-weight="bold">
+                            <fo:block font-weight="bold" text-align="right">
                                 <xsl:value-of select="key"/>
                             </fo:block>
                         </fo:table-cell>

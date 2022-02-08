@@ -4,6 +4,7 @@ import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import kz.sabyrzhan.entities.OrderEntity;
 import kz.sabyrzhan.model.InvoiceResult;
+import kz.sabyrzhan.model.InvoiceType;
 import kz.sabyrzhan.repositories.OrderItemRepository;
 import kz.sabyrzhan.repositories.OrderRepository;
 import kz.sabyrzhan.services.InvoiceService;
@@ -68,7 +69,10 @@ public class OrdersResource {
 
     @POST
     @Path("/{orderId}/invoice")
-    public Uni<InvoiceResult> generateOrderInvoice(@PathParam("orderId") String orderId) {
-        return getById(orderId).onItem().transformToUni(orderEntity -> invoiceService.generatePdf(orderEntity));
+    public Uni<InvoiceResult> generateOrderInvoice(@PathParam("orderId") final String orderId,
+                                                   @QueryParam("type") final InvoiceType type) {
+        return getById(orderId)
+                .onItem()
+                .transformToUni(orderEntity -> invoiceService.generateInvoice(orderEntity, type != null ? type : InvoiceType.STANDARD));
     }
 }

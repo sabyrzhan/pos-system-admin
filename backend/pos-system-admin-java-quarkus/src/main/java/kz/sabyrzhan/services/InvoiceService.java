@@ -3,10 +3,12 @@ package kz.sabyrzhan.services;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import io.smallrye.mutiny.Uni;
+import io.smallrye.mutiny.tuples.Tuple2;
 import kz.sabyrzhan.entities.OrderEntity;
 import kz.sabyrzhan.entities.OrderItemEntity;
 import kz.sabyrzhan.exceptions.InvoiceException;
 import kz.sabyrzhan.model.InvoiceResult;
+import kz.sabyrzhan.model.InvoiceType;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -17,7 +19,6 @@ import org.apache.fop.apps.FopFactory;
 import org.apache.fop.apps.MimeConstants;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
-import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.xml.transform.Result;
 import javax.xml.transform.Transformer;
@@ -44,19 +45,7 @@ public class InvoiceService {
     @ConfigProperty(name = "app.invoice_bucket")
     String invoiceBucket;
 
-    String xslDataTemplate;
-    String xmlDataTemplate;
-
-    @PostConstruct
-    void postConstruct() throws Exception {
-        try (var xsltFile = getClass().getClassLoader().getResourceAsStream("/invoicetemplate/standard/style.xsl");
-             var xmlSource = getClass().getClassLoader().getResourceAsStream("/invoicetemplate/standard/data.xml")) {
-            xslDataTemplate = IOUtils.toString(xsltFile, StandardCharsets.UTF_8);
-            xmlDataTemplate = IOUtils.toString(xmlSource, StandardCharsets.UTF_8);
-        }
-    }
-
-    public Uni<InvoiceResult> generatePdf(OrderEntity order) {
+    public Uni<InvoiceResult> generateInvoice(OrderEntity order, InvoiceType type) {
         final String invoiceName = "invoice_" + order.getId() + ".pdf";
         final String invoiceFilePath = invoicePath + "/" + invoiceName;
 
@@ -64,6 +53,38 @@ public class InvoiceService {
         stopWatch.start();
         return Uni.createFrom()
                 .deferred(() -> {
+                    String xslFile;
+                    switch (type) {
+                        case THERMAL:
+                            xslFile = "/invoicetemplate/style.thermal.xsl";
+                            break;
+                        case STANDARD:
+                        default:
+                            xslFile = "/invoicetemplate/style.standard.xsl";
+                            break;
+                    }
+                    String xmlFile = "/invoicetemplate/data.xml";
+                    String xslTemplate, xmlDataTemplate;
+                    try (var xsltFile = getClass().getClassLoader().getResourceAsStream(xslFile);
+                         var xmlSource = getClass().getClassLoader().getResourceAsStream(xmlFile)) {
+                        if (xsltFile == null) {
+                            throw new IllegalArgumentException("xsl template not found.");
+                        }
+                        if (xmlSource == null) {
+                            throw new IllegalArgumentException("xml data template not found.");
+                        }
+                        xslTemplate = IOUtils.toString(xsltFile, StandardCharsets.UTF_8);
+                        xmlDataTemplate = IOUtils.toString(xmlSource, StandardCharsets.UTF_8);
+                    } catch (Exception e) {
+                        log.error("Error while reading xml template file: {}", e.toString(), e);
+                        return Uni.createFrom().failure(new InvoiceException(e));
+                    }
+
+                    return Uni.createFrom().item(Tuple2.of(xslTemplate, xmlDataTemplate));
+                })
+                .onItem().transformToUni((tuple) -> {
+                    String xslTemplate = tuple.getItem1();
+                    String xmlDataTemplate = tuple.getItem2();
                     StringReader xsltFileReader = null;
                     StringReader xmlSourceReader = null;
                     FileOutputStream out = null;
@@ -76,7 +97,7 @@ public class InvoiceService {
                                 .replace("INVOICE_DATE", invoiceDate)
                                 .replace("BILL_TO", order.getCustomerName())
                                 .replace("ITEMS_AND_SUMS", generateXmlData(order));
-                        xsltFileReader = new StringReader(xslDataTemplate);
+                        xsltFileReader = new StringReader(xslTemplate);
                         xmlSourceReader = new StringReader(dataString);
                         FopFactory fopFactory = FopFactory.newInstance(new File(".").toURI());
                         FOUserAgent foUserAgent = fopFactory.newFOUserAgent();

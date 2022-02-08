@@ -82,5 +82,8 @@ POST http://localhost:8080/api/v1/dict/configs
 ### Cancel order
 DELETE http://localhost:8080/api/v1/orders/f78a8cdc-5f5f-4452-8f7c-6aba92e90ba6
 
-### Generate invoice
+### Generate invoice (SRANDARD)
 POST http://localhost:8080/api/v1/orders/f78a8cdc-5f5f-4452-8f7c-6aba92e90ba6/invoice
+
+### Generate invoice (THERMAL)
+POST http://localhost:8080/api/v1/orders/f78a8cdc-5f5f-4452-8f7c-6aba92e90ba6/invoice?type=THERMAL
