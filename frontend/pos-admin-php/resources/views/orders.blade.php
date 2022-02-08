@@ -92,7 +92,7 @@
                                                     <a href="{{ URL::route('generate_invoice', ['orderId' => $order['id'], 'type' => 'THERMAL']) }}" class="btn btn-primary" role="button" target="_blank">
                                                         <span class="nav-icon fas fa-receipt" data-toggle="tooltip" title="Print receipt"></span>
                                                     </a>
-                                                    <a href="{{ URL::route('view_product', [$order['id']]) }}" class="btn btn-warning" role="button">
+                                                    <a href="{{ URL::route('get_order_details_page', [$order['id']]) }}" class="btn btn-warning" role="button">
                                                         <span class="nav-icon fas fa-eye" data-toggle="tooltip" title="Order details"></span>
                                                     </a>
                                                     <a href="{{ URL::route('add_order_page') . '?copyFrom=' . $order['id'] }}" class="btn btn-info" role="button">

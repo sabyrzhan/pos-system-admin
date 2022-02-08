@@ -19,55 +19,88 @@
             <div class="row">
                 <div class="col-lg-6">
                     <div class="card">
+                        <div class="card-header">
+                            <h5 class="m-0">Orders</h5>
+                        </div>
                         <div class="card-body">
-                            <h5 class="card-title">Card title</h5>
-
-                            <p class="card-text">
-                                Some quick example text to build on the card title and make up the bulk of the card's
-                                content.
-                            </p>
-
-                            <a href="#" class="card-link">Card link</a>
-                            <a href="#" class="card-link">Another link</a>
+                            <ul class="list-group">
+                                <li class="list-group-item d-flex justify-content-between align-items-start">
+                                    <div class="ms-2 me-auto">
+                                        <div class="font-weight-bold">New orders</div>
+                                    </div>
+                                    <span class="badge bg-green badge-pill">10</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-start">
+                                    <div class="ms-2 me-auto">
+                                        <div class="font-weight-bold">Total processed</div>
+                                    </div>
+                                    <span class="badge bg-primary badge-pill">100</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-start">
+                                    <div class="ms-2 me-auto">
+                                        <div class="font-weight-bold">Total cancelled</div>
+                                    </div>
+                                    <span class="badge bg-warning badge-pill">200</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-start">
+                                    <div class="ms-2 me-auto">
+                                        <div class="font-weight-bold">Total returned</div>
+                                    </div>
+                                    <span class="badge bg-red badge-pill">2000</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-start">
+                                    <div class="ms-2 me-auto">
+                                        <div class="font-weight-bold">Total products</div>
+                                    </div>
+                                    <span class="badge bg-black badge-pill">2000</span>
+                                </li>
+                            </ul>
+                            <p>&nbsp;</p>
+                            <a href="{{ URL::route('get_orders_page') }}" class="btn btn-primary">Go to orders</a>
                         </div>
                     </div>
-
-                    <div class="card card-primary card-outline">
-                        <div class="card-body">
-                            <h5 class="card-title">Card title</h5>
-
-                            <p class="card-text">
-                                Some quick example text to build on the card title and make up the bulk of the card's
-                                content.
-                            </p>
-                            <a href="#" class="card-link">Card link</a>
-                            <a href="#" class="card-link">Another link</a>
-                        </div>
-                    </div><!-- /.card -->
                 </div>
                 <!-- /.col-md-6 -->
                 <div class="col-lg-6">
                     <div class="card">
                         <div class="card-header">
-                            <h5 class="m-0">Featured</h5>
+                            <h5 class="m-0">Products with top orders</h5>
                         </div>
                         <div class="card-body">
-                            <h6 class="card-title">Special title treatment</h6>
-
-                            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                            <a href="#" class="btn btn-primary">Go somewhere</a>
-                        </div>
-                    </div>
-
-                    <div class="card card-primary card-outline">
-                        <div class="card-header">
-                            <h5 class="m-0">Featured</h5>
-                        </div>
-                        <div class="card-body">
-                            <h6 class="card-title">Special title treatment</h6>
-
-                            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                            <a href="#" class="btn btn-primary">Go somewhere</a>
+                            <ul class="list-group">
+                                <li class="list-group-item d-flex justify-content-between align-items-start">
+                                    <div class="ms-2 me-auto">
+                                        <div class="font-weight-bold">iPhone 13</div>
+                                    </div>
+                                    <span class="badge bg-primary badge-pill">1120</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-start">
+                                    <div class="ms-2 me-auto">
+                                        <div class="font-weight-bold">iPhone 12 Pro</div>
+                                    </div>
+                                    <span class="badge bg-primary badge-pill">1000</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-start">
+                                    <div class="ms-2 me-auto">
+                                        <div class="font-weight-bold">MacBook Pro 16</div>
+                                    </div>
+                                    <span class="badge bg-primary badge-pill">887</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-start">
+                                    <div class="ms-2 me-auto">
+                                        <div class="font-weight-bold">iPad 8</div>
+                                    </div>
+                                    <span class="badge bg-primary badge-pill">600</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-start">
+                                    <div class="ms-2 me-auto">
+                                        <div class="font-weight-bold">Google Pixel 6</div>
+                                    </div>
+                                    <span class="badge bg-primary badge-pill">443</span>
+                                </li>
+                            </ul>
+                            <p>&nbsp;</p>
+                            <a href="{{ URL::route('products_page') }}" class="btn btn-primary">Go to Products</a>
                         </div>
                     </div>
                 </div>

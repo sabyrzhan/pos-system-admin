@@ -20,7 +20,7 @@ class OrdersController extends Controller
         if ($copyFromId) {
             $otherOrder = $this->apiClient->getOrderById($copyFromId);
             if ($otherOrder) {
-                $otherOrder['created'] = DateTime::createFromFormat("Y-m-d\TH:i:sp", $otherOrder['created'])->format('d.m.Y');
+                $otherOrder['created'] = $this->formatDate($otherOrder['created']);
             }
         }
         $products = $this->apiClient->getProducts();
@@ -34,6 +34,19 @@ class OrdersController extends Controller
         }
         $orders = $this->apiClient->getOrders($page);
         return view('orders', ['orders' => $orders]);
+    }
+
+    public function getOrderDetails($orderId) {
+        $order = $this->apiClient->getOrderById($orderId);
+        if (!$order) {
+            return redirect()->route('get_orders_page')->with('error', 'Order not found!');
+        }
+
+        $order['created'] = $this->formatDate($order['created']);
+        $products = $this->apiClient->getProducts();
+        $paymentTypes = $this->apiClient->getPaymentTypes();
+
+        return view('vieworder', ['products' => $products, 'order' => $order, 'paymentTypes' => $paymentTypes]);
     }
 
     public function addOrder() {
@@ -120,5 +133,9 @@ class OrdersController extends Controller
         }
 
         return $result;
+    }
+
+    private function formatDate($utcDate) : String {
+        return DateTime::createFromFormat("Y-m-d\TH:i:sp", $utcDate)->format('d.m.Y');
     }
 }

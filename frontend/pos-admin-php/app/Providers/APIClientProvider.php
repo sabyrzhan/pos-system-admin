@@ -213,5 +213,14 @@ class APIClientProvider
         }
     }
 
+    public function getPaymentTypes() {
+        $response = $this->client->get('/api/v1/dict/paymentTypes');
+        if ($response->status() != 200) {
+            return false;
+        } else {
+            return $response->json();
+        }
+    }
+
 
 }
