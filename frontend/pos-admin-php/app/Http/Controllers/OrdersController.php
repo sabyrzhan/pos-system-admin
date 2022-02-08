@@ -65,7 +65,11 @@ class OrdersController extends Controller
     }
 
     public function generateInvoice($orderId) {
-        $invoice = $this->apiClient->generateInvoice($orderId);
+        $type = request('type');
+        if (!$type) {
+            $type = 'STANDARD';
+        }
+        $invoice = $this->apiClient->generateInvoice($orderId, $type);
         if (!$invoice) {
             return redirect()->route('get_orders_page')->with('error', 'Error while generating invoice. Please try again!');
         }

@@ -86,8 +86,11 @@
                                                 </td>
                                                 <td>{{ $order['paymentType'] }}</td>
                                                 <td>
-                                                    <a href="{{ URL::route('generate_invoice', [$order['id']]) }}" class="btn btn-primary" role="button" target="_blank">
+                                                    <a href="{{ URL::route('generate_invoice', ['orderId' => $order['id'], 'type' => 'STANDARD']) }}" class="btn btn-primary" role="button" target="_blank">
                                                         <span class="nav-icon fas fa-print" data-toggle="tooltip" title="Print invoice"></span>
+                                                    </a>
+                                                    <a href="{{ URL::route('generate_invoice', ['orderId' => $order['id'], 'type' => 'THERMAL']) }}" class="btn btn-primary" role="button" target="_blank">
+                                                        <span class="nav-icon fas fa-receipt" data-toggle="tooltip" title="Print receipt"></span>
                                                     </a>
                                                     <a href="{{ URL::route('view_product', [$order['id']]) }}" class="btn btn-warning" role="button">
                                                         <span class="nav-icon fas fa-eye" data-toggle="tooltip" title="Order details"></span>
