@@ -44,4 +44,12 @@ public class OrderRepository implements PanacheRepositoryBase<OrderEntity, Integ
                     return Uni.createFrom().item(list.get(0));
                 });
     }
+
+    public Uni<Long> countOrders(OrderStatus status) {
+        return count("status = ?1", status);
+    }
+
+    public Uni<Void> updateStatus(String id, OrderStatus status) {
+        return update("status = ?1 where id = ?2", status, id).onItem().transformToUni(v -> Uni.createFrom().voidItem());
+    }
 }

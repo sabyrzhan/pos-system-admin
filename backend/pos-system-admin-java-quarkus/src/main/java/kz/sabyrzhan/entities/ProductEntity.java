@@ -8,6 +8,15 @@ import java.time.Instant;
 
 @Entity
 @Table(name = "pos_products")
+@NamedQueries({
+        @NamedQuery(
+                name = "ProductWithCount.topProducts",
+                query = "select new kz.sabyrzhan.model.ProductWithCount(o.productId, count(o.productId) as orderCount) " +
+                        "from OrderItemEntity o " +
+                        "left join OrderEntity e on e.id = o.orderId " +
+                        "where o.created > :date and e.status = :status " +
+                        "group by o.productId order by orderCount desc")
+})
 @Data
 public class ProductEntity extends PanacheEntityBase {
     @Id

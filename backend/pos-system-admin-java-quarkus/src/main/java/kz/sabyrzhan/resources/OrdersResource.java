@@ -5,6 +5,7 @@ import io.smallrye.mutiny.Uni;
 import kz.sabyrzhan.entities.OrderEntity;
 import kz.sabyrzhan.model.InvoiceResult;
 import kz.sabyrzhan.model.InvoiceType;
+import kz.sabyrzhan.model.OrderStatus;
 import kz.sabyrzhan.repositories.OrderItemRepository;
 import kz.sabyrzhan.repositories.OrderRepository;
 import kz.sabyrzhan.services.InvoiceService;
@@ -15,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Response;
 
 @Path("/api/v1/orders")
 @ApplicationScoped
@@ -65,6 +67,18 @@ public class OrdersResource {
     @Path("/{orderId}")
     public Uni<OrderEntity> cancelOrder(@PathParam("orderId") String orderId) {
         return orderService.cancelOrder(orderId);
+    }
+
+    @PUT
+    @Path("/{orderId}/start")
+    public Uni<Response> startOrder(@PathParam("orderId") String orderId) {
+        return orderRepository.updateStatus(orderId, OrderStatus.PROCESSING).onItem().transform(v -> Response.ok().build());
+    }
+
+    @PUT
+    @Path("/{orderId}/finish")
+    public Uni<Response> finishOrder(@PathParam("orderId") String orderId) {
+        return orderRepository.updateStatus(orderId, OrderStatus.DONE).onItem().transform(v -> Response.ok().build());
     }
 
     @POST

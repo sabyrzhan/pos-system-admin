@@ -2,12 +2,17 @@ package kz.sabyrzhan.repositories;
 
 import io.quarkus.hibernate.reactive.panache.Panache;
 import io.quarkus.hibernate.reactive.panache.PanacheRepositoryBase;
+import io.quarkus.panache.common.Parameters;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import kz.sabyrzhan.entities.ProductEntity;
 import kz.sabyrzhan.exceptions.EntityNotFoundException;
+import kz.sabyrzhan.model.OrderStatus;
+import kz.sabyrzhan.model.ProductWithCount;
 
 import javax.enterprise.context.ApplicationScoped;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -67,5 +72,16 @@ public class ProductRepository implements PanacheRepositoryBase<ProductEntity, I
         }
 
         return Uni.combine().all().unis(updates).combinedWith(v -> null);
+    }
+
+    public Uni<Long> countAvailableProducts() {
+        return count("stock > 0");
+    }
+
+    public Uni<List<ProductWithCount>> countTopOrderedProducts() {
+        var date = LocalDateTime.now().minusMonths(6).toInstant(ZoneOffset.UTC);
+        return find("#ProductWithCount.topProducts", Parameters.with("date", date).and("status", OrderStatus.DONE))
+                .page(0, 5)
+                .list();
     }
 }
