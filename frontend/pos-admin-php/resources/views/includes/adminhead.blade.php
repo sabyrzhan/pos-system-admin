@@ -96,7 +96,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     <li class="nav-header">PRODUCTS</li>
                     <li class="nav-item">
                         <a href="{{ URL::route('products_page') }}" class="nav-link">
-                            <i class="nav-icon fas fa-user-plus"></i>
+                            <i class="nav-icon fas fa-list"></i>
                             <p>Products list</p>
                         </a>
                     </li>

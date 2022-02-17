@@ -15,6 +15,14 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <link rel="stylesheet" href="/plugins/fontawesome-free/css/all.min.css">
     <!-- Theme style -->
     <link rel="stylesheet" href="/dist/css/adminlte.min.css">
+    <!-- DataTables -->
+    <link rel="stylesheet" href="/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+    <link rel="stylesheet" href="/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
+    <!-- Tempusdominus Bootstrap 4 (datetimepicker) -->
+    <link rel="stylesheet" href="/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
+    <!-- Select2 -->
+    <link rel="stylesheet" href="/plugins/select2/css/select2.min.css">
     <!-- jQuery -->
     <script src="/plugins/jquery/jquery.min.js"></script>
     <!-- AppGlobals variables containers -->
@@ -26,17 +34,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <!-- Navbar -->
     <nav class="main-header navbar navbar-expand navbar-white navbar-light">
         <!-- Left navbar links -->
-        <ul class="navbar-nav">
-            <li class="nav-item">
-                <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
-            </li>
-            <li class="nav-item d-none d-sm-inline-block">
-                <a href="index3.html" class="nav-link">Home</a>
-            </li>
-            <li class="nav-item d-none d-sm-inline-block">
-                <a href="#" class="nav-link">Contact</a>
-            </li>
-        </ul>
         <ul class="navbar-nav ml-auto">
             <li class="nav-item">
                 <a class="nav-link" href="/change_password">Change password</a>
@@ -68,58 +65,37 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 </div>
             </div>
 
-            <!-- SidebarSearch Form -->
-            <div class="form-inline">
-                <div class="input-group" data-widget="sidebar-search">
-                    <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
-                    <div class="input-group-append">
-                        <button class="btn btn-sidebar">
-                            <i class="fas fa-search fa-fw"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Sidebar Menu -->
             <nav class="mt-2">
                 <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-                    <!-- Add icons to the links using the .nav-icon class
-                         with font-awesome or any other icon font library -->
-                    <li class="nav-item menu-open">
-                        <a href="#" class="nav-link active">
+                    <li class="nav-header">MAIN</li>
+                    <li class="nav-item">
+                        <a href="{{ URL::route('home') }}" class="nav-link">
                             <i class="nav-icon fas fa-tachometer-alt"></i>
-                            <p>
-                                Starter Pages
-                                <i class="right fas fa-angle-left"></i>
-                            </p>
+                            <p>Dashboard</p>
                         </a>
-                        <ul class="nav nav-treeview">
-                            <li class="nav-item">
-                                <a href="#" class="nav-link active">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Active Page</p>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="#" class="nav-link">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Inactive Page</p>
-                                </a>
-                            </li>
-                        </ul>
+                    </li>
+                    <li class="nav-header">PRODUCTS</li>
+                    <li class="nav-item">
+                        <a href="{{ URL::route('products_page') }}" class="nav-link">
+                            <i class="nav-icon fas fas fa-list"></i>
+                            <p>Products list</p>
+                        </a>
+                    </li>
+                    <li class="nav-header">ORDERS</li>
+                    <li class="nav-item">
+                        <a href="{{ URL::route('get_orders_page') }}" class="nav-link">
+                            <i class="nav-icon fas fa-list"></i>
+                            <p>Orders list</p>
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a href="#" class="nav-link">
-                            <i class="nav-icon fas fa-th"></i>
-                            <p>
-                                Simple Link
-                                <span class="right badge badge-danger">New</span>
-                            </p>
+                        <a href="{{ URL::route('add_order_page') }}" class="nav-link">
+                            <i class="nav-icon fas fa-plus"></i>
+                            <p>Create new order</p>
                         </a>
                     </li>
                 </ul>
             </nav>
-            <!-- /.sidebar-menu -->
         </div>
         <!-- /.sidebar -->
     </aside>

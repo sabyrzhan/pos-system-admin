@@ -37,15 +37,17 @@ Route::middleware(['auth:web'])->group(function() {
     Route::get('/products/add', [ProductsController::class, 'addProductPage'])->name('add_product_page')->middleware('authRole:ADMIN');
     Route::post('/products/add', [ProductsController::class, 'addUpdateProduct'])->name('add_product')->middleware('authRole:ADMIN');
     Route::get('/products/{productId}', [ProductsController::class, 'viewProduct'])->name('view_product')->middleware('authRole:ADMIN');
-    Route::get('/products', [ProductsController::class, 'getProductsPage'])->name('products_page')->middleware('authRole:ADMIN');
-    Route::get('/orders', [OrdersController::class, 'getOrdersPage'])->name('get_orders_page')->middleware('authRole:ADMIN');
-    Route::get('/orders/{orderId}/details', [OrdersController::class, 'getOrderDetails'])->name('get_order_details_page')->middleware('authRole:ADMIN');
-    Route::get('/orders/add', [OrdersController::class, 'addOrderPage'])->name('add_order_page')->middleware('authRole:ADMIN');
-    Route::post('/orders/add', [OrdersController::class, 'addOrder'])->name('add_order')->middleware('authRole:ADMIN');
-    Route::get('/orders/{orderId}/invoice', [OrdersController::class, 'generateInvoice'])->name('generate_invoice')->middleware('authRole:ADMIN');
 
     # User routes
     Route::get('/user_dashboard', [UserDashboardController::class, 'index'])->middleware('authRole:USER');
+
+    # Common routes
+    Route::get('/products', [ProductsController::class, 'getProductsPage'])->name('products_page');
     Route::get('/change_password', [UsersController::class, 'changePasswordPage'])->name('changePasswordPage');
     Route::post('/change_password', [UsersController::class, 'changePassword']);
+    Route::get('/orders', [OrdersController::class, 'getOrdersPage'])->name('get_orders_page');
+    Route::get('/orders/{orderId}/details', [OrdersController::class, 'getOrderDetails'])->name('get_order_details_page');
+    Route::get('/orders/add', [OrdersController::class, 'addOrderPage'])->name('add_order_page');
+    Route::post('/orders/add', [OrdersController::class, 'addOrder'])->name('add_order');
+    Route::get('/orders/{orderId}/invoice', [OrdersController::class, 'generateInvoice'])->name('generate_invoice');
 });

@@ -18,8 +18,8 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::middleware(['auth:api'])->group(function() {
-    Route::delete('/users/{userId}', [UsersController::class, 'deleteUser']);
-    Route::delete('/categories/{catId}', [CategoriesController::class, 'deleteCategory']);
-    Route::delete('/products/{id}', [ProductsController::class, 'deleteProduct']);
+    Route::delete('/users/{userId}', [UsersController::class, 'deleteUser'])->middleware('authRole:ADMIN');
+    Route::delete('/categories/{catId}', [CategoriesController::class, 'deleteCategory'])->middleware('authRole:ADMIN');
+    Route::delete('/products/{id}', [ProductsController::class, 'deleteProduct'])->middleware('authRole:ADMIN');
     Route::delete('/orders/{id}', [OrdersController::class, 'cancelOrder']);
 });
