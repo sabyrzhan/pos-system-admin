@@ -222,5 +222,14 @@ class APIClientProvider
         }
     }
 
+    public function getDashboardInfo() {
+        $response = $this->client->get('/api/v1/dashboard/info');
+        if ($response->status() != 200) {
+            return false;
+        } else {
+            return $response->json();
+        }
+    }
+
 
 }

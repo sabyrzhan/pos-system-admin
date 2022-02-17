@@ -28,31 +28,37 @@
                                     <div class="ms-2 me-auto">
                                         <div class="font-weight-bold">New orders</div>
                                     </div>
-                                    <span class="badge bg-green badge-pill">10</span>
+                                    <span class="badge bg-green badge-pill">{{ $info['totalNewOrders'] }}</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-start">
+                                    <div class="ms-2 me-auto">
+                                        <div class="font-weight-bold">Total in progress orders</div>
+                                    </div>
+                                    <span class="badge bg-cyan badge-pill">{{ $info['totalInProgressOrders'] }}</span>
                                 </li>
                                 <li class="list-group-item d-flex justify-content-between align-items-start">
                                     <div class="ms-2 me-auto">
                                         <div class="font-weight-bold">Total processed</div>
                                     </div>
-                                    <span class="badge bg-primary badge-pill">100</span>
+                                    <span class="badge bg-primary badge-pill">{{ $info['totalProcessedOrders'] }}</span>
                                 </li>
                                 <li class="list-group-item d-flex justify-content-between align-items-start">
                                     <div class="ms-2 me-auto">
                                         <div class="font-weight-bold">Total cancelled</div>
                                     </div>
-                                    <span class="badge bg-warning badge-pill">200</span>
+                                    <span class="badge bg-warning badge-pill">{{ $info['totalCancelledOrders'] }}</span>
                                 </li>
                                 <li class="list-group-item d-flex justify-content-between align-items-start">
                                     <div class="ms-2 me-auto">
                                         <div class="font-weight-bold">Total returned</div>
                                     </div>
-                                    <span class="badge bg-red badge-pill">2000</span>
+                                    <span class="badge bg-red badge-pill">{{ $info['totalReturnedOrders'] }}</span>
                                 </li>
                                 <li class="list-group-item d-flex justify-content-between align-items-start">
                                     <div class="ms-2 me-auto">
                                         <div class="font-weight-bold">Total products</div>
                                     </div>
-                                    <span class="badge bg-black badge-pill">2000</span>
+                                    <span class="badge bg-black badge-pill">{{ $info['totalProducts'] }}</span>
                                 </li>
                             </ul>
                             <p>&nbsp;</p>
@@ -68,36 +74,18 @@
                         </div>
                         <div class="card-body">
                             <ul class="list-group">
-                                <li class="list-group-item d-flex justify-content-between align-items-start">
-                                    <div class="ms-2 me-auto">
-                                        <div class="font-weight-bold">iPhone 13</div>
-                                    </div>
-                                    <span class="badge bg-primary badge-pill">1120</span>
-                                </li>
-                                <li class="list-group-item d-flex justify-content-between align-items-start">
-                                    <div class="ms-2 me-auto">
-                                        <div class="font-weight-bold">iPhone 12 Pro</div>
-                                    </div>
-                                    <span class="badge bg-primary badge-pill">1000</span>
-                                </li>
-                                <li class="list-group-item d-flex justify-content-between align-items-start">
-                                    <div class="ms-2 me-auto">
-                                        <div class="font-weight-bold">MacBook Pro 16</div>
-                                    </div>
-                                    <span class="badge bg-primary badge-pill">887</span>
-                                </li>
-                                <li class="list-group-item d-flex justify-content-between align-items-start">
-                                    <div class="ms-2 me-auto">
-                                        <div class="font-weight-bold">iPad 8</div>
-                                    </div>
-                                    <span class="badge bg-primary badge-pill">600</span>
-                                </li>
-                                <li class="list-group-item d-flex justify-content-between align-items-start">
-                                    <div class="ms-2 me-auto">
-                                        <div class="font-weight-bold">Google Pixel 6</div>
-                                    </div>
-                                    <span class="badge bg-primary badge-pill">443</span>
-                                </li>
+                                @if($info['topProducts'])
+                                    @foreach($info['topProducts'] as $name => $count)
+                                        <li class="list-group-item d-flex justify-content-between align-items-start">
+                                            <div class="ms-2 me-auto">
+                                                <div class="font-weight-bold">{{ $name }}</div>
+                                            </div>
+                                            <span class="badge bg-primary badge-pill">{{ $count }}</span>
+                                        </li>
+                                    @endforeach
+                                @else
+                                    No processed orders.
+                                @endif
                             </ul>
                             <p>&nbsp;</p>
                             <a href="{{ URL::route('products_page') }}" class="btn btn-primary">Go to Products</a>

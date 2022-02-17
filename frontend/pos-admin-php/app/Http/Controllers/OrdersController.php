@@ -136,6 +136,13 @@ class OrdersController extends Controller
     }
 
     private function formatDate($utcDate) : String {
-        return DateTime::createFromFormat("Y-m-d\TH:i:sp", $utcDate)->format('d.m.Y');
+        // First try parsing UTC time with microseconds (example: 2022-02-17T18:58:18.564245Z)
+        $result = DateTime::createFromFormat("Y-m-d\TH:i:s.uZ", $utcDate);
+        if (!$result) {
+            // Second try parsing UTC time with seconds (example: 2022-02-17T22:47:42Z)
+            $result = DateTime::createFromFormat("Y-m-d\TH:i:sZ", $utcDate);
+        }
+
+        return $result->format('d.m.Y');
     }
 }
