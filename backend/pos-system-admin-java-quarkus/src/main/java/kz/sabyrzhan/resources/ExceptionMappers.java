@@ -51,4 +51,9 @@ public class ExceptionMappers {
     public RestResponse<ErrorResponse> handleInvoiceException(InvoiceException e) {
         return RestResponse.status(INTERNAL_SERVER_ERROR, new ErrorResponse(e.getMessage()));
     }
+
+    @ServerExceptionMapper
+    public RestResponse<ErrorResponse> handleInvoiceException(TooManyRequestsException e) {
+        return RestResponse.status(TOO_MANY_REQUESTS, new ErrorResponse(e.getMessage()));
+    }
 }

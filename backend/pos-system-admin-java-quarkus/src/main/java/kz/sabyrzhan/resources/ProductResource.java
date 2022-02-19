@@ -1,5 +1,6 @@
 package kz.sabyrzhan.resources;
 
+import io.micrometer.core.annotation.Timed;
 import io.quarkus.hibernate.reactive.panache.common.runtime.ReactiveTransactional;
 import io.smallrye.mutiny.Uni;
 import io.smallrye.mutiny.tuples.Tuple2;
@@ -9,6 +10,7 @@ import kz.sabyrzhan.model.Product;
 import kz.sabyrzhan.services.CategoryService;
 import kz.sabyrzhan.services.ProductService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.time.StopWatch;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -28,15 +30,27 @@ public class ProductResource {
     @Inject
     CategoryService categoryService;
 
+    @Inject
+    RateLimitManager rateLimitManager;
+
     @GET
     @ReactiveTransactional
-    public Uni<List<Product>> getProducts(@QueryParam("page") int page, @QueryParam("sizePerPage") int sizePerPage) {
-        if (page == 0) {
-            page = 1;
-        }
-        Uni<List<CategoryEntity>> allCategories = categoryService.getAll();
-        Uni<List<ProductEntity>> allProducts = productService.getProducts(page, sizePerPage).collect().asList();
-        return Uni.combine().all().unis(allCategories, allProducts).asTuple()
+    @Timed(value = "products.list")
+    public Uni<List<Product>> getProducts(@QueryParam("page") final int page,
+                                          @QueryParam("sizePerPage") final int sizePerPage) {
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start();
+
+        return rateLimitManager.acquire()
+                .onItem().transformToUni(v -> {
+                    Uni<List<CategoryEntity>> allCategories = categoryService.getAll();
+                    Uni<List<ProductEntity>> allProducts = productService.getProducts(
+                                                                    page == 0 ? 1 : page,
+                                                                    sizePerPage == 0 ? 30 : sizePerPage).collect().asList();
+
+
+                    return Uni.combine().all().unis(allCategories, allProducts).asTuple();
+                })
                 .onItem().transform(objects -> {
                     Map<Integer, CategoryEntity> categories = objects.getItem1().stream().collect(Collectors.toMap(CategoryEntity::getId, Function.identity()));
                     return Tuple2.of(categories, objects.getItem2());
@@ -48,6 +62,8 @@ public class ProductResource {
                         return product;
                     }).collect(Collectors.toList());
 
+                    stopWatch.stop();
+                    log.info("Rate limit acquire time: {}", stopWatch.toString());
                     return result;
                 });
     }
