@@ -22,9 +22,6 @@ public class RateLimitManager {
     }
 
     public Uni<Void> acquire() {
-        if (true) {
-            return Uni.createFrom().voidItem();
-        }
         boolean isSuccess;
         try {
             isSuccess = rateLimiter.tryAcquire(timeout, TimeUnit.SECONDS);
