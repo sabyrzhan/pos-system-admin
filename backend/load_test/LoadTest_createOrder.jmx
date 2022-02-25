@@ -26,16 +26,47 @@
         <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
       </ThreadGroup>
       <hashTree>
+        <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
+          <collectionProp name="HeaderManager.headers">
+            <elementProp name="" elementType="Header">
+              <stringProp name="Header.name">Content-Type</stringProp>
+              <stringProp name="Header.value">application/json</stringProp>
+            </elementProp>
+          </collectionProp>
+        </HeaderManager>
+        <hashTree/>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="HTTP Request" enabled="true">
-          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
-            <collectionProp name="Arguments.arguments"/>
+          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">{&#xd;
+  &quot;customerName&quot;: &quot;SomeCustomer&quot;,&#xd;
+  &quot;subtotal&quot;: &quot;500.00&quot;,&#xd;
+  &quot;tax&quot;: &quot;25.00&quot;,&#xd;
+  &quot;total&quot;: &quot;525.00&quot;,&#xd;
+  &quot;paid&quot;: &quot;1000&quot;,&#xd;
+  &quot;due&quot;: &quot;475&quot;,&#xd;
+  &quot;paymentType&quot;: &quot;CREDIT&quot;,&#xd;
+  &quot;created&quot;: &quot;2022-02-25T22:29:26+00:00&quot;,&#xd;
+  &quot;items&quot;: [&#xd;
+    {&#xd;
+      &quot;productId&quot;: &quot;1004&quot;,&#xd;
+      &quot;quantity&quot;: &quot;1&quot;&#xd;
+    }&#xd;
+  ]&#xd;
+}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
           </elementProp>
           <stringProp name="HTTPSampler.domain">localhost</stringProp>
           <stringProp name="HTTPSampler.port">8080</stringProp>
           <stringProp name="HTTPSampler.protocol"></stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-          <stringProp name="HTTPSampler.path">/api/v1/products</stringProp>
-          <stringProp name="HTTPSampler.method">GET</stringProp>
+          <stringProp name="HTTPSampler.path">/api/v1/orders</stringProp>
+          <stringProp name="HTTPSampler.method">POST</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
@@ -47,18 +78,18 @@
         <hashTree/>
         <kg.apc.jmeter.timers.VariableThroughputTimer guiclass="kg.apc.jmeter.timers.VariableThroughputTimerGui" testclass="kg.apc.jmeter.timers.VariableThroughputTimer" testname="jp@gc - Throughput Shaping Timer" enabled="true">
           <collectionProp name="load_profile">
-            <collectionProp name="981744505">
+            <collectionProp name="1362874864">
               <stringProp name="49">1</stringProp>
-              <stringProp name="1507423">1000</stringProp>
+              <stringProp name="48625">100</stringProp>
               <stringProp name="1722">60</stringProp>
             </collectionProp>
-            <collectionProp name="-1193772532">
-              <stringProp name="1507423">1000</stringProp>
-              <stringProp name="1507423">1000</stringProp>
+            <collectionProp name="-1882502932">
+              <stringProp name="48625">100</stringProp>
+              <stringProp name="48625">100</stringProp>
               <stringProp name="50547">300</stringProp>
             </collectionProp>
-            <collectionProp name="394060555">
-              <stringProp name="1507423">1000</stringProp>
+            <collectionProp name="-675800204">
+              <stringProp name="48625">100</stringProp>
               <stringProp name="49">1</stringProp>
               <stringProp name="60">60</stringProp>
             </collectionProp>
