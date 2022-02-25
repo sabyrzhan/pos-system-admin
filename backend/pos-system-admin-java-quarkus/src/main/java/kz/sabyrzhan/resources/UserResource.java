@@ -1,5 +1,7 @@
 package kz.sabyrzhan.resources;
 
+import io.micrometer.core.annotation.Counted;
+import io.micrometer.core.annotation.Timed;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import kz.sabyrzhan.entities.UserEntity;
@@ -22,11 +24,15 @@ public class UserResource {
     UserService userService;
 
     @POST
+    @Counted("users.create.counted")
+    @Timed("users.create.timed")
     public Uni<User> createUser(UserEntity user) {
         return userService.createUser(user);
     }
 
     @GET
+    @Counted("users.list.counted")
+    @Timed("users.list.timed")
     public Multi<User> getUsers(@QueryParam("page") int page) {
         if (page == 0) {
             page = 1;
@@ -37,12 +43,16 @@ public class UserResource {
 
     @GET
     @Path("/{id}")
+    @Counted("users.byid.counted")
+    @Timed("users.byid.timed")
     public Uni<User> getById(@PathParam("id") int id) {
         return userService.findById(id);
     }
 
     @POST
     @Path("/validate")
+    @Counted("users.validate.counted")
+    @Timed("users.validate.timed")
     public Uni<Response> validateUserByUsernameAndPassword(UsernameAndPasswordRequest request) {
         return userService.findByUsernameAndPassword(request.getUsername(), request.getPassword())
                 .onItem().transform(user -> Response.ok(user).build());
@@ -50,6 +60,8 @@ public class UserResource {
 
     @POST
     @Path("/{id}/change_password")
+    @Counted("users.change_password.counted")
+    @Timed("users.change_password.timed")
     public Uni<Response> changePassword(@PathParam("id") int id, UserEntity userIdAndPassword) {
         userIdAndPassword.setId(id);
         return userService.changePassword(userIdAndPassword).onItem().transform(user -> Response.ok(user).build())
@@ -60,6 +72,8 @@ public class UserResource {
 
     @DELETE
     @Path("/{id}")
+    @Counted("users.delete.counted")
+    @Timed("users.delete.timed")
     public Uni<Response> deleteUser(@PathParam("id") int id) {
         return userService.deleteUser(id)
                 .onItem().transform(v -> Response.accepted().type(MediaType.APPLICATION_JSON_TYPE).build());

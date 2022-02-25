@@ -1,5 +1,7 @@
 package kz.sabyrzhan.resources;
 
+import io.micrometer.core.annotation.Counted;
+import io.micrometer.core.annotation.Timed;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import kz.sabyrzhan.entities.OrderEntity;
@@ -35,12 +37,16 @@ public class OrdersResource {
     InvoiceService invoiceService;
 
     @POST
+    @Counted("orders.create.counted")
+    @Timed("orders.create.timed")
     public Uni<OrderEntity> createOrder(OrderEntity order) {
         return orderService.createOrder(order);
     }
 
     @GET
     @Path("/{id}")
+    @Counted("orders.byid.counted")
+    @Timed("orders.byid.timed")
     public Uni<OrderEntity> getById(@PathParam("id") String id) {
         var holder = new TransientHolder();
         return orderRepository.findById(id)
@@ -55,6 +61,8 @@ public class OrdersResource {
     }
 
     @GET
+    @Counted("orders.list.counted")
+    @Timed("orders.list.timed")
     public Multi<OrderEntity> getList(@QueryParam("page") int page) {
         if (page == 0) {
             page = 1;
@@ -65,24 +73,32 @@ public class OrdersResource {
 
     @DELETE
     @Path("/{orderId}")
+    @Counted("orders.cancel.counted")
+    @Timed("orders.cancel.timed")
     public Uni<OrderEntity> cancelOrder(@PathParam("orderId") String orderId) {
         return orderService.cancelOrder(orderId);
     }
 
     @PUT
     @Path("/{orderId}/start")
+    @Counted("orders.start.counted")
+    @Timed("orders.start.timed")
     public Uni<Response> startOrder(@PathParam("orderId") String orderId) {
         return orderRepository.updateStatus(orderId, OrderStatus.PROCESSING).onItem().transform(v -> Response.ok().build());
     }
 
     @PUT
     @Path("/{orderId}/finish")
+    @Counted("orders.finish.counted")
+    @Timed("orders.finish.timed")
     public Uni<Response> finishOrder(@PathParam("orderId") String orderId) {
         return orderRepository.updateStatus(orderId, OrderStatus.DONE).onItem().transform(v -> Response.ok().build());
     }
 
     @POST
     @Path("/{orderId}/invoice")
+    @Counted("orders.invoice_generate.counted")
+    @Timed("orders.invoice_generate.timed")
     public Uni<InvoiceResult> generateOrderInvoice(@PathParam("orderId") final String orderId,
                                                    @QueryParam("type") final InvoiceType type) {
         return getById(orderId)

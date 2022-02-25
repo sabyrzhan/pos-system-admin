@@ -1,5 +1,7 @@
 package kz.sabyrzhan.resources;
 
+import io.micrometer.core.annotation.Counted;
+import io.micrometer.core.annotation.Timed;
 import io.smallrye.mutiny.Uni;
 import kz.sabyrzhan.entities.ProductEntity;
 import kz.sabyrzhan.model.DashboardInfo;
@@ -29,6 +31,8 @@ public class DashboardResource {
 
     @GET
     @Path("/info")
+    @Counted("dashboard.info.counted")
+    @Timed("dashboard.info.timed")
     public Uni<DashboardInfo> info() {
         final DashboardInfo info = new DashboardInfo();
         return orderRepository.countOrders(OrderStatus.NEW)
