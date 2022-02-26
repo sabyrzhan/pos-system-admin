@@ -1,0 +1,49 @@
+Vagrant.configure("2") do |config|
+    config.ssh.insert_key = true
+    config.vm.provider "virtualbox" do |v|
+        v.memory = 4096
+        v.cpus = 2
+    end
+
+    config.vm.network "forwarded_port", guest: 9090, host: 9090 # prometheus
+    config.vm.network "forwarded_port", guest: 3000, host: 3000 # grafana
+
+    config.vm.define "promvm" do |subconfig|
+        subconfig.vm.box  = "ubuntu/focal64"
+        subconfig.vm.hostname = "grafanavm"
+        subconfig.vm.network :private_network, ip: "192.168.0.10"
+        subconfig.vm.provision "ansible" do |ansible|
+            ansible.playbook = "docker-playbook.yml"
+            ansible.extra_vars = {
+                node_ip: "192.168.0.10"
+            }
+        end
+    end
+
+    config.vm.provision "shell" do |s|
+        ssh_prv_key = ""
+        ssh_pub_key = ""
+        if File.file?("#{Dir.home}/.ssh/id_rsa")
+          ssh_prv_key = File.read("#{Dir.home}/.ssh/id_rsa")
+          ssh_pub_key = File.readlines("#{Dir.home}/.ssh/id_rsa.pub").first.strip
+        else
+          puts "No SSH key found. You will need to remedy this before pushing to the repository."
+        end
+        s.inline = <<-SHELL
+          if grep -sq "#{ssh_pub_key}" /home/vagrant/.ssh/authorized_keys; then
+            echo "SSH keys already provisioned."
+            exit 0;
+          fi
+          echo "SSH key provisioning."
+          mkdir -p /home/vagrant/.ssh/
+          touch /home/vagrant/.ssh/authorized_keys
+          echo #{ssh_pub_key} >> /home/vagrant/.ssh/authorized_keys
+          echo #{ssh_pub_key} > /home/vagrant/.ssh/id_rsa.pub
+          chmod 644 /home/vagrant/.ssh/id_rsa.pub
+          echo "#{ssh_prv_key}" > /home/vagrant/.ssh/id_rsa
+          chmod 600 /home/vagrant/.ssh/id_rsa
+          chown -R vagrant:vagrant /home/vagrant
+          exit 0
+        SHELL
+      end
+end

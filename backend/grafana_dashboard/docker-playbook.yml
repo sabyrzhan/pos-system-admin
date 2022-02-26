@@ -1,0 +1,22 @@
+---
+- hosts: all
+  become: true
+  tasks:
+  - name: Install docker
+    apt:
+      name: "{{ packages }}"
+      state: present
+      update_cache: yes
+    vars:
+      packages:
+      - docker.io
+      - net-tools
+      - docker-compose
+
+  - name: Add vagrant user to docker group
+    user:
+      name: vagrant
+      group: docker
+  handlers:
+  - name: docker status
+    service: name=docker state=started
