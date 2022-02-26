@@ -26,6 +26,17 @@
   "liveNow": false,
   "panels": [
     {
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 14,
+      "title": "System status",
+      "type": "row"
+    },
+    {
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -55,7 +66,7 @@
         "h": 8,
         "w": 5,
         "x": 0,
-        "y": 0
+        "y": 1
       },
       "id": 11,
       "options": {
@@ -70,12 +81,12 @@
         "showThresholdLabels": false,
         "showThresholdMarkers": true
       },
-      "pluginVersion": "8.5.0-52524pre",
+      "pluginVersion": "8.5.0-53358pre",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "jz0_VcB7z"
+            "uid": "Ji5FbCfnz"
           },
           "exemplar": true,
           "expr": "100 - (avg by (instance) (rate(node_cpu_seconds_total{job=\"node\",mode=\"idle\"}[1m])) * 100)",
@@ -117,7 +128,7 @@
         "h": 8,
         "w": 5,
         "x": 5,
-        "y": 0
+        "y": 1
       },
       "id": 12,
       "options": {
@@ -132,12 +143,12 @@
         "showThresholdLabels": false,
         "showThresholdMarkers": true
       },
-      "pluginVersion": "8.5.0-52524pre",
+      "pluginVersion": "8.5.0-53358pre",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "jz0_VcB7z"
+            "uid": "Ji5FbCfnz"
           },
           "exemplar": true,
           "expr": "system_load_average_1m{group=\"pos-system\", job=\"pos-system-backend\"}",
@@ -155,7 +166,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 8
+        "y": 9
       },
       "id": 6,
       "panels": [],
@@ -217,7 +228,7 @@
         "h": 8,
         "w": 8,
         "x": 0,
-        "y": 9
+        "y": 10
       },
       "id": 4,
       "options": {
@@ -235,7 +246,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "jz0_VcB7z"
+            "uid": "Ji5FbCfnz"
           },
           "exemplar": true,
           "expr": "increase(http_server_requests_seconds_sum{group=\"pos-system\", job=\"pos-system-backend\", method=\"GET\", uri=\"/api/v1/products\"}[1m])/increase(http_server_requests_seconds_count{group=\"pos-system\", job=\"pos-system-backend\", method=\"GET\", uri=\"/api/v1/products\"}[1m])",
@@ -333,7 +344,7 @@
         "h": 8,
         "w": 8,
         "x": 8,
-        "y": 9
+        "y": 10
       },
       "id": 2,
       "options": {
@@ -351,7 +362,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "jz0_VcB7z"
+            "uid": "Ji5FbCfnz"
           },
           "exemplar": true,
           "expr": "rate(http_server_requests_seconds_count{group=\"pos-system\", instance=\"172.16.31.1:8080\", job=\"pos-system-backend\", method=\"GET\", outcome=\"SUCCESS\", status=\"200\", uri=\"/api/v1/products\"}[1m])",
@@ -365,7 +376,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "jz0_VcB7z"
+            "uid": "Ji5FbCfnz"
           },
           "exemplar": true,
           "expr": "rate(http_server_requests_seconds_count{group=\"pos-system\", instance=\"172.16.31.1:8080\", job=\"pos-system-backend\", method=\"GET\", outcome=\"SERVER_ERROR\", status=\"500\", uri=\"/api/v1/products\"}[1m])",
@@ -378,7 +389,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "jz0_VcB7z"
+            "uid": "Ji5FbCfnz"
           },
           "exemplar": true,
           "expr": "rate(http_server_requests_seconds_count{group=\"pos-system\", instance=\"172.16.31.1:8080\", job=\"pos-system-backend\", method=\"GET\", outcome=\"SERVER_ERROR\", status=\"429\", uri=\"/api/v1/products\"}[1m])",
@@ -390,6 +401,479 @@
         }
       ],
       "title": "Products list rate [rps]",
+      "type": "timeseries"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 18
+      },
+      "id": 16,
+      "panels": [],
+      "title": "Orders",
+      "type": "row"
+    },
+    {
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 0,
+        "y": 19
+      },
+      "id": 17,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "Ji5FbCfnz"
+          },
+          "exemplar": true,
+          "expr": "increase(http_server_requests_seconds_sum{group=\"pos-system\", job=\"pos-system-backend\", method=\"GET\", uri=\"/api/v1/orders\"}[1m])/increase(http_server_requests_seconds_count{group=\"pos-system\", job=\"pos-system-backend\", method=\"GET\", uri=\"/api/v1/orders\"}[1m])",
+          "interval": "",
+          "legendFormat": "Latency",
+          "refId": "A"
+        }
+      ],
+      "title": "Orders list AVG latency [ms]",
+      "type": "timeseries"
+    },
+    {
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "200"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "dark-blue",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "500"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "dark-red",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 8,
+        "y": 19
+      },
+      "id": 18,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "Ji5FbCfnz"
+          },
+          "exemplar": true,
+          "expr": "rate(http_server_requests_seconds_count{group=\"pos-system\", job=\"pos-system-backend\", method=\"GET\", outcome=\"SUCCESS\", status=\"200\", uri=\"/api/v1/orders\"}[1m])",
+          "format": "time_series",
+          "instant": false,
+          "interval": "",
+          "intervalFactor": 1,
+          "legendFormat": "200",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "Ji5FbCfnz"
+          },
+          "exemplar": true,
+          "expr": "rate(http_server_requests_seconds_count{group=\"pos-system\", job=\"pos-system-backend\", method=\"GET\", outcome=\"SERVER_ERROR\", status=\"500\", uri=\"/api/v1/orders\"}[1m])",
+          "hide": false,
+          "instant": false,
+          "interval": "",
+          "legendFormat": "500",
+          "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "Ji5FbCfnz"
+          },
+          "exemplar": true,
+          "expr": "rate(http_server_requests_seconds_count{group=\"pos-system\", job=\"pos-system-backend\", method=\"GET\", outcome=\"SERVER_ERROR\", status=\"429\", uri=\"/api/v1/orders\"}[1m])",
+          "hide": false,
+          "instant": false,
+          "interval": "",
+          "legendFormat": "500",
+          "refId": "C"
+        }
+      ],
+      "title": "Orders list rate [rps]",
+      "type": "timeseries"
+    },
+    {
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 0,
+        "y": 27
+      },
+      "id": 20,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "Ji5FbCfnz"
+          },
+          "exemplar": true,
+          "expr": "increase(http_server_requests_seconds_sum{group=\"pos-system\", job=\"pos-system-backend\", method=\"POST\", uri=\"/api/v1/orders\"}[1m])/increase(http_server_requests_seconds_count{group=\"pos-system\", job=\"pos-system-backend\", method=\"POST\", uri=\"/api/v1/orders\"}[1m])",
+          "interval": "",
+          "legendFormat": "Latency",
+          "refId": "A"
+        }
+      ],
+      "title": "Create order AVG latency [ms]",
+      "type": "timeseries"
+    },
+    {
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "200"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "dark-blue",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "500"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "dark-red",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 8,
+        "y": 27
+      },
+      "id": 19,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "Ji5FbCfnz"
+          },
+          "exemplar": true,
+          "expr": "rate(http_server_requests_seconds_count{group=\"pos-system\", job=\"pos-system-backend\", method=\"POST\", outcome=\"SUCCESS\", status=\"200\", uri=\"/api/v1/orders\"}[1m])",
+          "format": "time_series",
+          "instant": false,
+          "interval": "",
+          "intervalFactor": 1,
+          "legendFormat": "200",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "Ji5FbCfnz"
+          },
+          "exemplar": true,
+          "expr": "rate(http_server_requests_seconds_count{group=\"pos-system\", job=\"pos-system-backend\", method=\"POST\", outcome=\"SERVER_ERROR\", status=\"500\", uri=\"/api/v1/orders\"}[1m])",
+          "hide": false,
+          "instant": false,
+          "interval": "",
+          "legendFormat": "500",
+          "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "Ji5FbCfnz"
+          },
+          "exemplar": true,
+          "expr": "rate(http_server_requests_seconds_count{group=\"pos-system\", job=\"pos-system-backend\", method=\"POST\", outcome=\"SERVER_ERROR\", status=\"429\", uri=\"/api/v1/orders\"}[1m])",
+          "hide": false,
+          "instant": false,
+          "interval": "",
+          "legendFormat": "500",
+          "refId": "C"
+        }
+      ],
+      "title": "Create order rate [rps]",
       "type": "timeseries"
     }
   ],
@@ -408,6 +892,6 @@
   "timezone": "",
   "title": "POS-SYSTEM Backend",
   "uid": "c6g3Vcf7k",
-  "version": 11,
+  "version": 5,
   "weekStart": ""
 }
