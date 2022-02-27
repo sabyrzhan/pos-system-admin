@@ -14,6 +14,7 @@ services:
     container_name: prometheus
     extra_hosts:
       pos-backend: ${POS_BACKEND_HOST}
+      pos-system-db-master: ${POS_DB_HOST_MASTER}
     ports:
       - 9090:9090
     volumes:
