@@ -16,7 +16,7 @@ scrape_configs:
   - job_name: 'pos-system-db-metrics'
     scrape_interval: 5s
     static_configs:
-      - targets: ['pos-system-db-master:9187']
+      - targets: ['pos-system-db-master:9187','pos-system-db-slave1:9187','pos-system-db-slave2:9187','pos-system-db-slave3:9187']
         labels:
           group: 'pos-system'
           subgroup: 'pos-system-db'

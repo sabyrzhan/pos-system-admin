@@ -15,6 +15,9 @@ services:
     extra_hosts:
       pos-backend: ${POS_BACKEND_HOST}
       pos-system-db-master: ${POS_DB_HOST_MASTER}
+      pos-system-db-slave1: ${POS_DB_HOST_SLAVE1}
+      pos-system-db-slave2: ${POS_DB_HOST_SLAVE2}
+      pos-system-db-slave3: ${POS_DB_HOST_SLAVE3}
     ports:
       - 9090:9090
     volumes:
