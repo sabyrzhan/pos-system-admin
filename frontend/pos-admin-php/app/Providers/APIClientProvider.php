@@ -206,6 +206,7 @@ class APIClientProvider
 
     public function generateInvoice($orderId, $type = 'STANDARD') {
         $response = $this->client->post('/api/v1/orders/' . $orderId . '/invoice?type=' . $type);
+        dd($response->json());
         if ($response->status() != 200) {
             return false;
         } else {

@@ -1,7 +1,5 @@
 package kz.sabyrzhan.services;
 
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import io.smallrye.mutiny.Uni;
 import io.smallrye.mutiny.tuples.Tuple2;
 import kz.sabyrzhan.entities.OrderEntity;
@@ -11,9 +9,7 @@ import kz.sabyrzhan.model.InvoiceResult;
 import kz.sabyrzhan.model.InvoiceStorage;
 import kz.sabyrzhan.model.InvoiceType;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.time.StopWatch;
 import org.apache.fop.apps.FOUserAgent;
 import org.apache.fop.apps.Fop;
 import org.apache.fop.apps.FopFactory;
@@ -21,6 +17,7 @@ import org.apache.fop.apps.MimeConstants;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import javax.xml.transform.Result;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
@@ -49,12 +46,17 @@ public class InvoiceService {
     @ConfigProperty(name = "app.invoice.storage_type")
     InvoiceStorage invoiceStorage;
 
+    @Inject
+    InvoiceUploaderS3 invoiceUploaderS3;
+
+    @Inject
+    InvoiceUploaderNone invoiceUploaderNone;
+
     public Uni<InvoiceResult> generateInvoice(OrderEntity order, InvoiceType type) {
         final String invoiceName = "invoice_" + order.getId() + ".pdf";
         final String invoiceFilePath = invoicePath + "/" + invoiceName;
 
-        final StopWatch stopWatch = new StopWatch("Total time taken for PDF generation and S3 upload:");
-        stopWatch.start();
+        var startTime = System.currentTimeMillis();
         return Uni.createFrom()
                 .deferred(() -> {
                     String xslFile;
@@ -123,36 +125,36 @@ public class InvoiceService {
                     return Uni.createFrom().nullItem();
                 })
                 .onItem().transformToUni(v -> {
-                    String s3FilePath = "";
+                    InvoiceUploader uploader;
+                    InvoiceUploadData uploaderData;
                     switch (invoiceStorage) {
                         case S3:
-                            AmazonS3 s3 = AmazonS3ClientBuilder.standard().build();
-                            try {
-                                s3.putObject(invoiceBucket, invoiceName, new File(invoiceFilePath));
-                            } catch (Exception e) {
-                                log.error("Error uploading invoice {} to S3: {}", invoiceName, e.toString(), e);
-                                return Uni.createFrom().failure(new InvoiceException(e));
-                            }
-                            s3FilePath = "https://s3.amazonaws.com/" + invoiceBucket + "/" + invoiceName;
+                            log.info("Using S3 uploader");
+                            uploader = invoiceUploaderS3;
+                            uploaderData = InvoiceUploadData.builder()
+                                    .filePath(invoiceFilePath)
+                                    .invoiceBucket(invoiceBucket)
+                                    .invoiceName(invoiceName)
+                                    .build();
                             break;
                         case NONE:
                         default:
-                            s3FilePath = "https://s2.q4cdn.com/175719177/files/doc_presentations/Placeholder-PDF.pdf";
-                            break;
+                            log.info("Using NONE uploader");
+                            uploader = invoiceUploaderNone;
+                            uploaderData = InvoiceUploadData.builder().build();
                     }
 
-                    FileUtils.deleteQuietly(new File(invoiceFilePath));
-
-                    return Uni.createFrom().item(new InvoiceResult(s3FilePath));
-                }).onItemOrFailure().transformToUni((invoiceResult, throwable) -> {
-                    stopWatch.stop();
-                    log.info(stopWatch.toString());
+                    return uploader.upload(uploaderData);
+                }).onItemOrFailure().transformToUni((uploaderResult, throwable) -> {
+                    var stopTime = System.currentTimeMillis();
+                    log.info("Total time taken for PDF generation and upload: {} ms", stopTime - startTime);
 
                     if (throwable != null) {
+                        log.error("Error uploading invoice: {}. Error: {}", invoiceName, throwable.toString(), throwable);
                         return Uni.createFrom().failure(throwable);
                     }
 
-                    return Uni.createFrom().item(invoiceResult);
+                    return Uni.createFrom().item(new InvoiceResult(uploaderResult.getInvoicePath()));
                 });
     }
 

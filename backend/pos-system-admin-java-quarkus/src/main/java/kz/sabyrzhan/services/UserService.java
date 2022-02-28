@@ -7,9 +7,11 @@ import kz.sabyrzhan.entities.UserEntity;
 import kz.sabyrzhan.exceptions.EntityAlreadyExistsException;
 import kz.sabyrzhan.exceptions.EntityNotFoundException;
 import kz.sabyrzhan.model.User;
-import org.apache.commons.lang3.RandomStringUtils;
 
 import javax.enterprise.context.ApplicationScoped;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 @ApplicationScoped
 public class UserService {
@@ -72,6 +74,21 @@ public class UserService {
     }
 
     private String generateSalt() {
-        return RandomStringUtils.randomAlphabetic(13);
+        List<Character> chars = new ArrayList<>();
+        for(char i = 'a'; i <= 'z'; i++) {
+            chars.add(i);
+        }
+        for(char i = 'A'; i <= 'Z'; i++) {
+            chars.add(i);
+        }
+        for(char i = '0'; i <= '9'; i++) {
+            chars.add(i);
+        }
+        StringBuilder sb = new StringBuilder();
+        Random r = new Random();
+        for(int i = 0; i < 13; i++) {
+            sb.append(chars.get(r.nextInt(chars.size())));
+        }
+        return sb.toString();
     }
 }
