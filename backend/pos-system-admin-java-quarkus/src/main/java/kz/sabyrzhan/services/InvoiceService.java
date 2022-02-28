@@ -8,6 +8,7 @@ import kz.sabyrzhan.entities.OrderEntity;
 import kz.sabyrzhan.entities.OrderItemEntity;
 import kz.sabyrzhan.exceptions.InvoiceException;
 import kz.sabyrzhan.model.InvoiceResult;
+import kz.sabyrzhan.model.InvoiceStorage;
 import kz.sabyrzhan.model.InvoiceType;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
@@ -44,6 +45,9 @@ public class InvoiceService {
 
     @ConfigProperty(name = "app.invoice_bucket")
     String invoiceBucket;
+
+    @ConfigProperty(name = "app.invoice.storage_type")
+    InvoiceStorage invoiceStorage;
 
     public Uni<InvoiceResult> generateInvoice(OrderEntity order, InvoiceType type) {
         final String invoiceName = "invoice_" + order.getId() + ".pdf";
@@ -119,17 +123,26 @@ public class InvoiceService {
                     return Uni.createFrom().nullItem();
                 })
                 .onItem().transformToUni(v -> {
-                    AmazonS3 s3 = AmazonS3ClientBuilder.standard().build();
-                    try {
-                        s3.putObject(invoiceBucket, invoiceName, new File(invoiceFilePath));
-                    } catch (Exception e) {
-                        log.error("Error uploading invoice {} to S3: {}", invoiceName, e.toString(), e);
-                        return Uni.createFrom().failure(new InvoiceException(e));
+                    String s3FilePath = "";
+                    switch (invoiceStorage) {
+                        case S3:
+                            AmazonS3 s3 = AmazonS3ClientBuilder.standard().build();
+                            try {
+                                s3.putObject(invoiceBucket, invoiceName, new File(invoiceFilePath));
+                            } catch (Exception e) {
+                                log.error("Error uploading invoice {} to S3: {}", invoiceName, e.toString(), e);
+                                return Uni.createFrom().failure(new InvoiceException(e));
+                            }
+                            s3FilePath = "https://s3.amazonaws.com/" + invoiceBucket + "/" + invoiceName;
+                            break;
+                        case NONE:
+                        default:
+                            s3FilePath = "https://s2.q4cdn.com/175719177/files/doc_presentations/Placeholder-PDF.pdf";
+                            break;
                     }
 
                     FileUtils.deleteQuietly(new File(invoiceFilePath));
 
-                    String s3FilePath = "https://s3.amazonaws.com/" + invoiceBucket + "/" + invoiceName;
                     return Uni.createFrom().item(new InvoiceResult(s3FilePath));
                 }).onItemOrFailure().transformToUni((invoiceResult, throwable) -> {
                     stopWatch.stop();
