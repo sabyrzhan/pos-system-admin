@@ -1,7 +1,10 @@
 version: "3"
 services:
   pos-system-backend:
-    image: quarkus/pos-system-admin
+    image: pos-system-backend
+    build:
+      context: .
+      dockerfile: src/main/docker/Dockerfile.native
     ports:
       - "8080:8080"
     environment:
