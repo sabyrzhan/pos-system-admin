@@ -9,6 +9,7 @@ import kz.sabyrzhan.model.InvoiceResult;
 import kz.sabyrzhan.model.InvoiceStorage;
 import kz.sabyrzhan.model.InvoiceType;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.fop.apps.*;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
@@ -104,7 +105,7 @@ public class InvoiceService {
                                 .replace("ITEMS_AND_SUMS", generateXmlData(order));
                         xsltFileReader = new StringReader(xslTemplate);
                         xmlSourceReader = new StringReader(dataString);
-                        FopFactory fopFactory = new FopFactoryBuilder(getClass().getClassLoader().getResource("fopconfig/fop.xml").toURI(), new ClasspathResolverURIAdapter()).build();
+                        FopFactory fopFactory = FopFactory.newInstance(new File(".").toURI());
                         FOUserAgent foUserAgent = fopFactory.newFOUserAgent();
                         out = new FileOutputStream(invoiceFilePath);
                         Fop fop = fopFactory.newFop(MimeConstants.MIME_PDF, foUserAgent, out);
@@ -147,6 +148,11 @@ public class InvoiceService {
                 }).onItemOrFailure().transformToUni((uploaderResult, throwable) -> {
                     var stopTime = System.currentTimeMillis();
                     log.info("Total time taken for PDF generation and upload: {} ms", stopTime - startTime);
+
+                    if (invoiceStorage != InvoiceStorage.FILE) {
+                        log.info("Deleting file {} since invoiceStorage is not FILE", invoiceFilePath);
+                        FileUtils.deleteQuietly(new File(invoiceFilePath));
+                    }
 
                     if (throwable != null) {
                         log.error("Error uploading invoice: {}. Error: {}", invoiceName, throwable.toString(), throwable);
