@@ -1,0 +1,16 @@
+version: "3"
+services:
+  pos-system-backend:
+    image: quarkus/pos-system-admin
+    ports:
+      - "8080:8080"
+    environment:
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=postgres
+      - DB_URL=vertx-reactive:postgresql://192.168.1.142/pos_system
+      - INVOICE_PATH=/localinvoices
+      - INVOICE_BUCKET=kz.sabyrzhan.posinventory.invoices
+      - RATE_LIMIT=300
+      - RATE_LIMIT_TIMEOUT_MS=1
+      # Invoice storage: S3, NONE, FILE
+      - INVOICE_STORAGE=NONE
