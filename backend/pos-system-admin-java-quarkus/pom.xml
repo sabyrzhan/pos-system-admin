@@ -32,6 +32,13 @@
         <scope>import</scope>
       </dependency>
       <dependency>
+        <groupId>${quarkus.platform.group-id}</groupId>
+        <artifactId>quarkus-camel-bom</artifactId>
+        <version>${quarkus.platform.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+      <dependency>
         <groupId>org.testcontainers</groupId>
         <artifactId>testcontainers-bom</artifactId>
         <version>1.16.2</version>
@@ -43,11 +50,6 @@
         <artifactId>lombok</artifactId>
         <version>1.18.22</version>
         <scope>provided</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.xmlgraphics</groupId>
-        <artifactId>fop</artifactId>
-        <version>2.7</version>
       </dependency>
       <dependency>
         <groupId>com.google.guava</groupId>
@@ -125,8 +127,8 @@
       <artifactId>quarkus-smallrye-health</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.apache.xmlgraphics</groupId>
-      <artifactId>fop</artifactId>
+      <groupId>org.apache.camel.quarkus</groupId>
+      <artifactId>camel-quarkus-fop</artifactId>
     </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>

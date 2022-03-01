@@ -10,10 +10,7 @@ import kz.sabyrzhan.model.InvoiceStorage;
 import kz.sabyrzhan.model.InvoiceType;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
-import org.apache.fop.apps.FOUserAgent;
-import org.apache.fop.apps.Fop;
-import org.apache.fop.apps.FopFactory;
-import org.apache.fop.apps.MimeConstants;
+import org.apache.fop.apps.*;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -27,6 +24,8 @@ import java.io.Closeable;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.StringReader;
+import java.net.URI;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
@@ -62,22 +61,22 @@ public class InvoiceService {
                     String xslFile;
                     switch (type) {
                         case THERMAL:
-                            xslFile = "/invoicetemplate/style.thermal.xsl";
+                            xslFile = "invoicetemplate/style.thermal.xsl";
                             break;
                         case STANDARD:
                         default:
-                            xslFile = "/invoicetemplate/style.standard.xsl";
+                            xslFile = "invoicetemplate/style.standard.xsl";
                             break;
                     }
-                    String xmlFile = "/invoicetemplate/data.xml";
+                    String xmlFile = "invoicetemplate/data.xml";
                     String xslTemplate, xmlDataTemplate;
                     try (var xsltFile = getClass().getClassLoader().getResourceAsStream(xslFile);
                          var xmlSource = getClass().getClassLoader().getResourceAsStream(xmlFile)) {
                         if (xsltFile == null) {
-                            throw new IllegalArgumentException("xsl template not found.");
+                            return Uni.createFrom().failure(new IllegalArgumentException("xsl template not found."));
                         }
                         if (xmlSource == null) {
-                            throw new IllegalArgumentException("xml data template not found.");
+                            return Uni.createFrom().failure(new IllegalArgumentException("xml data template not found."));
                         }
                         xslTemplate = IOUtils.toString(xsltFile, StandardCharsets.UTF_8);
                         xmlDataTemplate = IOUtils.toString(xmlSource, StandardCharsets.UTF_8);
@@ -105,7 +104,7 @@ public class InvoiceService {
                                 .replace("ITEMS_AND_SUMS", generateXmlData(order));
                         xsltFileReader = new StringReader(xslTemplate);
                         xmlSourceReader = new StringReader(dataString);
-                        FopFactory fopFactory = FopFactory.newInstance(new File(".").toURI());
+                        FopFactory fopFactory = new FopFactoryBuilder(getClass().getClassLoader().getResource("fopconfig/fop.xml").toURI(), new ClasspathResolverURIAdapter()).build();
                         FOUserAgent foUserAgent = fopFactory.newFOUserAgent();
                         out = new FileOutputStream(invoiceFilePath);
                         Fop fop = fopFactory.newFop(MimeConstants.MIME_PDF, foUserAgent, out);
