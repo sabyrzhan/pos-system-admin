@@ -2,6 +2,8 @@ package kz.sabyrzhan.entities;
 
 import io.quarkus.hibernate.reactive.panache.PanacheEntityBase;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.Instant;
@@ -17,7 +19,8 @@ import java.time.Instant;
                         "where o.created > :date and e.status = :status " +
                         "group by o.productId order by orderCount desc")
 })
-@Data
+@Getter
+@Setter
 public class ProductEntity extends PanacheEntityBase {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

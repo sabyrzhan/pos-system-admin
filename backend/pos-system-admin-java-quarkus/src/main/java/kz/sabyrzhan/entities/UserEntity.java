@@ -1,13 +1,15 @@
 package kz.sabyrzhan.entities;
 
 import io.quarkus.hibernate.reactive.panache.PanacheEntityBase;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "pos_users")
-@Data
+@Getter
+@Setter
 public class UserEntity extends PanacheEntityBase {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

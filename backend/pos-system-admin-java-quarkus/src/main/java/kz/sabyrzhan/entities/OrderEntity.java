@@ -4,6 +4,8 @@ import io.quarkus.hibernate.reactive.panache.PanacheEntityBase;
 import kz.sabyrzhan.model.OrderStatus;
 import kz.sabyrzhan.model.PaymentType;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.Instant;
@@ -14,7 +16,8 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "pos_orders")
-@Data
+@Getter
+@Setter
 public class OrderEntity extends PanacheEntityBase {
     @Id
     private String id = UUID.randomUUID().toString();

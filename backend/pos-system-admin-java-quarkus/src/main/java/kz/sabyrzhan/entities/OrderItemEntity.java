@@ -2,13 +2,16 @@ package kz.sabyrzhan.entities;
 
 import io.quarkus.hibernate.reactive.panache.PanacheEntityBase;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.Instant;
 
 @Entity
 @Table(name = "pos_order_items")
-@Data
+@Getter
+@Setter
 public class OrderItemEntity extends PanacheEntityBase implements Cloneable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

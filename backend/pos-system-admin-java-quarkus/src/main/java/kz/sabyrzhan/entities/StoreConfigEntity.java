@@ -3,13 +3,16 @@ package kz.sabyrzhan.entities;
 import io.quarkus.hibernate.reactive.panache.PanacheEntityBase;
 import kz.sabyrzhan.model.ConfigKey;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.Instant;
 
 @Entity
 @Table(name = "pos_store_configs")
-@Data
+@Getter
+@Setter
 public class StoreConfigEntity extends PanacheEntityBase {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
