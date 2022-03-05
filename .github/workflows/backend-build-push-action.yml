@@ -22,10 +22,18 @@ jobs:
           java-version: '17'
           distribution: 'zulu'
           java-package: 'jdk'
-      - name: Setup maven
-        uses: stCarolas/setup-maven@v4.2
+      - name: Get Date
+        id: get-date
+        run: |
+          echo "::set-output name=date::$(/bin/date -u "+%Y-%m")"
+        shell: bash
+      - name: Cache Maven Repository
+        id: cache-maven
+        uses: actions/cache@v2
         with:
-          maven-version: 3.8.2
+          path: ~/.m2/repository
+          # refresh cache every month to avoid unlimited growth
+          key: backend-key-${{ steps.get-date.outputs.date }}
       - name: Checkout code
         uses: actions/checkout@v2          
       - name: Log in to the ghr.io
@@ -49,3 +57,6 @@ jobs:
             -Dquarkus.native.builder-image=quay.io/quarkus/ubi-quarkus-native-image:22.0-java17 \
             -Dquarkus.native.native-image-xmx=6g \
             -Dquarkus.native.container-runtime-options='-m=8g'
+      - name: Delete Local Artifacts From Cache
+        shell: bash
+        run: rm -r ~/.m2/repository/kz
