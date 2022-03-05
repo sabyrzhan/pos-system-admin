@@ -16,26 +16,26 @@ jobs:
     name: Test backend
     runs-on: ubuntu-latest
     steps:
-    - name: Setup Java JDK
-      uses: actions/setup-java@v3.0.0
-      with:
-        java-version: '17'
-        distribution: 'zulu'
-        java-package: 'jdk'
-    - name: Checkout code
-      uses: actions/checkout@v2          
-    - name: Get Date
-      id: get-date
-      run: |
-        echo "::set-output name=date::$(/bin/date -u "+%Y-%m")"
-      shell: bash
-    - name: Cache Maven Repository
-      id: cache-maven
-      uses: actions/cache@v2
-      with:
-        path: ~/.m2/repository
-        # refresh cache every month to avoid unlimited growth
-        key: backend-cache-${{ steps.get-date.outputs.date }}
+      - name: Setup Java JDK
+        uses: actions/setup-java@v3.0.0
+        with:
+          java-version: '17'
+          distribution: 'zulu'
+          java-package: 'jdk'
+      - name: Checkout code
+        uses: actions/checkout@v2          
+      - name: Get Date
+        id: get-date
+        run: |
+          echo "::set-output name=date::$(/bin/date -u "+%Y-%m")"
+        shell: bash
+      - name: Cache Maven Repository
+        id: cache-maven
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2/repository
+          # refresh cache every month to avoid unlimited growth
+          key: backend-cache-${{ steps.get-date.outputs.date }}
       - name: Compile and run maven unit tests and integration tests with testcontainers
         run: ./mvnw clean intall
       - name: Delete Local Artifacts From Cache
