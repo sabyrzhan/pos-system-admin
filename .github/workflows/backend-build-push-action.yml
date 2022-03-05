@@ -35,7 +35,9 @@ jobs:
         with:
           path: ~/.m2/repository
           # refresh cache every month to avoid unlimited growth
-          key: backend-key-${{ steps.get-date.outputs.date }}
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
       - name: Compile and build Docker image
         run: |
           echo "BACKEND_VERSION=$(grep -m 1 "<version>.*</version>" pom.xml | awk -F '[><]' '{print $3}')" >> $GITHUB_ENV
