@@ -7,7 +7,6 @@ on:
     branches: [ master ]
 env:
   REGISTRY: ghcr.io
-  DOCKER_IMAGE_NAME: ${{ github.repository }}-backend
 
 jobs:
   build:
@@ -41,14 +40,15 @@ jobs:
             ${{ runner.os }}-maven-
       - name: Compile and build Docker image
         run: |
+          echo "IMAGE_NAME=$(grep -m 1 "quarkus.application.name" /src/main/resources/application.properties | awk -F '[=]' '{print $2}')" >> $GITHUB_ENV
           echo "BACKEND_VERSION=$(grep -m 1 "<version>.*</version>" pom.xml | awk -F '[><]' '{print $3}')" >> $GITHUB_ENV
+          echo "FULL_IMAGE_NAME=$REGISTRY/sabyrzhan/${{ env.IMAGE_NAME }}:${{ env.BACKEND_VERSION }}"
+
           ./mvnw clean install \
             -DskipTests \
             -Dquarkus.native.additional-build-args='--initialize-at-build-time=java.awt.color.ColorSpace$BuiltInSpace' \
             -Dquarkus.container-image.build=true\
-            -Dquarkus.container-image.group=\
-            -Dquarkus.container-image.registry=$REGISTRY\
-            -Dquarkus.container-image.name=$DOCKER_IMAGE_NAME\
+            -Dquarkus.container-image.image=${{ env.FULL_IMAGE_NAME }}\
             -Dquarkus.native.container-build=true \
             -Dquarkus.native.builder-image=quay.io/quarkus/ubi-quarkus-native-image:22.0-java17 \
             -Dquarkus.native.native-image-xmx=6g \
@@ -64,4 +64,4 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Push
         run: |
-          docker push $REGISTRY/$DOCKER_IMAGE_NAME:${{ env.BACKEND_VERSION }}
+          docker push ${{ env.FULL_IMAGE_NAME }}
