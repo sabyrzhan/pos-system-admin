@@ -35,14 +35,12 @@ jobs:
         with:
           path: ~/.m2/repository
           # refresh cache every month to avoid unlimited growth
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-maven-
+          key: backend-cache-${{ steps.get-date.outputs.date }}
       - name: Compile and build Docker image
         run: |
           echo "IMAGE_NAME=$(grep -m 1 "quarkus.application.name" /src/main/resources/application.properties | awk -F '[=]' '{print $2}')" >> $GITHUB_ENV
           echo "BACKEND_VERSION=$(grep -m 1 "<version>.*</version>" pom.xml | awk -F '[><]' '{print $3}')" >> $GITHUB_ENV
-          echo "FULL_IMAGE_NAME=$REGISTRY/sabyrzhan/${{ env.IMAGE_NAME }}:${{ env.BACKEND_VERSION }}"
+          echo "FULL_IMAGE_NAME=$REGISTRY/sabyrzhan/${{ env.IMAGE_NAME }}:${{ env.BACKEND_VERSION }}" >> $GITHUB_ENV
 
           ./mvnw clean install \
             -DskipTests \
