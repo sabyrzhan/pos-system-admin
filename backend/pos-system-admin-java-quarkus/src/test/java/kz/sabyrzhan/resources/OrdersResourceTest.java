@@ -126,7 +126,7 @@ class OrdersResourceTest {
         assertEquals(orderRequest.getPaymentType(), response.getPaymentType());
         assertEquals(orderRequest.getSubtotal(), response.getSubtotal());
         assertEquals(orderRequest.getTotal(), response.getTotal());
-        assertEquals(orderRequest.getCreated(), response.getCreated());
+        assertEquals(orderRequest.getCreated().truncatedTo(ChronoUnit.SECONDS), response.getCreated().truncatedTo(ChronoUnit.SECONDS));
         assertNotNull(response.getItems());
         assertEquals(requestItemMap.size(), response.getItems().size());
         Map<Integer, OrderItemEntity> responseItemMap = response.getItems().stream().collect(Collectors.toMap(OrderItemEntity::getProductId, Function.identity()));
@@ -139,7 +139,7 @@ class OrdersResourceTest {
             assertEquals(expectedItem.getProductName(), resultItem.getProductName());
             assertEquals(expectedItem.getQuantity(), resultItem.getQuantity());
             assertEquals(expectedItem.getPrice(), resultItem.getPrice());
-            assertEquals(orderRequest.getCreated(), resultItem.getCreated());
+            assertEquals(orderRequest.getCreated().truncatedTo(ChronoUnit.SECONDS), resultItem.getCreated().truncatedTo(ChronoUnit.SECONDS));
         }
         int expectedProduct1Stock = product1.getStock() - 1;
         int expectedProduct2Stock = product2.getStock() - 1;
@@ -275,7 +275,7 @@ class OrdersResourceTest {
             assertEquals(expected.getProductName(), actual.getProductName());
             assertEquals(expected.getQuantity(), actual.getQuantity());
             assertEquals(expected.getPrice(), actual.getPrice());
-            assertEquals(expected.getCreated(), actual.getCreated());
+            assertEquals(expected.getCreated().truncatedTo(ChronoUnit.SECONDS), actual.getCreated().truncatedTo(ChronoUnit.SECONDS));
         }
     }
 

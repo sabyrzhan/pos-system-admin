@@ -200,7 +200,7 @@ class DictionaryResourceTest {
         assertEquals(postData.getConfigKey(), result.getConfigKey());
         assertEquals(postData.getConfigValue(), result.getConfigValue());
         assertEquals(postData.getCreated().truncatedTo(ChronoUnit.SECONDS), result.getCreated().truncatedTo(ChronoUnit.SECONDS));
-        assertEquals(postData.getUpdated(), result.getUpdated());
+        assertEquals(postData.getUpdated().truncatedTo(ChronoUnit.SECONDS), result.getUpdated().truncatedTo(ChronoUnit.SECONDS));
     }
 
     @Test
@@ -222,7 +222,7 @@ class DictionaryResourceTest {
         assertEquals(expected.getConfigKey(), result.getConfigKey());
         assertEquals(expected.getConfigValue(), result.getConfigValue());
         assertEquals(expected.getCreated().truncatedTo(ChronoUnit.SECONDS), result.getCreated().truncatedTo(ChronoUnit.SECONDS));
-        assertEquals(expected.getUpdated(), result.getUpdated());
+        assertEquals(expected.getUpdated().truncatedTo(ChronoUnit.SECONDS), result.getUpdated().truncatedTo(ChronoUnit.SECONDS));
     }
 
     public static CategoryEntity createCategory() {
