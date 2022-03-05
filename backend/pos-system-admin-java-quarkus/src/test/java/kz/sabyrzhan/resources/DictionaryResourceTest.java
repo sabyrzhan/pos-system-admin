@@ -15,6 +15,8 @@ import org.junit.jupiter.api.Test;
 
 import javax.inject.Inject;
 
+import java.time.temporal.ChronoUnit;
+
 import static io.restassured.RestAssured.given;
 import static kz.sabyrzhan.repositories.CategoryRepository.CATEGORY_NOT_FOUND_MESSAGE;
 import static kz.sabyrzhan.services.CategoryService.CATEGORY_NAME_ALREADY_EXISTS;
@@ -197,7 +199,7 @@ class DictionaryResourceTest {
         assertTrue(result.getId() > 0);
         assertEquals(postData.getConfigKey(), result.getConfigKey());
         assertEquals(postData.getConfigValue(), result.getConfigValue());
-        assertEquals(postData.getCreated(), result.getCreated());
+        assertEquals(postData.getCreated().truncatedTo(ChronoUnit.SECONDS), result.getCreated().truncatedTo(ChronoUnit.SECONDS));
         assertEquals(postData.getUpdated(), result.getUpdated());
     }
 
@@ -219,7 +221,7 @@ class DictionaryResourceTest {
         assertEquals(expected.getId(), result.getId());
         assertEquals(expected.getConfigKey(), result.getConfigKey());
         assertEquals(expected.getConfigValue(), result.getConfigValue());
-        assertEquals(expected.getCreated(), result.getCreated());
+        assertEquals(expected.getCreated().truncatedTo(ChronoUnit.SECONDS), result.getCreated().truncatedTo(ChronoUnit.SECONDS));
         assertEquals(expected.getUpdated(), result.getUpdated());
     }
 

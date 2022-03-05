@@ -17,6 +17,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import javax.inject.Inject;
+import java.time.temporal.ChronoUnit;
 import java.util.LinkedList;
 
 import static io.restassured.RestAssured.given;
@@ -230,7 +231,7 @@ class ProductResourceTest {
             assertEquals(ex.getPurchasePrice(), re.getPurchasePrice());
             assertEquals(ex.getSalePrice(), re.getSalePrice());
             assertEquals(ex.getStock(), re.getStock());
-            assertEquals(ex.getCreated(), re.getCreated());
+            assertEquals(ex.getCreated().truncatedTo(ChronoUnit.SECONDS), re.getCreated().truncatedTo(ChronoUnit.SECONDS));
         }
     }
 

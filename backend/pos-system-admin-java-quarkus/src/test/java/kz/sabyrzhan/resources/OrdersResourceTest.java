@@ -17,6 +17,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import javax.inject.Inject;
+import java.time.temporal.ChronoUnit;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.Function;
@@ -259,7 +260,7 @@ class OrdersResourceTest {
         assertEquals(createdOrder.getPaymentType(), response.getPaymentType());
         assertEquals(createdOrder.getSubtotal(), response.getSubtotal());
         assertEquals(createdOrder.getTotal(), response.getTotal());
-        assertEquals(createdOrder.getCreated(), response.getCreated());
+        assertEquals(createdOrder.getCreated().truncatedTo(ChronoUnit.SECONDS), response.getCreated().truncatedTo(ChronoUnit.SECONDS));
 
         var responseItems = response.getItems();
         assertNotNull(responseItems);
