@@ -6,7 +6,8 @@ on:
   pull_request:
     branches: [ master ]
 env:
-  DOCKER_IMAGE_NAME: ghcr.io/${{ github.repository }}-backend
+  REGISTRY: ghcr.io
+  DOCKER_IMAGE_NAME: ${{ github.repository }}-backend
 
 jobs:
   build:
@@ -46,7 +47,7 @@ jobs:
             -Dquarkus.native.additional-build-args='--initialize-at-build-time=java.awt.color.ColorSpace$BuiltInSpace' \
             -Dquarkus.container-image.build=true\
             -Dquarkus.container-image.group=\
-            -Dquarkus.container-image.registry=ghcr.io\
+            -Dquarkus.container-image.registry=$REGISTRY\
             -Dquarkus.container-image.name=$DOCKER_IMAGE_NAME\
             -Dquarkus.native.container-build=true \
             -Dquarkus.native.builder-image=quay.io/quarkus/ubi-quarkus-native-image:22.0-java17 \
@@ -63,4 +64,4 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Push
         run: |
-          docker push $DOCKER_IMAGE_NAME:${{ env.BACKEND_VERSION }}
+          docker push $REGISTRY/$DOCKER_IMAGE_NAME:${{ env.BACKEND_VERSION }}
