@@ -18,7 +18,8 @@ case $target in
           -Dquarkus.container-image.tag=latest
     ;;
   *)
-    ./mvnw clean package \
+    ./mvnw clean install \
+      -Pnative \
       -DskipTests \
       -Dquarkus.native.additional-build-args='--initialize-at-build-time=java.awt.color.ColorSpace$BuiltInSpace' \
       -Dquarkus.container-image.build=true
@@ -28,6 +29,7 @@ case $target in
       -Dquarkus.native.builder-image=quay.io/quarkus/ubi-quarkus-native-image:22.0-java17 \
       -Dquarkus.native.native-image-xmx=14g \
       -Dquarkus.native.container-runtime-options='-m=16g'
-      #docker-compose build
+
+    docker-compose build
     ;;
 esac

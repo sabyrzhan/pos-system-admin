@@ -44,6 +44,7 @@ jobs:
           echo "FULL_IMAGE_NAME=$FULL_IMAGE_NAME" >> $GITHUB_ENV
 
           ./mvnw clean install \
+            -Pnative \
             -DskipTests \
             -Dquarkus.native.additional-build-args='--initialize-at-build-time=java.awt.color.ColorSpace$BuiltInSpace' \
             -Dquarkus.container-image.build=true\
