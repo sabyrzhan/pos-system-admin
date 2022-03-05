@@ -19,7 +19,6 @@ case $target in
     ;;
   *)
     ./mvnw clean package \
-      -Pnative \
       -DskipTests \
       -Dquarkus.native.additional-build-args='--initialize-at-build-time=java.awt.color.ColorSpace$BuiltInSpace' \
       -Dquarkus.container-image.build=true
