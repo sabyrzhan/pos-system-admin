@@ -36,13 +36,7 @@ jobs:
           path: ~/.m2/repository
           # refresh cache every month to avoid unlimited growth
           key: backend-key-${{ steps.get-date.outputs.date }}
-      - name: Log in to the ghr.io
-        uses: docker/login-action@v1
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Compile, build Docker image and push to GHR
+      - name: Compile and build Docker image
         run: |
           echo "BACKEND_VERSION=$(grep -m 1 "<version>.*</version>" pom.xml | awk -F '[><]' '{print $3}')" >> $GITHUB_ENV
           ./mvnw clean package \
@@ -52,7 +46,7 @@ jobs:
             -Dquarkus.container-image.build=true\
             -Dquarkus.container-image.group=\
             -Dquarkus.container-image.registry=ghcr.io\
-            -Dquarkus.container-image.push=true\
+            -Dquarkus.container-image.name=$DOCKER_IMAGE_NAME\
             -Dquarkus.native.container-build=true \
             -Dquarkus.native.builder-image=quay.io/quarkus/ubi-quarkus-native-image:22.0-java17 \
             -Dquarkus.native.native-image-xmx=6g \
@@ -60,3 +54,12 @@ jobs:
       - name: Delete Local Artifacts From Cache
         shell: bash
         run: rm -r ~/.m2/repository/kz
+      - name: Log in to the ghr.io
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Push
+        run: |
+          docker push $DOCKER_IMAGE_NAME:${{ env.BACKEND_VERSION }}
