@@ -37,7 +37,7 @@ jobs:
           # refresh cache every month to avoid unlimited growth
           key: backend-cache-${{ steps.get-date.outputs.date }}
       - name: Compile and run maven unit tests and integration tests with testcontainers
-        run: ./mvnw clean intall
+        run: ./mvnw clean install
       - name: Delete Local Artifacts From Cache
         shell: bash
         run: rm -r ~/.m2/repository/kz
