@@ -28,7 +28,13 @@ jobs:
           maven-version: 3.8.2
       - name: Checkout code
         uses: actions/checkout@v2          
-      - name: Compile and package backend
+      - name: Log in to the ghr.io
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Compile, build Docker image and push to GHR
         run: |
           echo "BACKEND_VERSION=$(grep -m 1 "<version>.*</version>" pom.xml | awk -F '[><]' '{print $3}')" >> $GITHUB_ENV
           ./mvnw clean package \
@@ -37,16 +43,9 @@ jobs:
             -Dquarkus.native.additional-build-args='--initialize-at-build-time=java.awt.color.ColorSpace$BuiltInSpace' \
             -Dquarkus.container-image.build=true\
             -Dquarkus.container-image.group=\
-            -Dquarkus.container-image.name=$DOCKER_IMAGE_NAME\
+            -Dquarkus.container-image.registry=ghcr.io\
+            -Dquarkus.container-image.push=true\
             -Dquarkus.native.container-build=true \
             -Dquarkus.native.builder-image=quay.io/quarkus/ubi-quarkus-native-image:22.0-java17 \
             -Dquarkus.native.native-image-xmx=6g \
             -Dquarkus.native.container-runtime-options='-m=8g'
-      - name: Log in to the ghr.io
-        uses: docker/login-action@v1
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Push docker image
-        run: docker push $DOCKER_IMAGE_NAME:${{ env.BACKEND_VERSION }}
