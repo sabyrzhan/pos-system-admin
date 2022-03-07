@@ -48,8 +48,8 @@ jobs:
     - name: Delete Local Artifacts From Cache
       shell: bash
       run: rm -rf ~/.m2/repository/kz
-#    - uses: eregon/publish-release@v1
-#      env:
-#        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#      with:
-#        release_id: ${{ github.event.release.id }}
+    - uses: eregon/publish-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        release_id: ${{ github.event.release.id }}
