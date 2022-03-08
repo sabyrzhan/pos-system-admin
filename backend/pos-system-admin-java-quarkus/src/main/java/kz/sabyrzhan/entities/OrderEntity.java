@@ -3,13 +3,11 @@ package kz.sabyrzhan.entities;
 import io.quarkus.hibernate.reactive.panache.PanacheEntityBase;
 import kz.sabyrzhan.model.OrderStatus;
 import kz.sabyrzhan.model.PaymentType;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.Instant;
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;

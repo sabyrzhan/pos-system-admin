@@ -70,7 +70,7 @@ class OrderServiceTest {
         orderEntity.setCustomerName("CustomerName");
         orderEntity.setPaymentType(PaymentType.CREDIT);
 
-        orderService.validateOrderEntity(orderEntity, taxConfig, transientHolder);
+        orderService.validateOrderEntity(orderEntity, transientHolder);
     }
 
     @Test
@@ -85,7 +85,7 @@ class OrderServiceTest {
         orderEntity.setCustomerName("CustomerName");
         orderEntity.setPaymentType(PaymentType.CREDIT);
 
-        orderService.validateOrderEntity(orderEntity, taxConfig, transientHolder);
+        orderService.validateOrderEntity(orderEntity, transientHolder);
     }
 
     @Test
@@ -101,7 +101,7 @@ class OrderServiceTest {
         orderEntity.setPaymentType(PaymentType.CREDIT);
 
         try {
-            orderService.validateOrderEntity(orderEntity, taxConfig, transientHolder);
+            orderService.validateOrderEntity(orderEntity, transientHolder);
             fail();
         } catch (IllegalArgumentException e) {
             assertEquals("Tax is invalid", e.getMessage());
@@ -121,7 +121,7 @@ class OrderServiceTest {
         orderEntity.setPaymentType(PaymentType.CREDIT);
 
         try {
-            orderService.validateOrderEntity(orderEntity, taxConfig, transientHolder);
+            orderService.validateOrderEntity(orderEntity, transientHolder);
             fail();
         } catch (IllegalArgumentException e) {
             assertEquals("Subtotal is invalid", e.getMessage());
@@ -141,7 +141,7 @@ class OrderServiceTest {
         orderEntity.setPaymentType(PaymentType.CREDIT);
 
         try {
-            orderService.validateOrderEntity(orderEntity, taxConfig, transientHolder);
+            orderService.validateOrderEntity(orderEntity, transientHolder);
             fail();
         } catch (IllegalArgumentException e) {
             assertEquals("Total is invalid", e.getMessage());
@@ -161,7 +161,7 @@ class OrderServiceTest {
         orderEntity.setPaymentType(PaymentType.CREDIT);
 
         try {
-            orderService.validateOrderEntity(orderEntity, taxConfig, transientHolder);
+            orderService.validateOrderEntity(orderEntity, transientHolder);
             fail();
         } catch (IllegalArgumentException e) {
             assertEquals("Due is invalid", e.getMessage());

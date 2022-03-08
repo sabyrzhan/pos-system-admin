@@ -12,7 +12,7 @@ import java.time.Instant;
 @Table(name = "pos_order_items")
 @Getter
 @Setter
-public class OrderItemEntity extends PanacheEntityBase implements Cloneable {
+public class OrderItemEntity extends PanacheEntityBase {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -39,8 +39,7 @@ public class OrderItemEntity extends PanacheEntityBase implements Cloneable {
         this.quantity += quantity;
     }
 
-    @Override
-    public OrderItemEntity clone() {
+    public OrderItemEntity copy() {
         OrderItemEntity clone = new OrderItemEntity();
         clone.setId(id);
         clone.setOrderId(orderId);

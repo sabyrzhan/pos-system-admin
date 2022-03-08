@@ -38,21 +38,17 @@ public class OrderService {
 
     public Uni<OrderEntity> createOrder(final OrderEntity requestOrder) {
         final TransientHolder holder = new TransientHolder();
-        return Uni.createFrom().item(requestOrder.getItems())
-                .onItem().transformToUni(items -> {
+        return Uni.createFrom().nullItem()
+                .onItem().transformToUni(v -> {
                     Set<Integer> productIds = new HashSet<>();
                     Map<Integer, OrderItemEntity> itemsWithoutDuplicates = new HashMap<>();
-                    if (requestOrder.getItems() != null) {
-                        for(OrderItemEntity item : requestOrder.getItems()) {
-                            productIds.add(item.getProductId());
-                            if (itemsWithoutDuplicates.get(item.getProductId()) == null) {
-                                itemsWithoutDuplicates.put(item.getProductId(), item.clone());
-                            } else {
-                                itemsWithoutDuplicates.get(item.getProductId()).addQuantity(item.getQuantity());
-                            }
-                        }
-                        requestOrder.setItems(itemsWithoutDuplicates.values().stream().collect(Collectors.toList()));
-                    }
+                    Optional.ofNullable(requestOrder.getItems()).ifPresent(items -> items.forEach(item -> {
+                        productIds.add(item.getProductId());
+                        Optional.ofNullable(itemsWithoutDuplicates.get(item.getProductId()))
+                                .ifPresentOrElse(existingItem -> existingItem.addQuantity(item.getQuantity()),
+                                                () -> itemsWithoutDuplicates.put(item.getProductId(), item.copy()));
+                    }));
+                    requestOrder.setItems(itemsWithoutDuplicates.values().stream().toList());
 
                     if (productIds.isEmpty()) {
                         return Uni.createFrom().failure(new InvalidOrderItemsException("Order items not specified"));
@@ -60,52 +56,48 @@ public class OrderService {
 
                     return Uni.createFrom().item(productIds);
                 })
-                .onItem().transformToUni(productIds -> {
-                    Uni<List<ProductEntity>> productsUni = productRepository.list(productIds);
-                    return productsUni.onItem().transformToUni(products -> {
-                        if (products.size() != productIds.size()) {
-                            return Uni.createFrom().failure(new InvalidOrderItemsException("Invalid products specified"));
+                .onItem().transformToUni(productIds -> productRepository.list(productIds).onItem().transformToUni(products -> {
+                    if (products.size() != productIds.size()) {
+                        return Uni.createFrom().failure(new InvalidOrderItemsException("Invalid products specified"));
+                    }
+                    return Uni.createFrom().item(products);
+                }))
+                .onItem().transformToUni(products -> {
+                    Map<Integer, ProductEntity> productsMap = products.stream().collect(Collectors.toMap(ProductEntity::getId, Function.identity()));
+
+                    List<OrderItemEntity> orderItems = new ArrayList<>();
+                    List<ProductEntity> updatedProducts = new ArrayList<>();
+
+                    ProductEntity product;
+                    for(OrderItemEntity orderItem: requestOrder.getItems()) {
+                        product = productsMap.get(orderItem.getProductId());
+                        if (product == null) {
+                            return Uni.createFrom().failure(new EntityNotFoundException("Product with id=" + orderItem.getProductId() + " not found."));
                         }
-
-                        Map<Integer, ProductEntity> productsMap = products.stream().collect(Collectors.toMap(ProductEntity::getId, Function.identity()));
-
-                        List<OrderItemEntity> orderItems = new ArrayList<>();
-                        List<ProductEntity> updatedProducts = new ArrayList<>();
-
-                        ProductEntity product;
-                        for(OrderItemEntity orderItem: requestOrder.getItems()) {
-                            product = productsMap.get(orderItem.getProductId());
-                            if (product == null) {
-                                return Uni.createFrom().failure(new EntityNotFoundException("Product with id=" + orderItem.getProductId() + " not found."));
-                            }
-                            if (product.getStock() < orderItem.getQuantity()) {
-                                return Uni.createFrom().failure(new InvalidOrderItemsException("Order item quantity is more than stock for productId=" + orderItem.getProductId()));
-                            }
-                            orderItem.setProductName(product.getName());
-                            orderItem.setCreated(requestOrder.getCreated());
-                            orderItem.setPrice(product.getSalePrice());
-                            orderItems.add(orderItem);
-
-                            product.decreaseStockAmount(orderItem.getQuantity());
-                            updatedProducts.add(product);
+                        if (product.getStock() < orderItem.getQuantity()) {
+                            return Uni.createFrom().failure(new InvalidOrderItemsException("Order item quantity is more than stock for productId=" + orderItem.getProductId()));
                         }
-                        requestOrder.setItems(orderItems);
+                        orderItem.setProductName(product.getName());
+                        orderItem.setCreated(requestOrder.getCreated());
+                        orderItem.setPrice(product.getSalePrice());
+                        orderItems.add(orderItem);
 
-                        holder.setProductsEntities(updatedProducts);
-                        return Uni.createFrom().nullItem();
-                    });
+                        product.decreaseStockAmount(orderItem.getQuantity());
+                        updatedProducts.add(product);
+                    }
+                    requestOrder.setItems(orderItems);
+
+                    holder.setProductsEntities(updatedProducts);
+                    return Uni.createFrom().nullItem();
                 })
-                .onItem().transformToUni(v -> {
-                    return storeConfigRepository.findByConfigKey(ConfigKey.TAX_PERCENT)
-                            .onItem()
-                            .transform(taxConfig -> {
-                                holder.putConfig(ConfigKey.TAX_PERCENT, taxConfig);
-                                return null;
-                            });
+                .onItem().transformToUni(v -> storeConfigRepository.findByConfigKey(ConfigKey.TAX_PERCENT))
+                .onItem().transform(taxConfig -> {
+                    holder.putConfig(ConfigKey.TAX_PERCENT, taxConfig);
+                    return null;
                 })
                 .onItem().transformToUni(v -> {
                     try {
-                        validateOrderEntity(requestOrder, holder.getConfig(ConfigKey.TAX_PERCENT), holder);
+                        validateOrderEntity(requestOrder, holder);
                         return Uni.createFrom().nullItem();
                     } catch (IllegalArgumentException e) {
                         return Uni.createFrom().failure(e);
@@ -118,23 +110,22 @@ public class OrderService {
                         return null;
                     });
                 })
-                .onItem().transformToUni(v -> {
-                    return orderRepository.persist(requestOrder).onItem().transformToUni(savedOrderEntity -> {
-                        savedOrderEntity.getItems().forEach(item -> item.setOrderId(savedOrderEntity.getId()));
-                        return orderItemRepository.persistAll(requestOrder.getItems())
-                                .onItem()
-                                .transformToUni(savedItems -> {
-                                    savedOrderEntity.setItems(savedItems);
-                                    return Uni.createFrom().item(savedOrderEntity);
-                                });
-                    });
+                .onItem().transformToUni(v -> orderRepository.persist(requestOrder))
+                .onItem().transformToUni(savedOrderEntity -> {
+                    savedOrderEntity.getItems().forEach(item -> item.setOrderId(savedOrderEntity.getId()));
+                    holder.setOrderEntity(savedOrderEntity);
+                    return orderItemRepository.persistAll(requestOrder.getItems());
+                })
+                .onItem().transformToUni(savedItems -> {
+                    var savedOrderEntity = holder.getOrderEntity();
+                    savedOrderEntity.setItems(savedItems);
+                    return Uni.createFrom().item(savedOrderEntity);
                 });
     }
 
-    public void validateOrderEntity(OrderEntity requestEntity,
-                                     StoreConfigEntity taxConfig,
-                                     TransientHolder holder) {
+    public void validateOrderEntity(OrderEntity requestEntity, TransientHolder holder) {
         Map<Integer, ProductEntity> productMap = holder.getProductsAsMap();
+        var taxConfig = holder.getConfig(ConfigKey.TAX_PERCENT);
 
         float subtotal = 0;
         float total = 0;
@@ -173,18 +164,22 @@ public class OrderService {
     }
 
     public Uni<OrderEntity> cancelOrder(String id) {
+        var holder = new TransientHolder();
         return orderRepository.cancelOrder(id)
-                .onItem().transformToUni(canceledOrder -> {
-                    return orderItemRepository.findByOrderId(canceledOrder.getId())
-                            .onItem().transform(items -> {
-                                canceledOrder.setItems(items);
-                                return canceledOrder;
-                            });
+                .onItem().transform(canceledOrder -> {
+                    holder.setOrderEntity(canceledOrder);
+                    return null;
                 })
-                .onItem().transformToUni(canceledOrder -> {
-                    var productIdToQuantityMap = canceledOrder.getItems().stream()
+                .onItem().transformToUni(v -> orderItemRepository.findByOrderId(holder.getOrderEntity().getId()))
+                .onItem().transform(items -> {
+                    holder.getOrderEntity().setItems(items);
+                    return null;
+                })
+                .onItem().transformToUni(v -> {
+                    var productIdToQuantityMap = holder.getOrderEntity().getItems().stream()
                             .collect(Collectors.toMap(OrderItemEntity::getProductId, OrderItemEntity::getQuantity));
-                    return productRepository.returnQuantities(productIdToQuantityMap).onItem().transform(v -> canceledOrder);
-                });
+                    return productRepository.returnQuantities(productIdToQuantityMap);
+                })
+                .onItem().transform(v -> holder.getOrderEntity());
     }
 }

@@ -101,7 +101,7 @@ class OrdersResourceTest {
     }
 
     @Test
-    public void createOrder_success() {
+    void createOrder_success() {
         var orderRequest = createOrder();
         Map<Integer, OrderItemEntity> requestItemMap = orderRequest.getItems().stream().collect(Collectors.toMap(OrderItemEntity::getProductId, Function.identity()));
 
@@ -153,7 +153,7 @@ class OrdersResourceTest {
     }
 
     @Test
-    public void createOrder_invalidTotal() {
+    void createOrder_invalidTotal() {
         var orderRequest = createOrder();
         orderRequest.setTotal(500);
 
@@ -177,7 +177,7 @@ class OrdersResourceTest {
     }
 
     @Test
-    public void cancelOrder_success() {
+    void cancelOrder_success() {
         var prod1Stock = product1.getStock();
         var prod2Stock = product2.getStock();
         var prod3Stock = product3.getStock();
@@ -206,7 +206,7 @@ class OrdersResourceTest {
     }
 
     @Test
-    public void cancelOrder_cannotCancelProcessing() {
+    void cancelOrder_cannotCancelProcessing() {
         var orderRequest = createOrder();
         var createdOrder = orderClient.create(orderRequest);
         OrderEntity.update("status = ?1 where id = ?2", OrderStatus.PROCESSING, createdOrder.getId()).await().indefinitely();
@@ -236,7 +236,7 @@ class OrdersResourceTest {
     }
 
     @Test
-    public void getById_success() {
+    void getById_success() {
         var createdOrder = orderClient.create(createOrder());
         var requestItemMap = createdOrder.getItems().stream().collect(Collectors.toMap(OrderItemEntity::getProductId, Function.identity()));
 
@@ -280,7 +280,7 @@ class OrdersResourceTest {
     }
 
     @Test
-    public void getById_notFound() {
+    void getById_notFound() {
         given()
                 .contentType(ContentType.JSON)
                 .when()

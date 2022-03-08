@@ -2,7 +2,6 @@ package kz.sabyrzhan.repositories;
 
 import io.quarkus.hibernate.reactive.panache.Panache;
 import io.quarkus.hibernate.reactive.panache.PanacheRepositoryBase;
-import io.quarkus.hibernate.reactive.panache.common.runtime.ReactiveTransactional;
 import io.smallrye.mutiny.Uni;
 import kz.sabyrzhan.entities.OrderItemEntity;
 import kz.sabyrzhan.entities.ProductEntity;
