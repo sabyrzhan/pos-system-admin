@@ -63,7 +63,7 @@ POST http://localhost:8080/api/v1/products
 Accept: application/json
 
 {
-  "name": "Test product41",
+  "name": "Test product4112",
   "categoryId": 1,
   "description": "Test description",
   "purchasePrice": "1.0",
@@ -86,6 +86,30 @@ POST http://localhost:8080/api/v1/dict/configs
   "configKey": "TAX_PERCENT",
   "configValue": "5"
 }
+
+### Create order
+POST http://localhost:8080/api/v1/orders
+Accept: application/json
+
+{
+  "customerName": "SomeCustomer",
+  "subtotal": "500.00",
+  "tax": "25.00",
+  "total": "525.00",
+  "paid": "1000",
+  "due": "475",
+  "paymentType": "CREDIT",
+  "created": "2022-02-25T22:29:26+00:00",
+  "items": [
+    {
+      "productId": "1004",
+      "quantity": "1"
+    }
+  ]
+}
+
+### Get order by id
+GET http://localhost:8080/api/v1/orders/a3872e60-8618-4c05-aaf9-fb4dc01b1423
 
 ### Cancel order
 DELETE http://localhost:8080/api/v1/orders/f78a8cdc-5f5f-4452-8f7c-6aba92e90ba6

@@ -12,6 +12,7 @@ import kz.sabyrzhan.entities.ProductEntity;
 import kz.sabyrzhan.model.Product;
 import kz.sabyrzhan.repositories.ProductRepository;
 import lombok.SneakyThrows;
+import org.awaitility.Awaitility;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,10 +20,13 @@ import org.junit.jupiter.api.Test;
 import javax.inject.Inject;
 import java.time.temporal.ChronoUnit;
 import java.util.LinkedList;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.IntStream;
 
 import static io.restassured.RestAssured.given;
 import static kz.sabyrzhan.repositories.CategoryRepository.CATEGORY_NOT_FOUND_MESSAGE;
 import static kz.sabyrzhan.services.ProductService.PRODUCT_NAME_ALREADY_EXISTS;
+import static org.awaitility.Awaitility.await;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -48,7 +52,7 @@ class ProductResourceTest {
     }
 
     @Test
-    public void addProduct_success() {
+    void addProduct_success() {
         var postData = createProduct();
 
         var response = given()
@@ -69,7 +73,7 @@ class ProductResourceTest {
     }
 
     @Test
-    public void addProduct_existsWithName() {
+    void addProduct_existsWithName() {
         var postData = productClient.addProduct(createProduct());
 
         given()
@@ -85,7 +89,7 @@ class ProductResourceTest {
     }
 
     @Test
-    public void updateProduct_success() {
+    void updateProduct_success() {
         var categoryData = dictClient.create(DictionaryResourceTest.createCategory());
         var postData = createProduct();
         postData.setCategoryId(categoryData.getId());
@@ -107,7 +111,7 @@ class ProductResourceTest {
     }
 
     @Test
-    public void updateProduct_sameNameExists() {
+    void updateProduct_sameNameExists() {
         var categoryData1 = DictionaryResourceTest.createCategory();
         categoryData1.setName("Cat1");
         categoryData1 = dictClient.create(categoryData1);
@@ -138,7 +142,7 @@ class ProductResourceTest {
     }
 
     @Test
-    public void updateProduct_categoryNotFound() {
+    void updateProduct_categoryNotFound() {
         var categoryData = dictClient.create(DictionaryResourceTest.createCategory());
         var postData = createProduct();
         postData.setCategoryId(categoryData.getId());
@@ -158,7 +162,7 @@ class ProductResourceTest {
     }
 
     @Test
-    public void getById_success() {
+    void getById_success() {
         var cat = dictClient.create(DictionaryResourceTest.createCategory());
         var requestData = createProduct();
         requestData.setCategoryId(cat.getId());
@@ -182,7 +186,7 @@ class ProductResourceTest {
     }
 
     @Test
-    public void getById_noEntity() {
+    void getById_noEntity() {
         ProductEntity requestData = createProduct();
 
         given()
@@ -199,16 +203,19 @@ class ProductResourceTest {
 
     @Test
     @SneakyThrows
-    public void getProducts_success() {
+    void getProducts_success() {
         var category = dictClient.create(DictionaryResourceTest.createCategory());
         LinkedList<ProductEntity> products = new LinkedList<>();
-        for(int i = 1; i <= 10; i++) {
-            var product = createProduct();
-            product.setName("TestName" + i);
-            product.setCategoryId(category.getId());
-            product = productClient.addProduct(product);
-            products.addFirst(product);
-            Thread.sleep(200); // Little delay so sort by created date really will work
+        for(int i = 0; i <= 10; i++) {
+            int j = i;
+            await().pollDelay(200, TimeUnit.MILLISECONDS).until(() -> {
+                var product = createProduct();
+                product.setName("TestName_" + j);
+                product.setCategoryId(category.getId());
+                product = productClient.addProduct(product);
+                products.addFirst(product);
+                return true;
+            }); // Little delay so sort by created date really will work
         }
 
         var sizePerPage = 5;

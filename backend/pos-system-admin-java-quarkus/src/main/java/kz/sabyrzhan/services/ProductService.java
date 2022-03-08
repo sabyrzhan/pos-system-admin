@@ -28,6 +28,7 @@ public class ProductService {
         return productRepository.findById(id);
     }
 
+    @ReactiveTransactional
     public Uni<ProductEntity> addProduct(ProductEntity entity) {
         return productRepository.findByName(entity.getName())
                 .onItemOrFailure()

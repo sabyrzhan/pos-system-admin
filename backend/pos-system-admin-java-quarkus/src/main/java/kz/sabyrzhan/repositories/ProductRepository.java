@@ -34,16 +34,12 @@ public class ProductRepository implements PanacheRepositoryBase<ProductEntity, I
     public Uni<ProductEntity> findByName(String name) {
         return ProductEntity.<ProductEntity>find("name = ?1", name).list()
                 .onItem().transformToUni(items -> {
-                    if (items.size() == 0) {
+                    if (items.isEmpty()) {
                         return Uni.createFrom().failure(new EntityNotFoundException(PRODUCT_NOT_FOUND_MESSAGE));
                     }
 
                     return Uni.createFrom().item(items.get(0));
                 });
-    }
-
-    public Uni<ProductEntity> persist(ProductEntity entity) {
-        return Panache.withTransaction(entity::persist);
     }
 
     public Uni<List<ProductEntity>> persistAll(List<ProductEntity> updatedEntities) {
