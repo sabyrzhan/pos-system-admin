@@ -3,14 +3,12 @@ package kz.sabyrzhan.resources;
 import com.google.common.util.concurrent.RateLimiter;
 import io.smallrye.mutiny.Uni;
 import kz.sabyrzhan.exceptions.TooManyRequestsException;
-import lombok.extern.slf4j.Slf4j;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import javax.enterprise.context.ApplicationScoped;
 import java.util.concurrent.TimeUnit;
 
 @ApplicationScoped
-@Slf4j
 public class RateLimitManager {
     private RateLimiter rateLimiter;
     private int timeout;

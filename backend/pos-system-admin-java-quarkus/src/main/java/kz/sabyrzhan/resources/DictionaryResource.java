@@ -12,7 +12,6 @@ import kz.sabyrzhan.model.PaymentType;
 import kz.sabyrzhan.model.UserRole;
 import kz.sabyrzhan.repositories.StoreConfigRepository;
 import kz.sabyrzhan.services.CategoryService;
-import lombok.extern.slf4j.Slf4j;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -20,7 +19,6 @@ import javax.ws.rs.*;
 
 @Path("/api/v1/dict")
 @ApplicationScoped
-@Slf4j
 public class DictionaryResource {
     @Inject
     CategoryService categoryService;

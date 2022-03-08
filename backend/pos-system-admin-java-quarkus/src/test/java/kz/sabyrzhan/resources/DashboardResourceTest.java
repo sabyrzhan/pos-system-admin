@@ -97,7 +97,7 @@ class DashboardResourceTest {
     }
 
     @Test
-    public void getInfo_success() {
+    void getInfo_success() {
         var prod1Stock = product1.getStock();
         var prod2Stock = product2.getStock();
         var prod3Stock = product3.getStock();

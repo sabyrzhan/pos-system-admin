@@ -8,7 +8,6 @@ import kz.sabyrzhan.entities.UserEntity;
 import kz.sabyrzhan.model.User;
 import kz.sabyrzhan.resources.request.UsernameAndPasswordRequest;
 import kz.sabyrzhan.services.UserService;
-import lombok.extern.slf4j.Slf4j;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -18,7 +17,6 @@ import javax.ws.rs.core.Response;
 
 @Path("/api/v1/users")
 @ApplicationScoped
-@Slf4j
 public class UserResource {
     @Inject
     UserService userService;

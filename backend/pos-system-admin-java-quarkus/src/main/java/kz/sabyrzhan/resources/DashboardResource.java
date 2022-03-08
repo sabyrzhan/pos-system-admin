@@ -9,7 +9,6 @@ import kz.sabyrzhan.model.OrderStatus;
 import kz.sabyrzhan.model.ProductWithCount;
 import kz.sabyrzhan.repositories.OrderRepository;
 import kz.sabyrzhan.repositories.ProductRepository;
-import lombok.extern.slf4j.Slf4j;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -22,7 +21,6 @@ import java.util.stream.Collectors;
 
 @Path("/api/v1/dashboard")
 @ApplicationScoped
-@Slf4j
 public class DashboardResource {
     @Inject
     OrderRepository orderRepository;

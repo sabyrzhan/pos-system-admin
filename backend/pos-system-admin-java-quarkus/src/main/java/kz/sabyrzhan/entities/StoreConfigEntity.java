@@ -2,7 +2,6 @@ package kz.sabyrzhan.entities;
 
 import io.quarkus.hibernate.reactive.panache.PanacheEntityBase;
 import kz.sabyrzhan.model.ConfigKey;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 

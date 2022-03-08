@@ -42,8 +42,16 @@ Accept: application/json
 GET http://localhost:8080/api/v1/users?page=1
 Accept: application/json
 
+### Add category
+POST http://localhost:8080/api/v1/dict/categories
+Accept: application/json
+
+{
+  "name" : "test category1"
+}
+
 ### Get category by id
-GET http://localhost:8080/api/v1/dict/categories/100
+GET http://localhost:8080/api/v1/dict/categories/7
 Accept: application/json
 
 ### Get categories
@@ -55,7 +63,7 @@ POST http://localhost:8080/api/v1/products
 Accept: application/json
 
 {
-  "name": "Test product4",
+  "name": "Test product41",
   "categoryId": 1,
   "description": "Test description",
   "purchasePrice": "1.0",

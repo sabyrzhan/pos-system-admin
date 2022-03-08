@@ -13,7 +13,6 @@ import kz.sabyrzhan.repositories.OrderRepository;
 import kz.sabyrzhan.services.InvoiceService;
 import kz.sabyrzhan.services.OrderService;
 import kz.sabyrzhan.services.dto.TransientHolder;
-import lombok.extern.slf4j.Slf4j;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -22,7 +21,6 @@ import javax.ws.rs.core.Response;
 
 @Path("/api/v1/orders")
 @ApplicationScoped
-@Slf4j
 public class OrdersResource {
     @Inject
     OrderService orderService;

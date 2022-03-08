@@ -130,7 +130,7 @@ class DictionaryResourceTest {
     }
 
     @Test
-    public void getCategoriesList_success() {
+    void getCategoriesList_success() {
         CategoryEntity created = dictClient.create(createCategory());
 
         CategoryEntity[] result = given()
@@ -149,7 +149,7 @@ class DictionaryResourceTest {
     }
 
     @Test
-    public void getCategoryById_success() {
+    void getCategoryById_success() {
         CategoryEntity created = dictClient.create(createCategory());
 
         CategoryEntity result = given()
@@ -167,7 +167,7 @@ class DictionaryResourceTest {
     }
 
     @Test
-    public void getCategoryById_notFound() {
+    void getCategoryById_notFound() {
         ErrorResponse result = given()
                 .contentType(ContentType.JSON)
                 .when()
@@ -178,7 +178,7 @@ class DictionaryResourceTest {
                 .and()
                 .extract().as(ErrorResponse.class);
 
-        assertEquals(result.getError(), CATEGORY_NOT_FOUND_MESSAGE);
+        assertEquals(CATEGORY_NOT_FOUND_MESSAGE, result.getError());
     }
 
     @Test
